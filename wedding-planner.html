@@ -1,0 +1,1309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Wedding Planner | BudgetTools — Free Online Wedding Planning Tool</title>
+  <meta name="description" content="Plan your wedding for free with BudgetTools. Manage your guest list, track your budget, organise vendors, and stay on schedule — all in one beautifully designed app."/>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+  <script src="https://cdn.tailwindcss.com?plugins=forms"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#506351",
+            "primary-container": "#8ca18c",
+            "primary-fixed": "#d2e8d1",
+            "on-primary": "#ffffff",
+            "on-primary-container": "#253828",
+            "on-primary-fixed-variant": "#384b3a",
+            "secondary": "#7d544f",
+            "secondary-container": "#fdc8c1",
+            "on-secondary": "#ffffff",
+            "on-secondary-container": "#79514d",
+            "tertiary": "#775a19",
+            "tertiary-container": "#ffdea5",
+            "on-tertiary": "#ffffff",
+            "on-tertiary-container": "#261900",
+            "surface": "#faf9f7",
+            "surface-container-lowest": "#ffffff",
+            "surface-container-low": "#f4f3f1",
+            "surface-container": "#efeeec",
+            "surface-container-high": "#e9e8e6",
+            "surface-container-highest": "#e3e2e0",
+            "on-surface": "#1a1c1b",
+            "on-surface-variant": "#434842",
+            "outline": "#737872",
+            "outline-variant": "#c3c8c0",
+            "error": "#ba1a1a",
+            "error-container": "#ffdad6",
+            "on-error": "#ffffff",
+          },
+          fontFamily: {
+            "headline": ["Noto Serif", "serif"],
+            "body": ["Plus Jakarta Sans", "sans-serif"],
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    * { box-sizing: border-box; }
+    body { font-family: 'Plus Jakarta Sans', sans-serif; background: #faf9f7; }
+    .font-headline, h1, h2, h3 { font-family: 'Noto Serif', serif; }
+    .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; vertical-align: middle; }
+    .filled { font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+    .grad-sage { background: linear-gradient(135deg, #506351, #8ca18c); }
+
+    /* Sidebar nav states */
+    .nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: 8px; cursor: pointer; font-size: 13px; font-weight: 500; transition: all 0.15s; width: 100%; text-align: left; }
+    .nav-item.active { background: rgba(80,99,81,0.12); color: #506351; font-weight: 700; }
+    .nav-item.inactive { color: #737872; }
+    .nav-item.inactive:hover { background: rgba(80,99,81,0.06); color: #506351; }
+
+    /* Filter buttons */
+    .filter-btn { padding: 6px 14px; border-radius: 999px; font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.15s; border: none; }
+    .filter-btn.active { background: #506351; color: #fff; }
+    .filter-btn.inactive { background: #efeeec; color: #434842; }
+    .filter-btn.inactive:hover { background: #e3e2e0; }
+
+    /* Input style */
+    .field { width: 100%; background: #e9e8e6; border: none; border-radius: 8px; padding: 10px 14px; font-size: 14px; color: #1a1c1b; outline: none; transition: box-shadow 0.15s; font-family: 'Plus Jakarta Sans', sans-serif; }
+    .field:focus { box-shadow: 0 0 0 2px rgba(80,99,81,0.35); }
+    .field-label { display: block; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: #434842; margin-bottom: 6px; }
+
+    /* RSVP select colours */
+    select.rsvp-confirmed { background: #dcfce7; color: #166534; }
+    select.rsvp-declined  { background: #fee2e2; color: #991b1b; }
+    select.rsvp-pending   { background: #f3f4f6; color: #4b5563; }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 4px; } ::-webkit-scrollbar-thumb { background: #c3c8c0; border-radius: 4px; }
+
+    /* Modal overlay */
+    .modal-overlay { position: fixed; inset: 0; background: rgba(26,28,27,0.45); backdrop-filter: blur(4px); z-index: 60; display: flex; align-items: center; justify-content: center; padding: 16px; }
+    .modal-box { background: #fff; border-radius: 20px; padding: 32px; width: 100%; max-width: 480px; box-shadow: 0 24px 60px rgba(26,28,27,0.15); max-height: 90vh; overflow-y: auto; }
+
+    /* Table row hover */
+    .data-row:hover { background: rgba(80,99,81,0.04); }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════════════
+     SETUP OVERLAY — shown on first visit
+═══════════════════════════════════════════════════════════ -->
+<div id="setup-overlay" class="fixed inset-0 z-50 flex items-center justify-center p-4" style="background:linear-gradient(135deg,#506351,#8ca18c)">
+  <div class="bg-white rounded-2xl shadow-2xl p-10 w-full max-w-md">
+    <div class="text-center mb-8">
+      <a href="index.html" class="text-xs text-primary font-semibold tracking-wide uppercase opacity-60 hover:opacity-100 transition-opacity block mb-6">← BudgetTools</a>
+      <h1 class="font-headline text-3xl text-on-surface mb-2">Let's Plan Your Wedding</h1>
+      <p class="text-on-surface-variant text-sm">Just a few details to get started. You can change everything later.</p>
+    </div>
+
+    <div id="setup-error" class="hidden bg-error-container text-error text-sm rounded-lg px-4 py-3 mb-6"></div>
+
+    <div class="space-y-5">
+      <div>
+        <label class="field-label">Your Name <span class="text-error">*</span></label>
+        <input id="s-pA" type="text" class="field" placeholder="e.g. Sarah"/>
+      </div>
+      <div>
+        <label class="field-label">Partner's Name</label>
+        <input id="s-pB" type="text" class="field" placeholder="e.g. James"/>
+      </div>
+      <div>
+        <label class="field-label">Wedding Date <span class="text-error">*</span></label>
+        <input id="s-date" type="date" class="field"/>
+      </div>
+      <div>
+        <label class="field-label">Venue Name</label>
+        <input id="s-venue" type="text" class="field" placeholder="e.g. The Grand Ballroom"/>
+      </div>
+      <div>
+        <label class="field-label">Total Budget (USD)</label>
+        <input id="s-budget" type="number" class="field" placeholder="e.g. 40000" min="0" step="500"/>
+      </div>
+    </div>
+
+    <button onclick="completeSetup()" class="grad-sage text-white w-full mt-8 py-4 rounded-xl font-bold text-base hover:opacity-90 transition-opacity">
+      Start Planning →
+    </button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     MAIN APP
+═══════════════════════════════════════════════════════════ -->
+<div id="app" class="hidden flex min-h-screen">
+
+  <!-- ── SIDEBAR ─────────────────────────────────────────── -->
+  <aside id="sidebar" class="hidden md:flex flex-col fixed left-0 top-0 h-full w-60 bg-white border-r border-outline-variant/20 z-30 overflow-y-auto">
+    <div class="p-6 pb-4">
+      <a href="index.html" class="text-xs text-primary font-semibold tracking-widest uppercase opacity-60 hover:opacity-100 transition-opacity block mb-5">← BudgetTools</a>
+      <p class="font-headline text-lg text-on-surface couple-name leading-tight">—</p>
+      <div class="flex items-baseline gap-1.5 mt-1">
+        <span class="text-2xl font-bold text-primary countdown-val">0</span>
+        <span class="text-sm text-on-surface-variant countdown-label">Days to Go</span>
+      </div>
+      <p class="text-xs text-outline mt-1 wedding-date-fmt"></p>
+    </div>
+
+    <nav class="flex-1 px-3 pb-4 space-y-0.5">
+      <button class="nav-item active" data-nav="dashboard" onclick="switchTab('dashboard')">
+        <span class="material-symbols-outlined text-xl">dashboard</span> Dashboard
+      </button>
+      <button class="nav-item inactive" data-nav="guests" onclick="switchTab('guests')">
+        <span class="material-symbols-outlined text-xl">group</span> Guest List
+      </button>
+      <button class="nav-item inactive" data-nav="budget" onclick="switchTab('budget')">
+        <span class="material-symbols-outlined text-xl">payments</span> Budget
+      </button>
+      <button class="nav-item inactive" data-nav="vendors" onclick="switchTab('vendors')">
+        <span class="material-symbols-outlined text-xl">store</span> Vendors
+      </button>
+      <button class="nav-item inactive" data-nav="checklist" onclick="switchTab('checklist')">
+        <span class="material-symbols-outlined text-xl">checklist</span> Checklist
+      </button>
+      <button class="nav-item inactive" data-nav="payments" onclick="switchTab('payments')">
+        <span class="material-symbols-outlined text-xl">schedule</span> Payments
+      </button>
+    </nav>
+
+    <div class="p-4 border-t border-outline-variant/20">
+      <button onclick="prepareSettings()" class="nav-item inactive w-full">
+        <span class="material-symbols-outlined text-xl">settings</span> Settings
+      </button>
+    </div>
+  </aside>
+
+  <!-- ── MOBILE HEADER ──────────────────────────────────── -->
+  <header class="md:hidden fixed top-0 left-0 right-0 z-40 bg-white/90 backdrop-blur-md border-b border-outline-variant/20 flex items-center justify-between px-4 py-3">
+    <div>
+      <p class="font-bold text-on-surface text-sm couple-name">—</p>
+      <p class="text-xs text-primary font-semibold"><span class="countdown-val">0</span> <span class="countdown-label">Days to Go</span></p>
+    </div>
+    <button onclick="toggleDrawer()" class="p-2 text-on-surface-variant hover:text-on-surface transition-colors">
+      <span class="material-symbols-outlined text-2xl" id="drawer-icon">menu</span>
+    </button>
+  </header>
+
+  <!-- Mobile drawer overlay -->
+  <div id="drawer-overlay" class="md:hidden fixed inset-0 bg-on-surface/30 z-40 hidden" onclick="toggleDrawer()"></div>
+  <div id="drawer" class="md:hidden fixed left-0 top-0 h-full w-64 bg-white z-50 -translate-x-full transition-transform duration-300 shadow-2xl overflow-y-auto">
+    <div class="p-6 border-b border-outline-variant/20">
+      <a href="index.html" class="text-xs text-primary font-semibold tracking-widest uppercase opacity-60 hover:opacity-100 block mb-4">← BudgetTools</a>
+      <p class="font-headline text-lg text-on-surface couple-name">—</p>
+      <p class="text-sm text-primary font-semibold mt-1"><span class="countdown-val">0</span> <span class="countdown-label">Days to Go</span></p>
+    </div>
+    <nav class="p-3 space-y-0.5">
+      <button class="nav-item active" data-nav="dashboard" onclick="switchTab('dashboard');toggleDrawer()"><span class="material-symbols-outlined text-xl">dashboard</span> Dashboard</button>
+      <button class="nav-item inactive" data-nav="guests" onclick="switchTab('guests');toggleDrawer()"><span class="material-symbols-outlined text-xl">group</span> Guest List</button>
+      <button class="nav-item inactive" data-nav="budget" onclick="switchTab('budget');toggleDrawer()"><span class="material-symbols-outlined text-xl">payments</span> Budget</button>
+      <button class="nav-item inactive" data-nav="vendors" onclick="switchTab('vendors');toggleDrawer()"><span class="material-symbols-outlined text-xl">store</span> Vendors</button>
+      <button class="nav-item inactive" data-nav="checklist" onclick="switchTab('checklist');toggleDrawer()"><span class="material-symbols-outlined text-xl">checklist</span> Checklist</button>
+      <button class="nav-item inactive" data-nav="payments" onclick="switchTab('payments');toggleDrawer()"><span class="material-symbols-outlined text-xl">schedule</span> Payments</button>
+    </nav>
+    <div class="p-4 border-t border-outline-variant/20">
+      <button onclick="prepareSettings();toggleDrawer()" class="nav-item inactive w-full"><span class="material-symbols-outlined text-xl">settings</span> Settings</button>
+    </div>
+  </div>
+
+  <!-- ── MAIN CONTENT ────────────────────────────────────── -->
+  <main class="flex-1 md:pl-60 pt-16 md:pt-0 min-h-screen">
+
+    <!-- ─ DASHBOARD ──────────────────────────────────────── -->
+    <div id="panel-dashboard" class="tab-panel p-6 md:p-10 max-w-5xl mx-auto">
+      <div class="grid lg:grid-cols-12 gap-6 items-end mb-10">
+        <div class="lg:col-span-7">
+          <span class="text-primary font-body text-xs uppercase tracking-[0.2em] mb-3 block font-bold">The Countdown</span>
+          <h2 class="font-headline text-6xl md:text-8xl text-on-surface leading-none">
+            <span id="dash-countdown">0</span>
+            <span class="italic text-primary-container text-4xl md:text-5xl ml-2">Days</span>
+          </h2>
+          <p class="text-on-surface-variant mt-3 text-sm wedding-date-fmt italic"></p>
+          <p class="text-on-surface-variant text-sm mt-1 couple-name font-semibold"></p>
+        </div>
+        <div class="lg:col-span-5">
+          <div id="dash-venue" class="bg-surface-container-low rounded-xl px-5 py-3 text-sm text-on-surface-variant"></div>
+        </div>
+      </div>
+
+      <!-- Stat cards -->
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+        <div class="bg-surface-container-lowest rounded-xl p-5 shadow-sm">
+          <p class="text-xs text-outline uppercase tracking-wide mb-2">Total Budget</p>
+          <p id="dash-budget-total" class="text-xl font-bold text-on-surface">—</p>
+        </div>
+        <div class="bg-surface-container-lowest rounded-xl p-5 shadow-sm">
+          <p class="text-xs text-outline uppercase tracking-wide mb-2">Spent</p>
+          <p id="dash-budget-spent" class="text-xl font-bold text-secondary">—</p>
+        </div>
+        <div class="bg-surface-container-lowest rounded-xl p-5 shadow-sm">
+          <p class="text-xs text-outline uppercase tracking-wide mb-2">Guests</p>
+          <p id="dash-guests-total" class="text-xl font-bold text-on-surface">0</p>
+          <p class="text-xs text-primary mt-1"><span id="dash-guests-confirmed">0</span> confirmed</p>
+        </div>
+        <div class="bg-surface-container-lowest rounded-xl p-5 shadow-sm">
+          <p class="text-xs text-outline uppercase tracking-wide mb-2">Vendors</p>
+          <p id="dash-vendors-count" class="text-xl font-bold text-on-surface">0</p>
+          <p class="text-xs text-primary mt-1"><span id="dash-vendors-confirmed">0</span> confirmed</p>
+        </div>
+      </div>
+
+      <!-- Budget progress -->
+      <div class="bg-surface-container-lowest rounded-xl p-6 shadow-sm mb-6">
+        <div class="flex items-center justify-between mb-3">
+          <h3 class="font-semibold text-on-surface text-sm">Budget Overview</h3>
+          <span id="dash-budget-pct" class="text-sm font-bold text-primary">0%</span>
+        </div>
+        <div class="h-2 bg-surface-container-high rounded-full overflow-hidden mb-3">
+          <div id="dash-budget-bar" class="h-full bg-primary rounded-full transition-all" style="width:0%"></div>
+        </div>
+        <div class="flex justify-between text-xs text-on-surface-variant">
+          <span>Spent: <strong id="dash-budget-spent2">—</strong></span>
+          <span>Remaining: <strong id="dash-budget-remaining">—</strong></span>
+        </div>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-6">
+        <!-- Tasks progress -->
+        <div class="bg-surface-container-lowest rounded-xl p-6 shadow-sm">
+          <div class="flex items-center justify-between mb-3">
+            <h3 class="font-semibold text-on-surface text-sm">Checklist Progress</h3>
+            <span class="text-xs text-on-surface-variant"><span id="dash-tasks-done">0</span> / <span id="dash-tasks-total">0</span></span>
+          </div>
+          <div class="h-2 bg-surface-container-high rounded-full overflow-hidden">
+            <div id="dash-tasks-bar" class="h-full bg-primary rounded-full transition-all" style="width:0%"></div>
+          </div>
+          <button onclick="switchTab('checklist')" class="mt-4 text-xs text-primary font-semibold hover:underline">View checklist →</button>
+        </div>
+        <!-- Upcoming payments -->
+        <div class="bg-surface-container-lowest rounded-xl p-6 shadow-sm">
+          <h3 class="font-semibold text-on-surface text-sm mb-3">Upcoming Payments</h3>
+          <div id="dash-upcoming"></div>
+          <button onclick="switchTab('payments')" class="mt-3 text-xs text-primary font-semibold hover:underline">View all payments →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─ GUESTS ──────────────────────────────────────────── -->
+    <div id="panel-guests" class="tab-panel hidden p-6 md:p-10 max-w-5xl mx-auto">
+      <div class="flex items-start justify-between mb-6">
+        <div>
+          <h2 class="font-headline text-3xl text-on-surface">Guest List</h2>
+          <p class="text-on-surface-variant text-sm mt-1">Track RSVPs, dietary requirements and plus-ones.</p>
+        </div>
+        <button onclick="openModal('add-guest-modal')" class="grad-sage text-white px-5 py-2.5 rounded-full text-sm font-bold flex items-center gap-2 hover:opacity-90 transition-opacity flex-shrink-0">
+          <span class="material-symbols-outlined text-lg">person_add</span> Add Guest
+        </button>
+      </div>
+
+      <!-- Stats + filters -->
+      <div class="flex flex-wrap gap-3 mb-5 items-center">
+        <button class="filter-btn active" data-gfilter="all" onclick="setGuestFilter('all')">All (<span id="gc-all">0</span>)</button>
+        <button class="filter-btn inactive" data-gfilter="confirmed" onclick="setGuestFilter('confirmed')">Confirmed (<span id="gc-confirmed">0</span>)</button>
+        <button class="filter-btn inactive" data-gfilter="pending" onclick="setGuestFilter('pending')">Pending (<span id="gc-pending">0</span>)</button>
+        <button class="filter-btn inactive" data-gfilter="declined" onclick="setGuestFilter('declined')">Declined (<span id="gc-declined">0</span>)</button>
+        <div class="ml-auto">
+          <input id="guest-search" type="search" placeholder="Search guests…" oninput="renderGuests()"
+                 class="field text-sm py-2 px-4 rounded-full w-48"/>
+        </div>
+      </div>
+
+      <!-- Table -->
+      <div class="bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden">
+        <table class="w-full text-sm">
+          <thead>
+            <tr class="border-b border-outline-variant/20">
+              <th class="text-left py-3 px-4 text-xs uppercase tracking-wide text-outline font-semibold">Name</th>
+              <th class="text-left py-3 px-4 text-xs uppercase tracking-wide text-outline font-semibold">Group</th>
+              <th class="text-left py-3 px-4 text-xs uppercase tracking-wide text-outline font-semibold">RSVP</th>
+              <th class="text-center py-3 px-4 text-xs uppercase tracking-wide text-outline font-semibold">+1</th>
+              <th class="text-left py-3 px-4 text-xs uppercase tracking-wide text-outline font-semibold hidden md:table-cell">Dietary</th>
+              <th class="py-3 px-4 w-10"></th>
+            </tr>
+          </thead>
+          <tbody id="guests-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ─ BUDGET ──────────────────────────────────────────── -->
+    <div id="panel-budget" class="tab-panel hidden p-6 md:p-10 max-w-5xl mx-auto">
+      <div class="flex items-start justify-between mb-6">
+        <div>
+          <h2 class="font-headline text-3xl text-on-surface">Budget Tracker</h2>
+          <p class="text-on-surface-variant text-sm mt-1">Compare your planned spend to actual costs across every category.</p>
+        </div>
+        <button onclick="openModal('add-budget-modal')" class="grad-sage text-white px-5 py-2.5 rounded-full text-sm font-bold flex items-center gap-2 hover:opacity-90 transition-opacity flex-shrink-0">
+          <span class="material-symbols-outlined text-lg">add</span> Add Category
+        </button>
+      </div>
+
+      <!-- Summary bar -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+        <div class="bg-surface-container-lowest rounded-xl p-5 shadow-sm">
+          <p class="text-xs text-outline uppercase tracking-wide mb-1">Total Budget</p>
+          <p id="b-total" class="text-xl font-bold text-on-surface">—</p>
+        </div>
+        <div class="bg-surface-container-lowest rounded-xl p-5 shadow-sm">
+          <p class="text-xs text-outline uppercase tracking-wide mb-1">Allocated</p>
+          <p id="b-allocated" class="text-xl font-bold text-on-surface">—</p>
+        </div>
+        <div class="bg-surface-container-lowest rounded-xl p-5 shadow-sm">
+          <p class="text-xs text-outline uppercase tracking-wide mb-1">Spent</p>
+          <p id="b-spent" class="text-xl font-bold text-secondary">—</p>
+        </div>
+        <div class="bg-surface-container-lowest rounded-xl p-5 shadow-sm">
+          <p class="text-xs text-outline uppercase tracking-wide mb-1">Remaining</p>
+          <p id="b-remaining" class="text-xl font-bold text-primary">—</p>
+        </div>
+      </div>
+
+      <!-- Progress bar -->
+      <div class="bg-surface-container-lowest rounded-xl p-5 shadow-sm mb-6">
+        <div class="flex justify-between text-xs text-on-surface-variant mb-2">
+          <span>Budget used</span>
+          <span id="b-pct" class="font-bold text-primary">0%</span>
+        </div>
+        <div class="h-2.5 bg-surface-container-high rounded-full overflow-hidden">
+          <div id="b-bar" class="h-full bg-primary rounded-full transition-all" style="width:0%"></div>
+        </div>
+      </div>
+
+      <!-- Categories table -->
+      <div class="bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden">
+        <table class="w-full text-sm">
+          <thead>
+            <tr class="border-b border-outline-variant/20">
+              <th class="text-left py-3 px-4 text-xs uppercase tracking-wide text-outline font-semibold">Category</th>
+              <th class="text-left py-3 px-4 text-xs uppercase tracking-wide text-outline font-semibold">Budgeted ($)</th>
+              <th class="text-left py-3 px-4 text-xs uppercase tracking-wide text-outline font-semibold">Actual ($)</th>
+              <th class="text-left py-3 px-4 text-xs uppercase tracking-wide text-outline font-semibold">Difference</th>
+              <th class="py-3 px-4 w-10"></th>
+            </tr>
+          </thead>
+          <tbody id="budget-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ─ VENDORS ─────────────────────────────────────────── -->
+    <div id="panel-vendors" class="tab-panel hidden p-6 md:p-10 max-w-5xl mx-auto">
+      <div class="flex items-start justify-between mb-6">
+        <div>
+          <h2 class="font-headline text-3xl text-on-surface">Vendors</h2>
+          <p class="text-on-surface-variant text-sm mt-1">Manage contacts, contracts, deposits, and balances.</p>
+        </div>
+        <button onclick="openModal('add-vendor-modal')" class="grad-sage text-white px-5 py-2.5 rounded-full text-sm font-bold flex items-center gap-2 hover:opacity-90 transition-opacity flex-shrink-0">
+          <span class="material-symbols-outlined text-lg">add</span> Add Vendor
+        </button>
+      </div>
+
+      <!-- Vendor summary -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+        <div class="bg-surface-container-lowest rounded-xl p-4 shadow-sm text-center">
+          <p id="v-count" class="text-2xl font-bold text-on-surface">0</p>
+          <p class="text-xs text-outline mt-1">Total Vendors</p>
+        </div>
+        <div class="bg-surface-container-lowest rounded-xl p-4 shadow-sm text-center">
+          <p id="v-confirmed" class="text-2xl font-bold text-primary">0</p>
+          <p class="text-xs text-outline mt-1">Confirmed</p>
+        </div>
+        <div class="bg-surface-container-lowest rounded-xl p-4 shadow-sm text-center">
+          <p id="v-total-contract" class="text-2xl font-bold text-on-surface">$0</p>
+          <p class="text-xs text-outline mt-1">Total Contracts</p>
+        </div>
+        <div class="bg-surface-container-lowest rounded-xl p-4 shadow-sm text-center">
+          <p id="v-balance" class="text-2xl font-bold text-secondary">$0</p>
+          <p class="text-xs text-outline mt-1">Balance Due</p>
+        </div>
+      </div>
+
+      <div id="vendors-grid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+    </div>
+
+    <!-- ─ CHECKLIST ───────────────────────────────────────── -->
+    <div id="panel-checklist" class="tab-panel hidden p-6 md:p-10 max-w-3xl mx-auto">
+      <div class="flex items-start justify-between mb-6">
+        <div>
+          <h2 class="font-headline text-3xl text-on-surface">Wedding Checklist</h2>
+          <p class="text-on-surface-variant text-sm mt-1">37 pre-loaded tasks organised by timeline. Add your own as needed.</p>
+        </div>
+        <button onclick="openModal('add-task-modal')" class="grad-sage text-white px-5 py-2.5 rounded-full text-sm font-bold flex items-center gap-2 hover:opacity-90 transition-opacity flex-shrink-0">
+          <span class="material-symbols-outlined text-lg">add</span> Add Task
+        </button>
+      </div>
+
+      <!-- Overall progress -->
+      <div class="bg-surface-container-lowest rounded-xl p-5 shadow-sm mb-8">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-sm font-semibold text-on-surface">Overall Progress</span>
+          <span class="text-sm font-bold text-primary"><span id="cl-done">0</span> / <span id="cl-total">0</span> tasks (<span id="cl-pct">0%</span>)</span>
+        </div>
+        <div class="h-2 bg-surface-container-high rounded-full overflow-hidden">
+          <div id="cl-bar" class="h-full bg-primary rounded-full transition-all" style="width:0%"></div>
+        </div>
+      </div>
+
+      <div id="checklist-container"></div>
+    </div>
+
+    <!-- ─ PAYMENTS ────────────────────────────────────────── -->
+    <div id="panel-payments" class="tab-panel hidden p-6 md:p-10 max-w-3xl mx-auto">
+      <div class="flex items-start justify-between mb-6">
+        <div>
+          <h2 class="font-headline text-3xl text-on-surface">Payment Tracker</h2>
+          <p class="text-on-surface-variant text-sm mt-1">Log all vendor payments and deposit due dates so nothing slips through.</p>
+        </div>
+        <button onclick="openModal('add-payment-modal')" class="grad-sage text-white px-5 py-2.5 rounded-full text-sm font-bold flex items-center gap-2 hover:opacity-90 transition-opacity flex-shrink-0">
+          <span class="material-symbols-outlined text-lg">add</span> Add Payment
+        </button>
+      </div>
+
+      <!-- Overdue alert -->
+      <div id="pay-overdue-bar" class="hidden bg-error-container text-error rounded-xl px-5 py-3 text-sm font-semibold mb-5 flex items-center gap-2">
+        <span class="material-symbols-outlined text-lg filled">warning</span>
+        <span id="pay-overdue-count">0</span> overdue payment(s) — take action now.
+      </div>
+
+      <!-- Summary -->
+      <div class="grid grid-cols-2 gap-4 mb-6">
+        <div class="bg-surface-container-lowest rounded-xl p-5 shadow-sm">
+          <p class="text-xs text-outline uppercase tracking-wide mb-1">Amount Due</p>
+          <p id="pay-due" class="text-2xl font-bold text-secondary">$0</p>
+        </div>
+        <div class="bg-surface-container-lowest rounded-xl p-5 shadow-sm">
+          <p class="text-xs text-outline uppercase tracking-wide mb-1">Total Paid</p>
+          <p id="pay-paid-total" class="text-2xl font-bold text-primary">$0</p>
+        </div>
+      </div>
+
+      <div id="payments-list" class="space-y-2"></div>
+    </div>
+
+  </main>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     MODALS
+═══════════════════════════════════════════════════════════ -->
+
+<!-- Add Guest -->
+<div id="add-guest-modal" class="modal-overlay hidden">
+  <div class="modal-box">
+    <div class="flex items-center justify-between mb-6">
+      <h3 class="font-headline text-2xl text-on-surface">Add Guest</h3>
+      <button onclick="closeModal('add-guest-modal')" class="text-outline hover:text-on-surface transition-colors">
+        <span class="material-symbols-outlined text-2xl">close</span>
+      </button>
+    </div>
+    <div id="g-error" class="hidden bg-error-container text-error text-sm rounded-lg px-4 py-2 mb-4"></div>
+    <form id="add-guest-form" onsubmit="event.preventDefault();addGuest()" class="space-y-4">
+      <div><label class="field-label">Full Name <span class="text-error">*</span></label><input id="g-name" type="text" class="field" placeholder="e.g. Emily Johnson"/></div>
+      <div class="grid grid-cols-2 gap-4">
+        <div><label class="field-label">Email</label><input id="g-email" type="email" class="field" placeholder="emily@email.com"/></div>
+        <div><label class="field-label">Phone</label><input id="g-phone" type="tel" class="field" placeholder="+1 555 000 0000"/></div>
+      </div>
+      <div><label class="field-label">Group</label><input id="g-group" type="text" class="field" placeholder="e.g. Bride's Family, Work Friends"/></div>
+      <div><label class="field-label">Dietary Requirements</label><input id="g-dietary" type="text" class="field" placeholder="e.g. Vegan, Gluten-free"/></div>
+      <div class="flex items-center gap-3">
+        <input id="g-plusone" type="checkbox" class="w-4 h-4 rounded text-primary cursor-pointer"/>
+        <label for="g-plusone" class="text-sm font-medium text-on-surface cursor-pointer">Has a plus-one</label>
+      </div>
+      <div class="flex gap-3 pt-2">
+        <button type="button" onclick="closeModal('add-guest-modal')" class="flex-1 py-3 rounded-xl border border-outline-variant/40 text-on-surface-variant font-semibold text-sm hover:bg-surface-container-low transition-colors">Cancel</button>
+        <button type="submit" class="flex-1 grad-sage text-white py-3 rounded-xl font-bold text-sm hover:opacity-90 transition-opacity">Add Guest</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Add Budget Category -->
+<div id="add-budget-modal" class="modal-overlay hidden">
+  <div class="modal-box">
+    <div class="flex items-center justify-between mb-6">
+      <h3 class="font-headline text-2xl text-on-surface">Add Category</h3>
+      <button onclick="closeModal('add-budget-modal')" class="text-outline hover:text-on-surface"><span class="material-symbols-outlined text-2xl">close</span></button>
+    </div>
+    <div id="bc-error" class="hidden bg-error-container text-error text-sm rounded-lg px-4 py-2 mb-4">Category name is required.</div>
+    <form id="add-budget-form" onsubmit="event.preventDefault();addBudgetCat()" class="space-y-4">
+      <div><label class="field-label">Category Name <span class="text-error">*</span></label><input id="bc-name" type="text" class="field" placeholder="e.g. Florist"/></div>
+      <div><label class="field-label">Budgeted Amount ($)</label><input id="bc-budgeted" type="number" class="field" placeholder="0" min="0" step="100"/></div>
+      <div class="flex gap-3 pt-2">
+        <button type="button" onclick="closeModal('add-budget-modal')" class="flex-1 py-3 rounded-xl border border-outline-variant/40 text-on-surface-variant font-semibold text-sm hover:bg-surface-container-low transition-colors">Cancel</button>
+        <button type="submit" class="flex-1 grad-sage text-white py-3 rounded-xl font-bold text-sm hover:opacity-90 transition-opacity">Add Category</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Add Vendor -->
+<div id="add-vendor-modal" class="modal-overlay hidden">
+  <div class="modal-box">
+    <div class="flex items-center justify-between mb-6">
+      <h3 class="font-headline text-2xl text-on-surface">Add Vendor</h3>
+      <button onclick="closeModal('add-vendor-modal')" class="text-outline hover:text-on-surface"><span class="material-symbols-outlined text-2xl">close</span></button>
+    </div>
+    <div id="v-error" class="hidden bg-error-container text-error text-sm rounded-lg px-4 py-2 mb-4">Vendor name is required.</div>
+    <form id="add-vendor-form" onsubmit="event.preventDefault();addVendor()" class="space-y-4">
+      <div><label class="field-label">Vendor Name <span class="text-error">*</span></label><input id="v-name" type="text" class="field" placeholder="e.g. Rose Garden Photography"/></div>
+      <div>
+        <label class="field-label">Category</label>
+        <select id="v-category" class="field">
+          <option>Venue</option><option>Catering</option><option>Photography</option><option>Videography</option>
+          <option>Florist</option><option>Music / DJ</option><option>Hair &amp; Makeup</option><option>Wedding Cake</option>
+          <option>Transportation</option><option>Officiant</option><option>Attire</option><option>Stationery</option><option>Other</option>
+        </select>
+      </div>
+      <div class="grid grid-cols-2 gap-4">
+        <div><label class="field-label">Contact Name</label><input id="v-contact" type="text" class="field" placeholder="Jane Smith"/></div>
+        <div><label class="field-label">Phone</label><input id="v-phone" type="tel" class="field" placeholder="+1 555 000 0000"/></div>
+      </div>
+      <div><label class="field-label">Email</label><input id="v-email" type="email" class="field" placeholder="vendor@email.com"/></div>
+      <div class="grid grid-cols-2 gap-4">
+        <div><label class="field-label">Contract Total ($)</label><input id="v-contract" type="number" class="field" placeholder="0" min="0" step="100"/></div>
+        <div><label class="field-label">Deposit Paid ($)</label><input id="v-deposit" type="number" class="field" placeholder="0" min="0" step="100"/></div>
+      </div>
+      <div>
+        <label class="field-label">Status</label>
+        <select id="v-status" class="field">
+          <option value="inquiry">Inquiry</option>
+          <option value="pending">Pending</option>
+          <option value="confirmed">Confirmed</option>
+        </select>
+      </div>
+      <div><label class="field-label">Notes</label><textarea id="v-notes" class="field" rows="2" placeholder="Any notes about this vendor…"></textarea></div>
+      <div class="flex gap-3 pt-2">
+        <button type="button" onclick="closeModal('add-vendor-modal')" class="flex-1 py-3 rounded-xl border border-outline-variant/40 text-on-surface-variant font-semibold text-sm hover:bg-surface-container-low transition-colors">Cancel</button>
+        <button type="submit" class="flex-1 grad-sage text-white py-3 rounded-xl font-bold text-sm hover:opacity-90 transition-opacity">Add Vendor</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Add Task -->
+<div id="add-task-modal" class="modal-overlay hidden">
+  <div class="modal-box">
+    <div class="flex items-center justify-between mb-6">
+      <h3 class="font-headline text-2xl text-on-surface">Add Task</h3>
+      <button onclick="closeModal('add-task-modal')" class="text-outline hover:text-on-surface"><span class="material-symbols-outlined text-2xl">close</span></button>
+    </div>
+    <div id="t-error" class="hidden bg-error-container text-error text-sm rounded-lg px-4 py-2 mb-4">Task description is required.</div>
+    <form onsubmit="event.preventDefault();addTask()" class="space-y-4">
+      <div><label class="field-label">Task <span class="text-error">*</span></label><input id="t-name" type="text" class="field" placeholder="e.g. Book cake tasting appointment"/></div>
+      <div>
+        <label class="field-label">Timeline</label>
+        <select id="t-period" class="field">
+          <option value="12+ months">12+ months before</option>
+          <option value="9-12 months">9–12 months before</option>
+          <option value="6-9 months">6–9 months before</option>
+          <option value="3-6 months">3–6 months before</option>
+          <option value="1-3 months">1–3 months before</option>
+          <option value="1 month">1 month before</option>
+          <option value="1 week">1 week before</option>
+        </select>
+      </div>
+      <div class="flex gap-3 pt-2">
+        <button type="button" onclick="closeModal('add-task-modal')" class="flex-1 py-3 rounded-xl border border-outline-variant/40 text-on-surface-variant font-semibold text-sm hover:bg-surface-container-low transition-colors">Cancel</button>
+        <button type="submit" class="flex-1 grad-sage text-white py-3 rounded-xl font-bold text-sm hover:opacity-90 transition-opacity">Add Task</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Add Payment -->
+<div id="add-payment-modal" class="modal-overlay hidden">
+  <div class="modal-box">
+    <div class="flex items-center justify-between mb-6">
+      <h3 class="font-headline text-2xl text-on-surface">Add Payment</h3>
+      <button onclick="closeModal('add-payment-modal')" class="text-outline hover:text-on-surface"><span class="material-symbols-outlined text-2xl">close</span></button>
+    </div>
+    <div id="p-error" class="hidden bg-error-container text-error text-sm rounded-lg px-4 py-2 mb-4">Vendor name and due date are required.</div>
+    <form id="add-payment-form" onsubmit="event.preventDefault();addPayment()" class="space-y-4">
+      <div><label class="field-label">Vendor / Description <span class="text-error">*</span></label><input id="p-vendor" type="text" class="field" placeholder="e.g. Venue deposit"/></div>
+      <div class="grid grid-cols-2 gap-4">
+        <div><label class="field-label">Amount ($)</label><input id="p-amount" type="number" class="field" placeholder="0" min="0" step="100"/></div>
+        <div><label class="field-label">Due Date <span class="text-error">*</span></label><input id="p-date" type="date" class="field"/></div>
+      </div>
+      <div><label class="field-label">Notes</label><input id="p-notes" type="text" class="field" placeholder="e.g. 50% deposit required 6 months out"/></div>
+      <div class="flex gap-3 pt-2">
+        <button type="button" onclick="closeModal('add-payment-modal')" class="flex-1 py-3 rounded-xl border border-outline-variant/40 text-on-surface-variant font-semibold text-sm hover:bg-surface-container-low transition-colors">Cancel</button>
+        <button type="submit" class="flex-1 grad-sage text-white py-3 rounded-xl font-bold text-sm hover:opacity-90 transition-opacity">Add Payment</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Settings -->
+<div id="settings-modal" class="modal-overlay hidden">
+  <div class="modal-box">
+    <div class="flex items-center justify-between mb-6">
+      <h3 class="font-headline text-2xl text-on-surface">Settings</h3>
+      <button onclick="closeModal('settings-modal')" class="text-outline hover:text-on-surface"><span class="material-symbols-outlined text-2xl">close</span></button>
+    </div>
+    <div class="space-y-4 mb-6">
+      <div><label class="field-label">Your Name</label><input id="set-pA" type="text" class="field"/></div>
+      <div><label class="field-label">Partner's Name</label><input id="set-pB" type="text" class="field"/></div>
+      <div><label class="field-label">Wedding Date</label><input id="set-date" type="date" class="field"/></div>
+      <div><label class="field-label">Venue Name</label><input id="set-venue" type="text" class="field"/></div>
+      <div><label class="field-label">Total Budget ($)</label><input id="set-budget" type="number" class="field" min="0" step="500"/></div>
+    </div>
+    <button onclick="saveSettings()" class="grad-sage text-white w-full py-3 rounded-xl font-bold text-sm mb-4 hover:opacity-90 transition-opacity">Save Changes</button>
+    <button onclick="resetAllData()" class="w-full py-3 rounded-xl border border-error/30 text-error text-sm font-semibold hover:bg-error-container/40 transition-colors">
+      ⚠ Reset All Data
+    </button>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════════
+     JAVASCRIPT
+═══════════════════════════════════════════════════════════ -->
+<script>
+'use strict';
+
+// ── DATA LAYER ─────────────────────────────────────────────
+// Swap Storage.get / Storage.set for API calls when backend is ready.
+const Storage = {
+  KEY: 'bt_wedding_v1',
+  get()    { try { return JSON.parse(localStorage.getItem(this.KEY)); } catch { return null; } },
+  set(d)   { try { localStorage.setItem(this.KEY, JSON.stringify(d)); } catch(e) { console.error('Save error', e); } },
+  clear()  { localStorage.removeItem(this.KEY); }
+};
+
+// ── DEFAULTS ───────────────────────────────────────────────
+const DEFAULT_CHECKLIST = [
+  {t:'Decide on wedding style and theme',p:'12+ months'},{t:'Set your overall wedding budget',p:'12+ months'},
+  {t:'Create preliminary guest list',p:'12+ months'},{t:'Research and book your venue',p:'12+ months'},
+  {t:'Hire a wedding planner (optional)',p:'12+ months'},{t:'Announce your engagement',p:'12+ months'},
+  {t:'Book photographer and videographer',p:'9-12 months'},{t:'Book caterer',p:'9-12 months'},
+  {t:'Book officiant',p:'9-12 months'},{t:'Book live music or DJ',p:'9-12 months'},
+  {t:'Send save-the-dates',p:'9-12 months'},{t:'Begin dress / attire shopping',p:'9-12 months'},
+  {t:'Plan and book honeymoon',p:'9-12 months'},{t:'Book florist',p:'6-9 months'},
+  {t:'Book hair and makeup artist',p:'6-9 months'},{t:'Create wedding registry',p:'6-9 months'},
+  {t:'Choose wedding party attire',p:'6-9 months'},{t:'Order wedding cake',p:'6-9 months'},
+  {t:'Book guest transportation',p:'6-9 months'},{t:'Send invitations',p:'3-6 months'},
+  {t:'Finalise menu with caterer',p:'3-6 months'},{t:'Arrange guest accommodations',p:'3-6 months'},
+  {t:'Schedule dress fittings',p:'3-6 months'},{t:'Purchase wedding rings',p:'3-6 months'},
+  {t:'Plan rehearsal dinner',p:'3-6 months'},{t:'Confirm all vendors',p:'1-3 months'},
+  {t:'Final dress fitting',p:'1-3 months'},{t:'Create seating chart',p:'1-3 months'},
+  {t:'Apply for marriage licence',p:'1-3 months'},{t:'Write your vows',p:'1-3 months'},
+  {t:'Create a day-of timeline',p:'1-3 months'},{t:'Give caterer final headcount',p:'1 month'},
+  {t:'Confirm honeymoon bookings',p:'1 month'},{t:'Prepare wedding day emergency kit',p:'1 month'},
+  {t:'Attend rehearsal and rehearsal dinner',p:'1 week'},{t:'Make final vendor payments',p:'1 week'},
+  {t:'Pack for honeymoon',p:'1 week'},
+];
+
+const DEFAULT_BUDGET = [
+  'Venue','Catering & Bar','Photography & Video','Flowers & Décor','Music & Entertainment',
+  'Wedding Attire','Hair & Makeup','Wedding Cake','Transportation','Invitations & Stationery',
+  'Officiant','Honeymoon','Wedding Rings','Rehearsal Dinner','Miscellaneous'
+].map(n => ({id:uid(), name:n, budgeted:0, actual:0}));
+
+// ── STATE ──────────────────────────────────────────────────
+let state = { data: null, tab: 'dashboard', guestFilter: 'all' };
+
+// ── UTILITIES ──────────────────────────────────────────────
+function uid() { return Math.random().toString(36).slice(2,9)+Date.now().toString(36); }
+
+function daysUntil(d) {
+  if (!d) return 0;
+  const t = new Date(d+'T00:00:00'), now = new Date(); now.setHours(0,0,0,0);
+  return Math.ceil((t - now) / 86400000);
+}
+
+function fmt$(n) {
+  return new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',maximumFractionDigits:0}).format(n||0);
+}
+
+function fmtDate(d) {
+  if (!d) return '';
+  return new Date(d+'T00:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+}
+
+function fmtDateLong(d) {
+  if (!d) return '';
+  return new Date(d+'T00:00:00').toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'});
+}
+
+function esc(s) {
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function $(id) { return document.getElementById(id); }
+function setText(id, v) { const e=$(id); if(e) e.textContent=v; }
+
+function openModal(id)  { const m=$(id); if(m){m.style.display='flex';} }
+function closeModal(id) { const m=$(id); if(m){m.style.display='none';} }
+
+// ── INIT ───────────────────────────────────────────────────
+function init() {
+  state.data = Storage.get();
+  if (!state.data) {
+    $('setup-overlay').style.display='flex';
+    $('app').style.display='none';
+    const tomorrow = new Date(); tomorrow.setDate(tomorrow.getDate()+1);
+    $('s-date').min = tomorrow.toISOString().split('T')[0];
+  } else {
+    $('setup-overlay').style.display='none';
+    launchApp();
+  }
+}
+
+// ── SETUP ──────────────────────────────────────────────────
+function completeSetup() {
+  const pA = $('s-pA').value.trim();
+  const pB = $('s-pB').value.trim();
+  const date = $('s-date').value;
+  const venue = $('s-venue').value.trim();
+  const budget = parseFloat($('s-budget').value)||0;
+
+  if (!pA || !date) {
+    $('setup-error').textContent='Please enter your name and the wedding date.';
+    $('setup-error').style.display='block'; return;
+  }
+
+  state.data = {
+    setup: { partnerA:pA, partnerB:pB, weddingDate:date, venue, totalBudget:budget },
+    guests: [],
+    budget: { categories: DEFAULT_BUDGET.map(c=>({...c,id:uid()})) },
+    vendors: [],
+    checklist: DEFAULT_CHECKLIST.map(c=>({id:uid(),task:c.t,period:c.p,completed:false})),
+    payments: []
+  };
+
+  Storage.set(state.data);
+  $('setup-overlay').style.display='none';
+  launchApp();
+}
+
+// ── LAUNCH ─────────────────────────────────────────────────
+function launchApp() {
+  $('app').style.display='flex';
+  updateGlobalUI();
+  switchTab('dashboard');
+}
+
+function updateGlobalUI() {
+  const s = state.data.setup;
+  const name = s.partnerB ? `${s.partnerA} & ${s.partnerB}` : s.partnerA;
+  const days = daysUntil(s.weddingDate);
+  const label = days < 0 ? 'Days Since' : days === 0 ? 'Today!' : 'Days to Go';
+
+  document.querySelectorAll('.couple-name').forEach(e=>e.textContent=name);
+  document.querySelectorAll('.countdown-val').forEach(e=>e.textContent=Math.abs(days));
+  document.querySelectorAll('.countdown-label').forEach(e=>e.textContent=label);
+  document.querySelectorAll('.wedding-date-fmt').forEach(e=>e.textContent=fmtDateLong(s.weddingDate));
+
+  const venueEl = $('dash-venue');
+  if (venueEl) {
+    venueEl.innerHTML = s.venue
+      ? `<span class="material-symbols-outlined text-sm text-primary align-middle mr-1">location_on</span><span class="text-on-surface-variant">${esc(s.venue)}</span>`
+      : '';
+    venueEl.style.display = s.venue ? 'block' : 'none';
+  }
+}
+
+// ── NAVIGATION ─────────────────────────────────────────────
+function switchTab(tab) {
+  state.tab = tab;
+  document.querySelectorAll('[data-nav]').forEach(el => {
+    const on = el.dataset.nav === tab;
+    el.classList.toggle('active', on);
+    el.classList.toggle('inactive', !on);
+  });
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.add('hidden'));
+  const panel = $('panel-'+tab);
+  if (panel) panel.classList.remove('hidden');
+  render(tab);
+}
+
+function render(tab) {
+  switch(tab) {
+    case 'dashboard': renderDashboard(); break;
+    case 'guests':    renderGuests();    break;
+    case 'budget':    renderBudget();    break;
+    case 'vendors':   renderVendors();   break;
+    case 'checklist': renderChecklist(); break;
+    case 'payments':  renderPayments();  break;
+  }
+}
+
+// ── MOBILE DRAWER ──────────────────────────────────────────
+function toggleDrawer() {
+  const drawer = $('drawer');
+  const overlay = $('drawer-overlay');
+  const icon = $('drawer-icon');
+  const open = drawer.style.transform === 'translateX(0px)';
+  drawer.style.transform = open ? '' : 'translateX(0px)';
+  overlay.style.display = open ? 'none' : 'block';
+  icon.textContent = open ? 'menu' : 'close';
+}
+
+// ── DASHBOARD ──────────────────────────────────────────────
+function renderDashboard() {
+  const d = state.data;
+  const days = daysUntil(d.setup.weddingDate);
+  setText('dash-countdown', Math.abs(days));
+
+  const confirmed = d.guests.filter(g=>g.rsvp==='confirmed').length;
+  const pending   = d.guests.filter(g=>g.rsvp==='pending').length;
+  setText('dash-guests-total', d.guests.length);
+  setText('dash-guests-confirmed', confirmed);
+  setText('dash-vendors-count', d.vendors.length);
+  setText('dash-vendors-confirmed', d.vendors.filter(v=>v.status==='confirmed').length);
+
+  const total   = d.setup.totalBudget||0;
+  const spent   = d.budget.categories.reduce((s,c)=>s+c.actual,0);
+  const rem     = total - spent;
+  const pct     = total>0 ? Math.min((spent/total)*100,100) : 0;
+
+  setText('dash-budget-total', fmt$(total));
+  setText('dash-budget-spent', fmt$(spent));
+  setText('dash-budget-spent2', fmt$(spent));
+  setText('dash-budget-remaining', fmt$(rem));
+  setText('dash-budget-pct', Math.round(pct)+'%');
+
+  const bar = $('dash-budget-bar');
+  if(bar){ bar.style.width=pct+'%'; bar.className='h-full rounded-full transition-all '+(pct>90?'bg-error':pct>70?'bg-amber-500':'bg-primary'); }
+
+  const tasks = d.checklist;
+  const done  = tasks.filter(t=>t.completed).length;
+  const tpct  = tasks.length>0 ? (done/tasks.length)*100 : 0;
+  setText('dash-tasks-done', done);
+  setText('dash-tasks-total', tasks.length);
+  const tb = $('dash-tasks-bar'); if(tb) tb.style.width=tpct+'%';
+
+  const upcoming = d.payments.filter(p=>!p.paid).sort((a,b)=>new Date(a.dueDate)-new Date(b.dueDate)).slice(0,3);
+  const upEl = $('dash-upcoming');
+  if(upEl) {
+    if(!upcoming.length) {
+      upEl.innerHTML='<p class="text-sm text-on-surface-variant italic py-2">No upcoming payments.</p>';
+    } else {
+      const today = new Date(); today.setHours(0,0,0,0);
+      upEl.innerHTML = upcoming.map(p=>{
+        const od = new Date(p.dueDate)<today;
+        return `<div class="flex items-center justify-between py-2.5 border-b border-outline-variant/15 last:border-0">
+          <div><p class="text-sm font-medium ${od?'text-error':'text-on-surface'}">${esc(p.vendor)}</p>
+          <p class="text-xs text-on-surface-variant">${fmtDate(p.dueDate)}${od?' · Overdue':''}</p></div>
+          <p class="font-bold text-sm ${od?'text-error':'text-on-surface'}">${fmt$(p.amount)}</p>
+        </div>`;
+      }).join('');
+    }
+  }
+}
+
+// ── GUESTS ─────────────────────────────────────────────────
+function setGuestFilter(f) {
+  state.guestFilter = f;
+  document.querySelectorAll('[data-gfilter]').forEach(el=>{
+    el.classList.toggle('active', el.dataset.gfilter===f);
+    el.classList.toggle('inactive', el.dataset.gfilter!==f);
+  });
+  renderGuests();
+}
+
+function renderGuests() {
+  const guests = state.data.guests;
+  const filter = state.guestFilter;
+  const search = ($('guest-search')?.value||'').toLowerCase();
+
+  setText('gc-all',       guests.length);
+  setText('gc-confirmed', guests.filter(g=>g.rsvp==='confirmed').length);
+  setText('gc-pending',   guests.filter(g=>g.rsvp==='pending').length);
+  setText('gc-declined',  guests.filter(g=>g.rsvp==='declined').length);
+
+  let list = filter==='all' ? guests : guests.filter(g=>g.rsvp===filter);
+  if(search) list = list.filter(g=>(g.name+g.group||'').toLowerCase().includes(search));
+
+  const tbody = $('guests-tbody');
+  if(!tbody) return;
+
+  if(!list.length) {
+    tbody.innerHTML=`<tr><td colspan="6" class="text-center py-14 text-on-surface-variant text-sm italic">
+      ${!guests.length ? 'No guests yet. <button onclick="openModal(\'add-guest-modal\')" class="text-primary underline font-semibold not-italic">Add your first guest →</button>' : 'No guests match this filter.'}
+    </td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = list.map(g=>`
+    <tr class="data-row border-b border-outline-variant/15 transition-colors">
+      <td class="py-3 px-4">
+        <p class="font-medium text-on-surface text-sm">${esc(g.name)}</p>
+        ${g.email?`<p class="text-xs text-on-surface-variant">${esc(g.email)}</p>`:''}
+      </td>
+      <td class="py-3 px-4 text-sm text-on-surface-variant">${esc(g.group)||'—'}</td>
+      <td class="py-3 px-4">
+        <select onchange="updateRSVP('${g.id}',this.value)"
+          class="rsvp-${g.rsvp} text-xs rounded-full px-3 py-1.5 font-semibold border-none cursor-pointer focus:outline-none appearance-none">
+          <option value="pending"   ${g.rsvp==='pending'  ?'selected':''}>Pending</option>
+          <option value="confirmed" ${g.rsvp==='confirmed'?'selected':''}>Confirmed</option>
+          <option value="declined"  ${g.rsvp==='declined' ?'selected':''}>Declined</option>
+        </select>
+      </td>
+      <td class="py-3 px-4 text-center">
+        <input type="checkbox" ${g.plusOne?'checked':''} onchange="updateGuestField('${g.id}','plusOne',this.checked)" class="rounded text-primary cursor-pointer"/>
+      </td>
+      <td class="py-3 px-4 text-sm text-on-surface-variant hidden md:table-cell">${esc(g.dietary)||'—'}</td>
+      <td class="py-3 px-4 text-center">
+        <button onclick="deleteGuest('${g.id}')" class="text-on-surface-variant hover:text-error transition-colors p-1">
+          <span class="material-symbols-outlined text-base">delete_outline</span>
+        </button>
+      </td>
+    </tr>`).join('');
+}
+
+function addGuest() {
+  const name = $('g-name').value.trim();
+  if(!name){ $('g-error').textContent='Name is required.'; $('g-error').style.display='block'; return; }
+  state.data.guests.push({
+    id:uid(), name, email:$('g-email').value.trim(), phone:$('g-phone').value.trim(),
+    group:$('g-group').value.trim(), rsvp:'pending', plusOne:$('g-plusone').checked,
+    dietary:$('g-dietary').value.trim()
+  });
+  Storage.set(state.data);
+  closeModal('add-guest-modal');
+  $('add-guest-form').reset();
+  $('g-error').style.display='none';
+  renderGuests(); renderDashboard();
+}
+
+function deleteGuest(id) {
+  if(!confirm('Remove this guest?')) return;
+  state.data.guests = state.data.guests.filter(g=>g.id!==id);
+  Storage.set(state.data); renderGuests(); renderDashboard();
+}
+
+function updateRSVP(id, rsvp) {
+  const g = state.data.guests.find(g=>g.id===id);
+  if(g){ g.rsvp=rsvp; Storage.set(state.data); renderGuests(); renderDashboard(); }
+}
+
+function updateGuestField(id, field, val) {
+  const g = state.data.guests.find(g=>g.id===id);
+  if(g){ g[field]=val; Storage.set(state.data); }
+}
+
+// ── BUDGET ─────────────────────────────────────────────────
+function renderBudget() {
+  const cats  = state.data.budget.categories;
+  const total = state.data.setup.totalBudget||0;
+  const budg  = cats.reduce((s,c)=>s+c.budgeted,0);
+  const spent = cats.reduce((s,c)=>s+c.actual,0);
+  const rem   = total - spent;
+  const pct   = total>0 ? Math.min((spent/total)*100,100) : 0;
+
+  setText('b-total', fmt$(total));
+  setText('b-allocated', fmt$(budg));
+  setText('b-spent', fmt$(spent));
+  setText('b-pct', Math.round(pct)+'%');
+
+  const remEl = $('b-remaining');
+  if(remEl){ remEl.textContent=fmt$(rem); remEl.className='text-xl font-bold '+(rem<0?'text-error':'text-primary'); }
+
+  const bar = $('b-bar');
+  if(bar){ bar.style.width=pct+'%'; bar.className='h-full rounded-full transition-all '+(pct>90?'bg-error':pct>70?'bg-amber-500':'bg-primary'); }
+
+  const tbody = $('budget-tbody');
+  if(!tbody) return;
+
+  tbody.innerHTML = cats.map(c=>{
+    const diff = c.budgeted - c.actual;
+    return `
+    <tr class="data-row border-b border-outline-variant/15 group transition-colors">
+      <td class="py-3 px-4 font-medium text-on-surface text-sm">${esc(c.name)}</td>
+      <td class="py-3 px-4">
+        <input type="number" value="${c.budgeted||0}" min="0" step="100"
+               onchange="updateBudget('${c.id}','budgeted',+this.value)"
+               class="w-32 bg-surface-container-high rounded-lg px-3 py-1.5 text-sm text-on-surface font-medium border-none focus:outline-none focus:ring-2 focus:ring-primary/30"/>
+      </td>
+      <td class="py-3 px-4">
+        <input type="number" value="${c.actual||0}" min="0" step="100"
+               onchange="updateBudget('${c.id}','actual',+this.value)"
+               class="w-32 bg-surface-container-high rounded-lg px-3 py-1.5 text-sm text-on-surface font-medium border-none focus:outline-none focus:ring-2 focus:ring-primary/30"/>
+      </td>
+      <td class="py-3 px-4 text-sm font-semibold ${diff>=0?'text-primary':'text-error'}">${diff>=0?'+':''}${fmt$(diff)}</td>
+      <td class="py-3 px-4 text-center opacity-0 group-hover:opacity-100 transition-opacity">
+        <button onclick="deleteBudgetCat('${c.id}')" class="text-on-surface-variant hover:text-error transition-colors p-1">
+          <span class="material-symbols-outlined text-sm">delete_outline</span>
+        </button>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+function updateBudget(id, field, val) {
+  const c = state.data.budget.categories.find(c=>c.id===id);
+  if(c){ c[field]=val; Storage.set(state.data); renderBudget(); renderDashboard(); }
+}
+
+function addBudgetCat() {
+  const name = $('bc-name').value.trim();
+  if(!name){ $('bc-error').style.display='block'; return; }
+  state.data.budget.categories.push({id:uid(), name, budgeted:parseFloat($('bc-budgeted').value)||0, actual:0});
+  Storage.set(state.data);
+  closeModal('add-budget-modal');
+  $('add-budget-form').reset();
+  $('bc-error').style.display='none';
+  renderBudget();
+}
+
+function deleteBudgetCat(id) {
+  if(!confirm('Delete this budget category?')) return;
+  state.data.budget.categories = state.data.budget.categories.filter(c=>c.id!==id);
+  Storage.set(state.data); renderBudget(); renderDashboard();
+}
+
+// ── VENDORS ────────────────────────────────────────────────
+function renderVendors() {
+  const vs = state.data.vendors;
+  setText('v-count', vs.length);
+  setText('v-confirmed', vs.filter(v=>v.status==='confirmed').length);
+  setText('v-total-contract', fmt$(vs.reduce((s,v)=>s+v.contractAmount,0)));
+  setText('v-balance', fmt$(vs.reduce((s,v)=>s+(v.contractAmount-v.depositPaid),0)));
+
+  const grid = $('vendors-grid');
+  if(!grid) return;
+
+  if(!vs.length){
+    grid.innerHTML=`<div class="col-span-full text-center py-20">
+      <span class="material-symbols-outlined text-6xl text-outline/30 block mb-4">handshake</span>
+      <p class="text-on-surface-variant italic mb-4 text-sm">No vendors added yet.</p>
+      <button onclick="openModal('add-vendor-modal')" class="grad-sage text-white px-6 py-2.5 rounded-full text-sm font-bold hover:opacity-90">Add Your First Vendor</button>
+    </div>`;
+    return;
+  }
+
+  const badge = {confirmed:'bg-green-100 text-green-700',pending:'bg-stone-100 text-stone-500',inquiry:'bg-amber-50 text-amber-600'};
+
+  grid.innerHTML = vs.map(v=>{
+    const bal = v.contractAmount - v.depositPaid;
+    return `
+    <div class="bg-surface-container-lowest rounded-xl p-5 shadow-sm hover:shadow-md transition-shadow">
+      <div class="flex justify-between items-start mb-3">
+        <span class="text-xs font-bold px-2.5 py-1 rounded-full ${badge[v.status]||badge.pending} capitalize">${v.status||'Pending'}</span>
+        <button onclick="deleteVendor('${v.id}')" class="text-outline hover:text-error transition-colors">
+          <span class="material-symbols-outlined text-base">close</span>
+        </button>
+      </div>
+      <h3 class="font-semibold text-on-surface text-base leading-tight">${esc(v.name)}</h3>
+      <p class="text-xs font-semibold text-primary mt-0.5 mb-3">${esc(v.category)}</p>
+      ${v.contact?`<p class="text-xs text-on-surface-variant mb-0.5">👤 ${esc(v.contact)}</p>`:''}
+      ${v.email?`<p class="text-xs text-on-surface-variant mb-0.5">✉️ ${esc(v.email)}</p>`:''}
+      ${v.phone?`<p class="text-xs text-on-surface-variant mb-2">📞 ${esc(v.phone)}</p>`:'<div class="mb-2"></div>'}
+      <div class="border-t border-outline-variant/15 pt-3 grid grid-cols-3 text-center gap-1">
+        <div><p class="text-[10px] text-outline mb-0.5">Contract</p><p class="text-xs font-bold text-on-surface">${fmt$(v.contractAmount)}</p></div>
+        <div><p class="text-[10px] text-outline mb-0.5">Paid</p><p class="text-xs font-bold text-primary">${fmt$(v.depositPaid)}</p></div>
+        <div><p class="text-[10px] text-outline mb-0.5">Balance</p><p class="text-xs font-bold ${bal>0?'text-error':'text-primary'}">${fmt$(bal)}</p></div>
+      </div>
+      ${v.notes?`<p class="text-xs text-on-surface-variant mt-3 italic border-t border-outline-variant/15 pt-2">${esc(v.notes)}</p>`:''}
+    </div>`;
+  }).join('');
+}
+
+function addVendor() {
+  const name = $('v-name').value.trim();
+  if(!name){ $('v-error').style.display='block'; return; }
+  state.data.vendors.push({
+    id:uid(), name, category:$('v-category').value, contact:$('v-contact').value.trim(),
+    email:$('v-email').value.trim(), phone:$('v-phone').value.trim(),
+    contractAmount:parseFloat($('v-contract').value)||0, depositPaid:parseFloat($('v-deposit').value)||0,
+    status:$('v-status').value, notes:$('v-notes').value.trim()
+  });
+  Storage.set(state.data);
+  closeModal('add-vendor-modal');
+  $('add-vendor-form').reset();
+  $('v-error').style.display='none';
+  renderVendors(); renderDashboard();
+}
+
+function deleteVendor(id) {
+  if(!confirm('Remove this vendor?')) return;
+  state.data.vendors = state.data.vendors.filter(v=>v.id!==id);
+  Storage.set(state.data); renderVendors(); renderDashboard();
+}
+
+// ── CHECKLIST ──────────────────────────────────────────────
+const PERIODS = ['12+ months','9-12 months','6-9 months','3-6 months','1-3 months','1 month','1 week'];
+
+function renderChecklist() {
+  const tasks = state.data.checklist;
+  const done  = tasks.filter(t=>t.completed).length;
+  const total = tasks.length;
+  const pct   = total>0 ? Math.round((done/total)*100) : 0;
+
+  setText('cl-done', done); setText('cl-total', total); setText('cl-pct', pct+'%');
+  const cb = $('cl-bar'); if(cb) cb.style.width=pct+'%';
+
+  const cont = $('checklist-container');
+  if(!cont) return;
+
+  cont.innerHTML = PERIODS.map(period=>{
+    const pt = tasks.filter(t=>t.period===period);
+    if(!pt.length) return '';
+    const pd = pt.filter(t=>t.completed).length;
+    const pp = Math.round((pd/pt.length)*100);
+    return `
+    <div class="mb-8">
+      <div class="flex items-center justify-between mb-2">
+        <h3 class="font-semibold text-on-surface text-sm">${period} before</h3>
+        <span class="text-xs text-on-surface-variant">${pd}/${pt.length}</span>
+      </div>
+      <div class="h-1 bg-surface-container-high rounded-full mb-3 overflow-hidden">
+        <div class="h-full bg-primary rounded-full transition-all" style="width:${pp}%"></div>
+      </div>
+      <div class="space-y-1">
+        ${pt.map(task=>`
+        <label class="flex items-start gap-3 px-3 py-2.5 rounded-lg hover:bg-surface-container-low cursor-pointer group transition-colors">
+          <input type="checkbox" ${task.completed?'checked':''} onchange="toggleTask('${task.id}',this.checked)"
+                 class="mt-0.5 w-4 h-4 rounded text-primary border-outline-variant cursor-pointer flex-shrink-0"/>
+          <span class="text-sm flex-1 ${task.completed?'line-through text-on-surface-variant':'text-on-surface'} transition-all">${esc(task.task)}</span>
+          <button type="button" onclick="event.preventDefault();deleteTask('${task.id}')"
+                  class="opacity-0 group-hover:opacity-100 transition-opacity text-outline hover:text-error p-0.5 flex-shrink-0">
+            <span class="material-symbols-outlined text-sm">close</span>
+          </button>
+        </label>`).join('')}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function toggleTask(id, completed) {
+  const t = state.data.checklist.find(t=>t.id===id);
+  if(t){ t.completed=completed; Storage.set(state.data); renderChecklist(); }
+}
+
+function addTask() {
+  const task = $('t-name').value.trim();
+  if(!task){ $('t-error').style.display='block'; return; }
+  state.data.checklist.push({id:uid(), task, period:$('t-period').value, completed:false});
+  Storage.set(state.data);
+  closeModal('add-task-modal');
+  $('t-name').value='';
+  $('t-error').style.display='none';
+  renderChecklist();
+}
+
+function deleteTask(id) {
+  state.data.checklist = state.data.checklist.filter(t=>t.id!==id);
+  Storage.set(state.data); renderChecklist();
+}
+
+// ── PAYMENTS ───────────────────────────────────────────────
+function renderPayments() {
+  const payments = [...state.data.payments].sort((a,b)=>new Date(a.dueDate)-new Date(b.dueDate));
+  const today = new Date(); today.setHours(0,0,0,0);
+  const unpaid  = payments.filter(p=>!p.paid);
+  const paid    = payments.filter(p=>p.paid);
+  const overdue = unpaid.filter(p=>new Date(p.dueDate)<today);
+
+  setText('pay-due', fmt$(unpaid.reduce((s,p)=>s+p.amount,0)));
+  setText('pay-paid-total', fmt$(paid.reduce((s,p)=>s+p.amount,0)));
+
+  const obEl = $('pay-overdue-bar');
+  if(obEl){ obEl.style.display=overdue.length?'flex':'none'; setText('pay-overdue-count', overdue.length); }
+
+  const list = $('payments-list');
+  if(!list) return;
+
+  if(!payments.length){
+    list.innerHTML='<div class="text-center py-16 text-on-surface-variant text-sm italic">No payments scheduled yet. Add vendor deposits and due dates to stay on track.</div>';
+    return;
+  }
+
+  list.innerHTML = payments.map(p=>{
+    const od = !p.paid && new Date(p.dueDate)<today;
+    const btnCls = p.paid ? 'bg-primary border-primary' : od ? 'border-error' : 'border-outline-variant';
+    return `
+    <div class="flex items-center gap-3 p-4 rounded-xl ${p.paid?'bg-surface-container-low/50':'bg-surface-container-lowest'} hover:bg-surface-container-low transition-colors">
+      <button onclick="togglePayment('${p.id}')"
+              class="w-6 h-6 rounded-full border-2 flex-shrink-0 flex items-center justify-center transition-all ${btnCls}">
+        ${p.paid?`<span class="material-symbols-outlined text-white" style="font-size:13px;font-variation-settings:'FILL' 1">check</span>`:''}
+      </button>
+      <div class="flex-1 min-w-0">
+        <p class="text-sm font-medium ${p.paid?'line-through text-on-surface-variant':'text-on-surface'}">${esc(p.vendor)}</p>
+        ${p.notes?`<p class="text-xs text-on-surface-variant truncate">${esc(p.notes)}</p>`:''}
+      </div>
+      <div class="text-right flex-shrink-0">
+        <p class="text-sm font-bold ${od?'text-error':p.paid?'text-on-surface-variant':'text-on-surface'}">${fmt$(p.amount)}</p>
+        <p class="text-xs ${od?'text-error':'text-on-surface-variant'}">${p.paid?'Paid ✓':fmtDate(p.dueDate)+(od?' · Overdue':'')}</p>
+      </div>
+      <button onclick="deletePayment('${p.id}')" class="text-outline hover:text-error transition-colors flex-shrink-0">
+        <span class="material-symbols-outlined text-base">close</span>
+      </button>
+    </div>`;
+  }).join('');
+}
+
+function addPayment() {
+  const vendor = $('p-vendor').value.trim();
+  const date   = $('p-date').value;
+  if(!vendor||!date){ $('p-error').style.display='block'; return; }
+  state.data.payments.push({id:uid(), vendor, amount:parseFloat($('p-amount').value)||0, dueDate:date, paid:false, notes:$('p-notes').value.trim()});
+  Storage.set(state.data);
+  closeModal('add-payment-modal');
+  $('add-payment-form').reset();
+  $('p-error').style.display='none';
+  renderPayments(); renderDashboard();
+}
+
+function togglePayment(id) {
+  const p = state.data.payments.find(p=>p.id===id);
+  if(p){ p.paid=!p.paid; Storage.set(state.data); renderPayments(); renderDashboard(); }
+}
+
+function deletePayment(id) {
+  if(!confirm('Delete this payment?')) return;
+  state.data.payments = state.data.payments.filter(p=>p.id!==id);
+  Storage.set(state.data); renderPayments(); renderDashboard();
+}
+
+// ── SETTINGS ───────────────────────────────────────────────
+function prepareSettings() {
+  const s = state.data.setup;
+  $('set-pA').value=s.partnerA||'';
+  $('set-pB').value=s.partnerB||'';
+  $('set-date').value=s.weddingDate||'';
+  $('set-venue').value=s.venue||'';
+  $('set-budget').value=s.totalBudget||0;
+  openModal('settings-modal');
+}
+
+function saveSettings() {
+  const pA = $('set-pA').value.trim();
+  const date = $('set-date').value;
+  if(!pA||!date) return;
+  state.data.setup = {
+    partnerA:pA, partnerB:$('set-pB').value.trim(),
+    weddingDate:date, venue:$('set-venue').value.trim(),
+    totalBudget:parseFloat($('set-budget').value)||0
+  };
+  Storage.set(state.data);
+  closeModal('settings-modal');
+  updateGlobalUI();
+  render(state.tab);
+}
+
+function resetAllData() {
+  if(!confirm('This will permanently delete ALL your wedding planning data. Are you sure?')) return;
+  if(!confirm('Final confirmation — this cannot be undone.')) return;
+  Storage.clear();
+  location.reload();
+}
+
+// Close modals on backdrop click
+document.addEventListener('click', e=>{
+  if(e.target.classList.contains('modal-overlay')) {
+    e.target.style.display='none';
+  }
+});
+
+// ── START ──────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>
