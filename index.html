@@ -3,17 +3,17 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>BudgetTools | Free Wedding Planner, Budget Tracker & Event Planning Tools</title>
-  <meta name="description" content="BudgetTools offers free, beautifully designed planning tools for your wedding, budget, and events. Track guests, manage vendors, monitor spend, and stay on schedule — no account needed."/>
+  <title>BudgetTools | Free Financial Calculators & Premium Planning Templates</title>
+  <meta name="description" content="10 free financial calculators — wedding budget, event break-even, freelancer take-home, rental yield, and more. Plus premium planning templates for weddings, events, travel, cafe costing, and inventory."/>
   <meta name="robots" content="index, follow"/>
-  <link rel="canonical" href="https://budgettools.app/"/>
-  <meta property="og:title" content="BudgetTools | Free Wedding Planner & Budget Tracker"/>
-  <meta property="og:description" content="Beautiful, free planning tools for life's biggest milestones. Track guests, manage your budget, coordinate vendors — start in seconds."/>
+  <link rel="canonical" href="https://profound-biscuit-1631a5.netlify.app/"/>
+  <meta property="og:title" content="BudgetTools | Free Calculators & Premium Planning Tools"/>
+  <meta property="og:description" content="Free financial calculators for every life event. Premium planning templates for weddings, events, travel, cafes, and inventory management."/>
   <meta property="og:type" content="website"/>
-  <meta property="og:url" content="https://budgettools.app"/>
+  <meta property="og:url" content="https://profound-biscuit-1631a5.netlify.app"/>
   <meta name="twitter:card" content="summary_large_image"/>
-  <meta name="twitter:title" content="BudgetTools | Free Wedding Planner & Budget Tracker"/>
-  <meta name="twitter:description" content="Beautiful, free planning tools for life's biggest milestones."/>
+  <meta name="twitter:title" content="BudgetTools | Free Calculators & Premium Planning Tools"/>
+  <meta name="twitter:description" content="Free financial calculators. Premium planning templates. No spreadsheets needed."/>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
   <script src="https://cdn.tailwindcss.com?plugins=forms"></script>
@@ -82,19 +82,38 @@
   <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
     <a href="/" class="text-xl font-bold tracking-tight text-primary font-body" aria-label="BudgetTools Home">BudgetTools</a>
     <div class="hidden md:flex items-center gap-8">
+      <a href="#calculators" class="text-on-surface-variant hover:text-primary font-medium transition-colors text-sm">Free Calculators</a>
       <a href="#templates" class="text-on-surface-variant hover:text-primary font-medium transition-colors text-sm">Templates</a>
       <a href="#how-it-works" class="text-on-surface-variant hover:text-primary font-medium transition-colors text-sm">How It Works</a>
-      <a href="#features" class="text-on-surface-variant hover:text-primary font-medium transition-colors text-sm">Features</a>
-      <a href="wedding-planner.html" class="text-primary font-semibold text-sm hover:underline">Wedding Planner ↗</a>
+      <a href="#pricing" class="text-on-surface-variant hover:text-primary font-medium transition-colors text-sm">Pricing</a>
     </div>
     <div class="flex items-center gap-3">
-      <button class="text-on-surface-variant font-medium hover:text-primary transition-colors text-sm hidden sm:block">Sign In</button>
-      <a href="wedding-planner.html" class="grad-primary text-white px-5 py-2.5 rounded-lg font-semibold hover:opacity-90 transition-opacity text-sm">
-        Get Started Free
+      <a href="#calculators" class="text-on-surface-variant font-medium hover:text-primary transition-colors text-sm hidden sm:block">Try Free Calculators</a>
+      <!-- Auth nav: shown/hidden by js/auth.js based on session state -->
+      <a href="/auth.html" data-bt-login style="display:none" class="text-on-surface-variant font-medium hover:text-primary transition-colors text-sm">Log In</a>
+      <a href="/account.html" data-bt-account style="display:none" class="items-center gap-2 text-on-surface-variant font-medium hover:text-primary transition-colors text-sm">
+        <span class="material-symbols-outlined text-base">account_circle</span>
+        <span class="hidden sm:inline">Account</span>
+      </a>
+      <a href="#templates" class="grad-primary text-white px-5 py-2.5 rounded-lg font-semibold hover:opacity-90 transition-opacity text-sm">
+        View Templates
       </a>
     </div>
   </div>
 </nav>
+
+<!-- Auth modules (loaded after body so Supabase SDK is available) -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="/js/auth.js"></script>
+<script>
+  // Update nav once auth state is known
+  document.addEventListener('bt:auth:ready', () => {
+    if (window.BT_AUTH) window.BT_AUTH.updateNav();
+  });
+  document.addEventListener('bt:auth:change', () => {
+    if (window.BT_AUTH) window.BT_AUTH.updateNav();
+  });
+</script>
 
 <main>
 
@@ -109,28 +128,28 @@
       <!-- Copy -->
       <div class="lg:col-span-5">
         <div class="inline-flex items-center gap-2 bg-secondary-container/60 text-on-secondary-container px-4 py-1.5 rounded-full text-xs font-semibold mb-8">
-          <span class="material-symbols-outlined text-sm filled">favorite</span>
-          Free Wedding Planner — Live Now
+          <span class="material-symbols-outlined text-sm filled">calculate</span>
+          10 Free Calculators · 5 Premium Templates
         </div>
         <h1 class="text-5xl md:text-6xl font-semibold text-primary leading-[1.1] mb-6">
-          Plan Every Detail.<br/><span class="italic font-light">Track Every Dollar.</span>
+          Free Calculators.<br/><span class="italic font-light">Premium Tools.</span>
         </h1>
         <p class="text-lg text-on-surface-variant leading-relaxed mb-8 max-w-md">
-          BudgetTools gives you beautiful, free planning tools for life's biggest milestones — from weddings to budgets to events. No spreadsheets. No subscriptions. Just clarity.
+          Get instant answers with 10 free financial calculators — no account, no sign-up. When you're ready to go deeper, upgrade to a premium planning template with full tracking, history, and exports.
         </p>
         <div class="flex flex-wrap gap-3 mb-10">
-          <a href="wedding-planner.html" class="grad-primary text-white px-7 py-4 rounded-lg font-bold text-base shadow-lg shadow-primary/20 hover:opacity-90 transition-all inline-flex items-center gap-2">
-            <span class="material-symbols-outlined text-lg filled">favorite</span>
-            Start Wedding Planner
+          <a href="#calculators" class="grad-primary text-white px-7 py-4 rounded-lg font-bold text-base shadow-lg shadow-primary/20 hover:opacity-90 transition-all inline-flex items-center gap-2">
+            <span class="material-symbols-outlined text-lg filled">calculate</span>
+            Try Free Calculators
           </a>
           <a href="#templates" class="bg-surface-container-high text-on-primary-fixed-variant px-7 py-4 rounded-lg font-bold text-base hover:bg-surface-container-highest transition-all">
-            Browse Templates
+            View Templates
           </a>
         </div>
         <div class="flex flex-wrap gap-5 text-sm text-on-surface-variant">
-          <span class="flex items-center gap-1.5"><span class="material-symbols-outlined text-secondary text-base filled">check_circle</span>100% Free</span>
+          <span class="flex items-center gap-1.5"><span class="material-symbols-outlined text-secondary text-base filled">check_circle</span>Calculators always free</span>
           <span class="flex items-center gap-1.5"><span class="material-symbols-outlined text-secondary text-base filled">check_circle</span>No account required</span>
-          <span class="flex items-center gap-1.5"><span class="material-symbols-outlined text-secondary text-base filled">check_circle</span>Auto-saves locally</span>
+          <span class="flex items-center gap-1.5"><span class="material-symbols-outlined text-secondary text-base filled">check_circle</span>Results in seconds</span>
         </div>
       </div>
 
@@ -234,133 +253,310 @@
   </div>
 </section>
 
-<!-- ── FEATURED: WEDDING PLANNER ──────────────────────────── -->
-<section id="templates" class="py-24 bg-surface-container-low">
+<!-- ── FREE CALCULATORS ────────────────────────────────────── -->
+<section id="calculators" class="py-24 bg-surface-container-low">
   <div class="max-w-7xl mx-auto px-6">
-    <span class="font-label text-xs uppercase tracking-[0.2em] text-primary block mb-3">Featured Template — Live Now</span>
-    <div class="grid lg:grid-cols-2 gap-16 items-start">
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
       <div>
-        <h2 class="text-4xl font-semibold text-primary mb-5 leading-tight">The Complete<br/><span class="italic font-light">Wedding Planner</span></h2>
-        <p class="text-on-surface-variant text-lg leading-relaxed mb-8">
-          Everything you need to plan your perfect wedding — beautifully designed, completely free, and ready in under a minute. No spreadsheets, no login, no hassle.
-        </p>
-        <ul class="space-y-4 mb-10">
-          <li class="flex items-start gap-3">
-            <span class="material-symbols-outlined text-secondary filled text-lg mt-0.5 flex-shrink-0">check_circle</span>
-            <span class="text-on-surface"><strong>Guest List Manager</strong> — Track RSVPs, plus-ones, dietary requirements, and table assignments for every guest.</span>
-          </li>
-          <li class="flex items-start gap-3">
-            <span class="material-symbols-outlined text-secondary filled text-lg mt-0.5 flex-shrink-0">check_circle</span>
-            <span class="text-on-surface"><strong>Budget Tracker</strong> — Set a total budget, allocate by category, and compare planned vs. actual spend in real time.</span>
-          </li>
-          <li class="flex items-start gap-3">
-            <span class="material-symbols-outlined text-secondary filled text-lg mt-0.5 flex-shrink-0">check_circle</span>
-            <span class="text-on-surface"><strong>Vendor Management</strong> — Store contacts, track contracts, deposit amounts, and outstanding balances for every vendor.</span>
-          </li>
-          <li class="flex items-start gap-3">
-            <span class="material-symbols-outlined text-secondary filled text-lg mt-0.5 flex-shrink-0">check_circle</span>
-            <span class="text-on-surface"><strong>Wedding Checklist</strong> — 37 pre-loaded tasks organised by timeline, from 12+ months out to the week of your wedding.</span>
-          </li>
-          <li class="flex items-start gap-3">
-            <span class="material-symbols-outlined text-secondary filled text-lg mt-0.5 flex-shrink-0">check_circle</span>
-            <span class="text-on-surface"><strong>Payment Scheduler</strong> — Log every vendor payment and deposit due date so nothing slips through the cracks.</span>
-          </li>
-        </ul>
-        <a href="wedding-planner.html" class="grad-primary text-white px-8 py-4 rounded-lg font-bold text-base inline-flex items-center gap-2 shadow-lg shadow-primary/20 hover:opacity-90 transition-all">
-          <span class="material-symbols-outlined filled">favorite</span>
-          Start Planning — It's Free
-        </a>
+        <div class="inline-flex items-center gap-2 bg-green-100 text-green-800 px-3 py-1 rounded-full text-xs font-bold mb-4">
+          <span class="material-symbols-outlined text-sm filled">check_circle</span>
+          Always Free — No Account Required
+        </div>
+        <h2 class="text-4xl font-semibold text-primary leading-tight">10 Free Financial<br/><span class="italic font-light">Calculators</span></h2>
       </div>
-      <!-- Feature grid -->
-      <div class="grid grid-cols-2 gap-4">
-        <div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm">
-          <span class="material-symbols-outlined text-primary text-3xl mb-3 block">group</span>
-          <h3 class="font-semibold text-on-surface mb-1">Guest List</h3>
-          <p class="text-sm text-on-surface-variant leading-relaxed">RSVP tracking, dietary notes, table numbers, and plus-one management.</p>
+      <p class="text-on-surface-variant max-w-sm text-sm leading-relaxed">Get instant answers to your most important financial questions. Click any calculator and see results in seconds.</p>
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
+
+      <a href="calc-wedding.html" class="group bg-white rounded-2xl p-6 shadow-sm border border-outline-variant/15 hover:shadow-md hover:-translate-y-1 transition-all relative overflow-hidden">
+        <div class="absolute inset-x-0 top-0 h-1 rounded-t-2xl" style="background:#506351"></div>
+        <div class="w-10 h-10 rounded-xl flex items-center justify-center mb-4" style="background:#f0f4f0">
+          <span class="material-symbols-outlined filled" style="color:#506351;font-size:20px">favorite</span>
         </div>
-        <div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm">
-          <span class="material-symbols-outlined text-primary text-3xl mb-3 block">payments</span>
-          <h3 class="font-semibold text-on-surface mb-1">Budget</h3>
-          <p class="text-sm text-on-surface-variant leading-relaxed">Live budget vs. actual spend across 15 default categories.</p>
+        <div class="text-[10px] font-bold uppercase tracking-widest text-green-700 bg-green-50 px-2 py-0.5 rounded-full inline-block mb-2">Free</div>
+        <h3 class="font-semibold text-on-surface text-sm mb-1">Wedding Budget</h3>
+        <p class="text-xs text-on-surface-variant leading-snug">Estimate total cost from guests, venue & catering</p>
+      </a>
+
+      <a href="calc-event-breakeven.html" class="group bg-white rounded-2xl p-6 shadow-sm border border-outline-variant/15 hover:shadow-md hover:-translate-y-1 transition-all relative overflow-hidden">
+        <div class="absolute inset-x-0 top-0 h-1 rounded-t-2xl" style="background:#4527a0"></div>
+        <div class="w-10 h-10 rounded-xl flex items-center justify-center mb-4" style="background:#f3f0ff">
+          <span class="material-symbols-outlined filled" style="color:#4527a0;font-size:20px">trending_up</span>
         </div>
-        <div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm">
-          <span class="material-symbols-outlined text-primary text-3xl mb-3 block">store</span>
-          <h3 class="font-semibold text-on-surface mb-1">Vendors</h3>
-          <p class="text-sm text-on-surface-variant leading-relaxed">Contacts, contracts, deposits, and outstanding balances.</p>
+        <div class="text-[10px] font-bold uppercase tracking-widest text-green-700 bg-green-50 px-2 py-0.5 rounded-full inline-block mb-2">Free</div>
+        <h3 class="font-semibold text-on-surface text-sm mb-1">Event Break-Even</h3>
+        <p class="text-xs text-on-surface-variant leading-snug">Tickets needed to cover costs & make profit</p>
+      </a>
+
+      <a href="calc-household.html" class="group bg-white rounded-2xl p-6 shadow-sm border border-outline-variant/15 hover:shadow-md hover:-translate-y-1 transition-all relative overflow-hidden">
+        <div class="absolute inset-x-0 top-0 h-1 rounded-t-2xl" style="background:#00355f"></div>
+        <div class="w-10 h-10 rounded-xl flex items-center justify-center mb-4" style="background:#e8f0f8">
+          <span class="material-symbols-outlined filled" style="color:#00355f;font-size:20px">home</span>
         </div>
-        <div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm">
-          <span class="material-symbols-outlined text-primary text-3xl mb-3 block">checklist</span>
-          <h3 class="font-semibold text-on-surface mb-1">Checklist</h3>
-          <p class="text-sm text-on-surface-variant leading-relaxed">37 pre-loaded tasks grouped by months-before-the-wedding.</p>
+        <div class="text-[10px] font-bold uppercase tracking-widest text-green-700 bg-green-50 px-2 py-0.5 rounded-full inline-block mb-2">Free</div>
+        <h3 class="font-semibold text-on-surface text-sm mb-1">Household Savings</h3>
+        <p class="text-xs text-on-surface-variant leading-snug">Your savings rate & gap to your goal</p>
+      </a>
+
+      <a href="calc-freelancer.html" class="group bg-white rounded-2xl p-6 shadow-sm border border-outline-variant/15 hover:shadow-md hover:-translate-y-1 transition-all relative overflow-hidden">
+        <div class="absolute inset-x-0 top-0 h-1 rounded-t-2xl" style="background:#0f766e"></div>
+        <div class="w-10 h-10 rounded-xl flex items-center justify-center mb-4" style="background:#e6f7f5">
+          <span class="material-symbols-outlined filled" style="color:#0f766e;font-size:20px">work</span>
         </div>
-      </div>
+        <div class="text-[10px] font-bold uppercase tracking-widest text-green-700 bg-green-50 px-2 py-0.5 rounded-full inline-block mb-2">Free</div>
+        <h3 class="font-semibold text-on-surface text-sm mb-1">Freelancer Take-Home</h3>
+        <p class="text-xs text-on-surface-variant leading-snug">Real income after tax, super & expenses</p>
+      </a>
+
+      <a href="calc-inventory-reorder.html" class="group bg-white rounded-2xl p-6 shadow-sm border border-outline-variant/15 hover:shadow-md hover:-translate-y-1 transition-all relative overflow-hidden">
+        <div class="absolute inset-x-0 top-0 h-1 rounded-t-2xl" style="background:#1565c0"></div>
+        <div class="w-10 h-10 rounded-xl flex items-center justify-center mb-4" style="background:#e8f0fb">
+          <span class="material-symbols-outlined filled" style="color:#1565c0;font-size:20px">inventory_2</span>
+        </div>
+        <div class="text-[10px] font-bold uppercase tracking-widest text-green-700 bg-green-50 px-2 py-0.5 rounded-full inline-block mb-2">Free</div>
+        <h3 class="font-semibold text-on-surface text-sm mb-1">Inventory Reorder</h3>
+        <p class="text-xs text-on-surface-variant leading-snug">Reorder point & optimal order quantity</p>
+      </a>
+
+      <a href="calc-travel-split.html" class="group bg-white rounded-2xl p-6 shadow-sm border border-outline-variant/15 hover:shadow-md hover:-translate-y-1 transition-all relative overflow-hidden">
+        <div class="absolute inset-x-0 top-0 h-1 rounded-t-2xl" style="background:#006874"></div>
+        <div class="w-10 h-10 rounded-xl flex items-center justify-center mb-4" style="background:#e2f5f7">
+          <span class="material-symbols-outlined filled" style="color:#006874;font-size:20px">flight_takeoff</span>
+        </div>
+        <div class="text-[10px] font-bold uppercase tracking-widest text-green-700 bg-green-50 px-2 py-0.5 rounded-full inline-block mb-2">Free</div>
+        <h3 class="font-semibold text-on-surface text-sm mb-1">Travel Cost Split</h3>
+        <p class="text-xs text-on-surface-variant leading-snug">Per-person cost for any group trip</p>
+      </a>
+
+      <a href="calc-project-burn.html" class="group bg-white rounded-2xl p-6 shadow-sm border border-outline-variant/15 hover:shadow-md hover:-translate-y-1 transition-all relative overflow-hidden">
+        <div class="absolute inset-x-0 top-0 h-1 rounded-t-2xl" style="background:#7c3aed"></div>
+        <div class="w-10 h-10 rounded-xl flex items-center justify-center mb-4" style="background:#f3eeff">
+          <span class="material-symbols-outlined filled" style="color:#7c3aed;font-size:20px">account_tree</span>
+        </div>
+        <div class="text-[10px] font-bold uppercase tracking-widest text-green-700 bg-green-50 px-2 py-0.5 rounded-full inline-block mb-2">Free</div>
+        <h3 class="font-semibold text-on-surface text-sm mb-1">Project Burn Rate</h3>
+        <p class="text-xs text-on-surface-variant leading-snug">Burn rate, projected cost & over-budget risk</p>
+      </a>
+
+      <a href="calc-loan.html" class="group bg-white rounded-2xl p-6 shadow-sm border border-outline-variant/15 hover:shadow-md hover:-translate-y-1 transition-all relative overflow-hidden">
+        <div class="absolute inset-x-0 top-0 h-1 rounded-t-2xl" style="background:#be185d"></div>
+        <div class="w-10 h-10 rounded-xl flex items-center justify-center mb-4" style="background:#fdf0f7">
+          <span class="material-symbols-outlined filled" style="color:#be185d;font-size:20px">real_estate_agent</span>
+        </div>
+        <div class="text-[10px] font-bold uppercase tracking-widest text-green-700 bg-green-50 px-2 py-0.5 rounded-full inline-block mb-2">Free</div>
+        <h3 class="font-semibold text-on-surface text-sm mb-1">Loan Affordability</h3>
+        <p class="text-xs text-on-surface-variant leading-snug">Safe loan range based on your income & debts</p>
+      </a>
+
+      <a href="calc-product-margin.html" class="group bg-white rounded-2xl p-6 shadow-sm border border-outline-variant/15 hover:shadow-md hover:-translate-y-1 transition-all relative overflow-hidden">
+        <div class="absolute inset-x-0 top-0 h-1 rounded-t-2xl" style="background:#5d1a0a"></div>
+        <div class="w-10 h-10 rounded-xl flex items-center justify-center mb-4" style="background:#fdf0ea">
+          <span class="material-symbols-outlined filled" style="color:#5d1a0a;font-size:20px">sell</span>
+        </div>
+        <div class="text-[10px] font-bold uppercase tracking-widest text-green-700 bg-green-50 px-2 py-0.5 rounded-full inline-block mb-2">Free</div>
+        <h3 class="font-semibold text-on-surface text-sm mb-1">Product Margin</h3>
+        <p class="text-xs text-on-surface-variant leading-snug">Net margin after fees, shipping & returns</p>
+      </a>
+
+      <a href="calc-rental-yield.html" class="group bg-white rounded-2xl p-6 shadow-sm border border-outline-variant/15 hover:shadow-md hover:-translate-y-1 transition-all relative overflow-hidden">
+        <div class="absolute inset-x-0 top-0 h-1 rounded-t-2xl" style="background:#0d5c3a"></div>
+        <div class="w-10 h-10 rounded-xl flex items-center justify-center mb-4" style="background:#e6f5ed">
+          <span class="material-symbols-outlined filled" style="color:#0d5c3a;font-size:20px">apartment</span>
+        </div>
+        <div class="text-[10px] font-bold uppercase tracking-widest text-green-700 bg-green-50 px-2 py-0.5 rounded-full inline-block mb-2">Free</div>
+        <h3 class="font-semibold text-on-surface text-sm mb-1">Rental Yield</h3>
+        <p class="text-xs text-on-surface-variant leading-snug">Gross & net yield, annual cash flow</p>
+      </a>
+
     </div>
   </div>
 </section>
 
-<!-- ── ALL TEMPLATES ──────────────────────────────────────── -->
-<section class="py-24 bg-surface">
+<!-- ── PREMIUM TEMPLATES ───────────────────────────────────── -->
+<section id="templates" class="py-24 bg-surface">
   <div class="max-w-7xl mx-auto px-6">
-    <span class="font-label text-xs uppercase tracking-[0.2em] text-primary block mb-3">All Templates</span>
-    <h2 class="text-4xl font-semibold text-primary mb-12">More Launching Soon</h2>
-    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-px bg-outline-variant/15 rounded-2xl overflow-hidden shadow-sm">
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
+      <div>
+        <div class="inline-flex items-center gap-2 bg-primary-fixed text-on-primary-fixed-variant px-3 py-1 rounded-full text-xs font-bold mb-4">
+          <span class="material-symbols-outlined text-sm filled">workspace_premium</span>
+          Premium Templates
+        </div>
+        <h2 class="text-4xl font-semibold text-primary leading-tight">Full Planning Templates<br/><span class="italic font-light">for Every Life Event</span></h2>
+      </div>
+      <p class="text-on-surface-variant max-w-sm text-sm leading-relaxed">Every template includes a live demo you can explore free. Unlock your own data, full history, and exports with a Pro subscription.</p>
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
 
-      <a href="wedding-planner.html" class="bg-surface-container-lowest p-8 hover:bg-surface-container transition-colors group cursor-pointer relative">
-        <span class="absolute top-3 right-3 text-[10px] bg-secondary-container text-on-secondary-container px-2 py-0.5 rounded-full font-bold">Live</span>
-        <span class="material-symbols-outlined text-primary mb-4 text-3xl block group-hover:scale-110 transition-transform filled">favorite</span>
-        <h3 class="font-semibold text-on-surface mb-1 text-sm">Wedding Planner</h3>
-        <p class="text-xs text-on-surface-variant">Complete planning suite</p>
+      <a href="wedding-planner.html" class="group bg-white rounded-2xl overflow-hidden shadow-sm border border-outline-variant/15 hover:shadow-lg hover:-translate-y-1 transition-all">
+        <div class="h-2" style="background:linear-gradient(90deg,#2d3a2e,#506351)"></div>
+        <div class="p-6">
+          <div class="flex items-start justify-between mb-4">
+            <div class="w-12 h-12 rounded-xl flex items-center justify-center" style="background:#f0f4f0">
+              <span class="material-symbols-outlined filled text-2xl" style="color:#506351">favorite</span>
+            </div>
+            <span class="text-[10px] font-bold bg-amber-100 text-amber-800 px-2.5 py-1 rounded-full">Try Demo Free</span>
+          </div>
+          <h3 class="font-headline text-lg text-on-surface mb-1">Wedding Planner</h3>
+          <p class="text-sm text-on-surface-variant mb-4 leading-relaxed">Guest list, budget tracker, vendor management, checklist, payment scheduler — everything for your wedding.</p>
+          <div class="flex flex-wrap gap-2 mb-4">
+            <span class="text-xs bg-surface-container text-on-surface-variant px-2 py-0.5 rounded-full">6 Tabs</span>
+            <span class="text-xs bg-surface-container text-on-surface-variant px-2 py-0.5 rounded-full">Guest RSVP</span>
+            <span class="text-xs bg-surface-container text-on-surface-variant px-2 py-0.5 rounded-full">Budget Tracker</span>
+            <span class="text-xs bg-surface-container text-on-surface-variant px-2 py-0.5 rounded-full">Vendors</span>
+          </div>
+          <div class="flex items-center justify-between text-sm">
+            <span class="text-primary font-bold group-hover:underline">Explore Template →</span>
+            <span class="text-on-surface-variant text-xs">Pro: $9/mo</span>
+          </div>
+        </div>
       </a>
 
-      <div class="bg-surface-container-lowest p-8 opacity-50">
-        <span class="material-symbols-outlined text-outline mb-4 text-3xl block">home</span>
-        <h3 class="font-semibold text-on-surface mb-1 text-sm">Household Budget</h3>
-        <p class="text-xs text-outline">Coming soon</p>
-      </div>
-      <a href="travel-budget.html" class="bg-surface-container-lowest p-8 hover:bg-surface-container transition-colors group cursor-pointer relative">
-        <span class="absolute top-3 right-3 text-[10px] bg-secondary-container text-on-secondary-container px-2 py-0.5 rounded-full font-bold">Live</span>
-        <span class="material-symbols-outlined text-primary mb-4 text-3xl block group-hover:scale-110 transition-transform filled">flight_takeoff</span>
-        <h3 class="font-semibold text-on-surface mb-1 text-sm">Travel Budget</h3>
-        <p class="text-xs text-on-surface-variant">Trip expense tracker</p>
+      <a href="event-budget.html" class="group bg-white rounded-2xl overflow-hidden shadow-sm border border-outline-variant/15 hover:shadow-lg hover:-translate-y-1 transition-all">
+        <div class="h-2" style="background:linear-gradient(90deg,#2f0c7a,#4527a0)"></div>
+        <div class="p-6">
+          <div class="flex items-start justify-between mb-4">
+            <div class="w-12 h-12 rounded-xl flex items-center justify-center" style="background:#f3f0ff">
+              <span class="material-symbols-outlined text-2xl" style="color:#4527a0">event_note</span>
+            </div>
+            <span class="text-[10px] font-bold bg-amber-100 text-amber-800 px-2.5 py-1 rounded-full">Try Demo Free</span>
+          </div>
+          <h3 class="font-headline text-lg text-on-surface mb-1">Event Budget & P&L</h3>
+          <p class="text-sm text-on-surface-variant mb-4 leading-relaxed">Real-time P&L, break-even calculator, per-attendee metrics, revenue streams — for any event type.</p>
+          <div class="flex flex-wrap gap-2 mb-4">
+            <span class="text-xs bg-surface-container text-on-surface-variant px-2 py-0.5 rounded-full">P&L Summary</span>
+            <span class="text-xs bg-surface-container text-on-surface-variant px-2 py-0.5 rounded-full">Break-Even</span>
+            <span class="text-xs bg-surface-container text-on-surface-variant px-2 py-0.5 rounded-full">Revenue Streams</span>
+          </div>
+          <div class="flex items-center justify-between text-sm">
+            <span class="text-primary font-bold group-hover:underline">Explore Template →</span>
+            <span class="text-on-surface-variant text-xs">Pro: $9/mo</span>
+          </div>
+        </div>
       </a>
-      <a href="event-budget.html" class="bg-surface-container-lowest p-8 hover:bg-surface-container transition-colors group cursor-pointer relative">
-        <span class="absolute top-3 right-3 text-[10px] bg-secondary-container text-on-secondary-container px-2 py-0.5 rounded-full font-bold">Live</span>
-        <span class="material-symbols-outlined text-primary mb-4 text-3xl block group-hover:scale-110 transition-transform">event_note</span>
-        <h3 class="font-semibold text-on-surface mb-1 text-sm">Event Budget</h3>
-        <p class="text-xs text-on-surface-variant">P&L tracker for events</p>
+
+      <a href="travel-budget.html" class="group bg-white rounded-2xl overflow-hidden shadow-sm border border-outline-variant/15 hover:shadow-lg hover:-translate-y-1 transition-all">
+        <div class="h-2" style="background:linear-gradient(90deg,#004d57,#006874)"></div>
+        <div class="p-6">
+          <div class="flex items-start justify-between mb-4">
+            <div class="w-12 h-12 rounded-xl flex items-center justify-center" style="background:#e2f5f7">
+              <span class="material-symbols-outlined filled text-2xl" style="color:#006874">flight_takeoff</span>
+            </div>
+            <span class="text-[10px] font-bold bg-amber-100 text-amber-800 px-2.5 py-1 rounded-full">Try Demo Free</span>
+          </div>
+          <h3 class="font-headline text-lg text-on-surface mb-1">Travel Budget Planner</h3>
+          <p class="text-sm text-on-surface-variant mb-4 leading-relaxed">Daily spend log, burn rate, per-person split, category tracker, packing checklist — for any trip.</p>
+          <div class="flex flex-wrap gap-2 mb-4">
+            <span class="text-xs bg-surface-container text-on-surface-variant px-2 py-0.5 rounded-full">Daily Log</span>
+            <span class="text-xs bg-surface-container text-on-surface-variant px-2 py-0.5 rounded-full">Per Person</span>
+            <span class="text-xs bg-surface-container text-on-surface-variant px-2 py-0.5 rounded-full">Packing List</span>
+          </div>
+          <div class="flex items-center justify-between text-sm">
+            <span class="text-primary font-bold group-hover:underline">Explore Template →</span>
+            <span class="text-on-surface-variant text-xs">Pro: $9/mo</span>
+          </div>
+        </div>
       </a>
-      <div class="bg-surface-container-lowest p-8 opacity-50">
-        <span class="material-symbols-outlined text-outline mb-4 text-3xl block">work</span>
-        <h3 class="font-semibold text-on-surface mb-1 text-sm">Freelancer</h3>
-        <p class="text-xs text-outline">Coming soon</p>
-      </div>
-      <div class="bg-surface-container-lowest p-8 opacity-50">
-        <span class="material-symbols-outlined text-outline mb-4 text-3xl block">business_center</span>
-        <h3 class="font-semibold text-on-surface mb-1 text-sm">Small Business</h3>
-        <p class="text-xs text-outline">Coming soon</p>
-      </div>
-      <div class="bg-surface-container-lowest p-8 opacity-50">
-        <span class="material-symbols-outlined text-outline mb-4 text-3xl block">apartment</span>
-        <h3 class="font-semibold text-on-surface mb-1 text-sm">Rental Property</h3>
-        <p class="text-xs text-outline">Coming soon</p>
-      </div>
-      <div class="bg-surface-container-lowest p-8 opacity-50">
-        <span class="material-symbols-outlined text-outline mb-4 text-3xl block">account_tree</span>
-        <h3 class="font-semibold text-on-surface mb-1 text-sm">Project Budget</h3>
-        <p class="text-xs text-outline">Coming soon</p>
-      </div>
-      <a href="cafe-costing.html" class="bg-surface-container-lowest p-8 hover:bg-surface-container transition-colors group cursor-pointer relative">
-        <span class="absolute top-3 right-3 text-[10px] bg-secondary-container text-on-secondary-container px-2 py-0.5 rounded-full font-bold">Live</span>
-        <span class="material-symbols-outlined text-primary mb-4 text-3xl block group-hover:scale-110 transition-transform filled">restaurant</span>
-        <h3 class="font-semibold text-on-surface mb-1 text-sm">Cafe Costing</h3>
-        <p class="text-xs text-on-surface-variant">Menu & recipe margins</p>
+
+      <a href="cafe-costing.html" class="group bg-white rounded-2xl overflow-hidden shadow-sm border border-outline-variant/15 hover:shadow-lg hover:-translate-y-1 transition-all">
+        <div class="h-2" style="background:linear-gradient(90deg,#3b0e02,#5d1a0a)"></div>
+        <div class="p-6">
+          <div class="flex items-start justify-between mb-4">
+            <div class="w-12 h-12 rounded-xl flex items-center justify-center" style="background:#fdf0ea">
+              <span class="material-symbols-outlined filled text-2xl" style="color:#5d1a0a">restaurant</span>
+            </div>
+            <span class="text-[10px] font-bold bg-amber-100 text-amber-800 px-2.5 py-1 rounded-full">Try Demo Free</span>
+          </div>
+          <h3 class="font-headline text-lg text-on-surface mb-1">Cafe Costing</h3>
+          <p class="text-sm text-on-surface-variant mb-4 leading-relaxed">Food cost %, GP margin per item, recipe costing, break-even covers — for every dish on your menu.</p>
+          <div class="flex flex-wrap gap-2 mb-4">
+            <span class="text-xs bg-surface-container text-on-surface-variant px-2 py-0.5 rounded-full">Food Cost %</span>
+            <span class="text-xs bg-surface-container text-on-surface-variant px-2 py-0.5 rounded-full">Recipe Builder</span>
+            <span class="text-xs bg-surface-container text-on-surface-variant px-2 py-0.5 rounded-full">Break-Even</span>
+          </div>
+          <div class="flex items-center justify-between text-sm">
+            <span class="text-primary font-bold group-hover:underline">Explore Template →</span>
+            <span class="text-on-surface-variant text-xs">Pro: $15/mo</span>
+          </div>
+        </div>
       </a>
-      <a href="inventory.html" class="bg-surface-container-lowest p-8 hover:bg-surface-container transition-colors group cursor-pointer relative">
-        <span class="absolute top-3 right-3 text-[10px] bg-secondary-container text-on-secondary-container px-2 py-0.5 rounded-full font-bold">Live</span>
-        <span class="material-symbols-outlined text-primary mb-4 text-3xl block group-hover:scale-110 transition-transform filled">inventory_2</span>
-        <h3 class="font-semibold text-on-surface mb-1 text-sm">Inventory</h3>
-        <p class="text-xs text-on-surface-variant">Stock & reorder tracker</p>
+
+      <a href="inventory.html" class="group bg-white rounded-2xl overflow-hidden shadow-sm border border-outline-variant/15 hover:shadow-lg hover:-translate-y-1 transition-all">
+        <div class="h-2" style="background:linear-gradient(90deg,#0d47a1,#1565c0)"></div>
+        <div class="p-6">
+          <div class="flex items-start justify-between mb-4">
+            <div class="w-12 h-12 rounded-xl flex items-center justify-center" style="background:#e8f0fb">
+              <span class="material-symbols-outlined filled text-2xl" style="color:#1565c0">inventory_2</span>
+            </div>
+            <span class="text-[10px] font-bold bg-amber-100 text-amber-800 px-2.5 py-1 rounded-full">Try Demo Free</span>
+          </div>
+          <h3 class="font-headline text-lg text-on-surface mb-1">Inventory Management</h3>
+          <p class="text-sm text-on-surface-variant mb-4 leading-relaxed">Real-time stock levels, reorder alerts, movements log, total stock value, supplier info per SKU.</p>
+          <div class="flex flex-wrap gap-2 mb-4">
+            <span class="text-xs bg-surface-container text-on-surface-variant px-2 py-0.5 rounded-full">Reorder Alerts</span>
+            <span class="text-xs bg-surface-container text-on-surface-variant px-2 py-0.5 rounded-full">Stock Value</span>
+            <span class="text-xs bg-surface-container text-on-surface-variant px-2 py-0.5 rounded-full">Movements Log</span>
+          </div>
+          <div class="flex items-center justify-between text-sm">
+            <span class="text-primary font-bold group-hover:underline">Explore Template →</span>
+            <span class="text-on-surface-variant text-xs">Pro: $12/mo</span>
+          </div>
+        </div>
       </a>
+
+      <!-- Coming Soon card -->
+      <div class="bg-surface-container-low rounded-2xl overflow-hidden border-2 border-dashed border-outline-variant/30 p-6 flex flex-col items-center justify-center text-center min-h-[280px]">
+        <div class="w-12 h-12 rounded-xl bg-surface-container-high flex items-center justify-center mb-4">
+          <span class="material-symbols-outlined text-outline text-2xl">add</span>
+        </div>
+        <h3 class="font-headline text-lg text-on-surface-variant mb-2">More Coming Soon</h3>
+        <p class="text-sm text-outline leading-relaxed mb-4">Household Budget, Freelancer Income, Project Planner, Rental Property, Small Business — all in development.</p>
+        <span class="text-xs bg-surface-container text-on-surface-variant px-3 py-1 rounded-full font-medium">5 More Templates</span>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ── PRICING ─────────────────────────────────────────────── -->
+<section id="pricing" class="py-24 bg-surface-container-low">
+  <div class="max-w-5xl mx-auto px-6">
+    <div class="text-center mb-14">
+      <span class="font-label text-xs uppercase tracking-[0.2em] text-primary block mb-4">Pricing</span>
+      <h2 class="text-4xl font-semibold text-primary mb-4">Simple, Honest Pricing</h2>
+      <p class="text-on-surface-variant text-lg max-w-xl mx-auto">Calculators are free forever. Templates are premium — try the demo, pay only when you're ready to track your own data.</p>
+    </div>
+    <div class="grid md:grid-cols-2 gap-6 max-w-3xl mx-auto">
+      <div class="bg-white rounded-2xl p-8 border border-outline-variant/20 shadow-sm">
+        <div class="inline-flex items-center gap-2 bg-green-100 text-green-800 px-3 py-1 rounded-full text-xs font-bold mb-6">Free Forever</div>
+        <div class="mb-6">
+          <span class="text-4xl font-headline font-bold text-on-surface">$0</span>
+          <span class="text-on-surface-variant text-sm"> / always</span>
+        </div>
+        <ul class="space-y-3 text-sm text-on-surface-variant mb-8">
+          <li class="flex items-center gap-2"><span class="material-symbols-outlined text-base text-green-600 filled">check</span>All 10 financial calculators</li>
+          <li class="flex items-center gap-2"><span class="material-symbols-outlined text-base text-green-600 filled">check</span>Instant results, no sign-up</li>
+          <li class="flex items-center gap-2"><span class="material-symbols-outlined text-base text-green-600 filled">check</span>Demo mode on all templates</li>
+          <li class="flex items-center gap-2"><span class="material-symbols-outlined text-base text-green-600 filled">check</span>Explore every feature before paying</li>
+        </ul>
+        <a href="#calculators" class="w-full border-2 border-primary text-primary font-bold py-3 rounded-xl hover:bg-primary-fixed transition-colors block text-center">Try Free Calculators</a>
+      </div>
+      <div class="bg-primary rounded-2xl p-8 shadow-lg relative overflow-hidden">
+        <div class="absolute top-4 right-4 bg-yellow-300 text-on-surface text-xs font-bold px-3 py-1 rounded-full">Launching Soon</div>
+        <div class="inline-flex items-center gap-2 bg-white/20 text-white px-3 py-1 rounded-full text-xs font-bold mb-6">Pro Templates</div>
+        <div class="mb-6">
+          <span class="text-4xl font-headline font-bold text-white">$9</span>
+          <span class="text-white/60 text-sm"> / month per template</span>
+        </div>
+        <ul class="space-y-3 text-sm text-white/80 mb-8">
+          <li class="flex items-center gap-2"><span class="material-symbols-outlined text-base text-green-300 filled">check</span>Save your own data (no demo mode)</li>
+          <li class="flex items-center gap-2"><span class="material-symbols-outlined text-base text-green-300 filled">check</span>Full history, unlimited entries</li>
+          <li class="flex items-center gap-2"><span class="material-symbols-outlined text-base text-green-300 filled">check</span>PDF & CSV export</li>
+          <li class="flex items-center gap-2"><span class="material-symbols-outlined text-base text-green-300 filled">check</span>Cloud sync across devices</li>
+          <li class="flex items-center gap-2"><span class="material-symbols-outlined text-base text-green-300 filled">check</span>Team sharing & collaboration</li>
+          <li class="flex items-center gap-2"><span class="material-symbols-outlined text-base text-green-300 filled">check</span>Priority support</li>
+        </ul>
+        <button class="w-full bg-white/20 text-white font-bold py-3 rounded-xl cursor-not-allowed opacity-70">Join the Waitlist</button>
+      </div>
     </div>
   </div>
 </section>
@@ -443,15 +639,20 @@
   </div>
   <div class="max-w-3xl mx-auto px-6 text-center relative z-10">
     <h2 class="text-5xl font-semibold text-white mb-6 leading-tight">
-      Ready to Plan Your<br/><span class="italic font-light">Perfect Wedding?</span>
+      Start Free.<br/><span class="italic font-light">Upgrade When You're Ready.</span>
     </h2>
-    <p class="text-on-primary-container text-xl mb-10 opacity-85 leading-relaxed">
-      Join thousands of couples using BudgetTools to plan with clarity and confidence. Free, beautiful, and ready in seconds.
+    <p class="text-white/75 text-xl mb-10 leading-relaxed">
+      10 free calculators — instant results, no sign-up. 5 premium planning templates — try the demo free, unlock your data when you're ready.
     </p>
-    <a href="wedding-planner.html" class="bg-white text-primary px-10 py-5 rounded-lg font-bold text-xl shadow-2xl hover:scale-105 transition-transform inline-block">
-      Start Planning for Free
-    </a>
-    <p class="mt-5 text-on-primary-container/50 text-sm">No account needed · Saves automatically · Always free</p>
+    <div class="flex flex-wrap gap-4 justify-center">
+      <a href="#calculators" class="bg-white text-primary px-10 py-5 rounded-lg font-bold text-lg shadow-2xl hover:scale-105 transition-transform inline-block">
+        Try Free Calculators
+      </a>
+      <a href="#templates" class="border-2 border-white/40 text-white px-10 py-5 rounded-lg font-bold text-lg hover:border-white hover:bg-white/10 transition-all inline-block">
+        Explore Templates
+      </a>
+    </div>
+    <p class="mt-6 text-white/40 text-sm">Calculators: always free · Templates: demo free, Pro from $9/mo</p>
   </div>
 </section>
 
@@ -462,14 +663,29 @@
   <div class="max-w-7xl mx-auto px-6 py-12 flex flex-col md:flex-row justify-between items-start gap-10">
     <div>
       <p class="text-lg font-bold text-primary mb-2 font-body">BudgetTools</p>
-      <p class="text-on-surface-variant text-sm max-w-xs leading-relaxed">Beautiful, free planning tools for life's biggest milestones.</p>
+      <p class="text-on-surface-variant text-sm max-w-xs leading-relaxed">Free financial calculators + premium planning templates for every life event.</p>
     </div>
-    <div class="grid grid-cols-2 md:grid-cols-3 gap-10 text-sm">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-10 text-sm">
       <div>
-        <h4 class="font-semibold text-on-surface mb-3">Templates</h4>
+        <h4 class="font-semibold text-on-surface mb-3">Free Calculators</h4>
+        <ul class="space-y-2 text-on-surface-variant">
+          <li><a href="calc-wedding.html" class="hover:text-primary transition-colors">Wedding Budget</a></li>
+          <li><a href="calc-event-breakeven.html" class="hover:text-primary transition-colors">Event Break-Even</a></li>
+          <li><a href="calc-household.html" class="hover:text-primary transition-colors">Household Savings</a></li>
+          <li><a href="calc-freelancer.html" class="hover:text-primary transition-colors">Freelancer Take-Home</a></li>
+          <li><a href="calc-inventory-reorder.html" class="hover:text-primary transition-colors">Inventory Reorder</a></li>
+          <li><a href="calc-travel-split.html" class="hover:text-primary transition-colors">Travel Split</a></li>
+          <li><a href="calc-project-burn.html" class="hover:text-primary transition-colors">Project Burn Rate</a></li>
+          <li><a href="calc-loan.html" class="hover:text-primary transition-colors">Loan Affordability</a></li>
+          <li><a href="calc-product-margin.html" class="hover:text-primary transition-colors">Product Margin</a></li>
+          <li><a href="calc-rental-yield.html" class="hover:text-primary transition-colors">Rental Yield</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="font-semibold text-on-surface mb-3">Premium Templates</h4>
         <ul class="space-y-2 text-on-surface-variant">
           <li><a href="wedding-planner.html" class="hover:text-primary transition-colors">Wedding Planner</a></li>
-          <li><a href="event-budget.html" class="hover:text-primary transition-colors">Event Budget</a></li>
+          <li><a href="event-budget.html" class="hover:text-primary transition-colors">Event Budget & P&L</a></li>
           <li><a href="travel-budget.html" class="hover:text-primary transition-colors">Travel Budget</a></li>
           <li><a href="cafe-costing.html" class="hover:text-primary transition-colors">Cafe Costing</a></li>
           <li><a href="inventory.html" class="hover:text-primary transition-colors">Inventory</a></li>
@@ -479,8 +695,9 @@
         <h4 class="font-semibold text-on-surface mb-3">Company</h4>
         <ul class="space-y-2 text-on-surface-variant">
           <li><a href="#" class="hover:text-primary transition-colors">About</a></li>
-          <li><a href="#" class="hover:text-primary transition-colors">Contact</a></li>
+          <li><a href="#pricing" class="hover:text-primary transition-colors">Pricing</a></li>
           <li><a href="#" class="hover:text-primary transition-colors">Blog</a></li>
+          <li><a href="#" class="hover:text-primary transition-colors">Contact</a></li>
         </ul>
       </div>
       <div>

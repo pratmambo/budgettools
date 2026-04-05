@@ -1,0 +1,16 @@
+{
+  "name": "budgettools",
+  "version": "1.0.0",
+  "description": "BudgetTools — financial planning templates and calculators",
+  "private": true,
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.39.0",
+    "razorpay": "^2.9.0"
+  },
+  "devDependencies": {
+    "@netlify/functions": "^2.4.0"
+  }
+}

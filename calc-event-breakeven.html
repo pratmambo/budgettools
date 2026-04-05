@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Event Break-Even Calculator | BudgetTools</title>
+  <meta name="description" content="Calculate how many ticket sales you need to break even on your event. Enter venue, catering, marketing and ticket price — instant P&L estimate."/>
+  <meta name="robots" content="index, follow"/>
+  <link rel="canonical" href="https://budgettools.app/calc-event-breakeven.html"/>
+  <meta property="og:title" content="Event Break-Even Calculator | BudgetTools"/>
+  <meta property="og:description" content="Calculate how many ticket sales you need to break even on your event. Instant P&amp;L estimate — free, no sign-up."/>
+  <meta property="og:type" content="website"/>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,400;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@400,0..1&display=swap" rel="stylesheet"/>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: "#4527a0",
+            surface: "#f8f9fa",
+            "on-surface": "#1a1a2e",
+          },
+          fontFamily: {
+            headline: ["Noto Serif", "serif"],
+            body: ["Plus Jakarta Sans", "sans-serif"],
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body { font-family: 'Plus Jakarta Sans', sans-serif; background: #f8f9fa; color: #1a1a2e; }
+    h1, h2, h3 { font-family: 'Noto Serif', serif; }
+    .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; vertical-align: middle; }
+    .filled { font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+    .field {
+      width: 100%; background: #f1f5f9; border: 1px solid #e2e8f0; border-radius: 10px;
+      padding: 10px 14px; font-size: 15px; color: #1a1a2e; outline: none;
+      font-family: 'Plus Jakarta Sans', sans-serif; transition: border-color 0.15s, box-shadow 0.15s;
+      appearance: none;
+    }
+    .field:focus { border-color: #4527a0; box-shadow: 0 0 0 3px #4527a020; }
+    .field-label { display: block; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; color: #64748b; margin-bottom: 6px; }
+    .result-card { background: white; border-radius: 16px; padding: 20px 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); border: 1px solid #e2e8f0; }
+    .result-number { font-family: 'Noto Serif', serif; font-size: 2rem; font-weight: 700; line-height: 1.1; }
+    input[type=range] { -webkit-appearance: none; appearance: none; width: 100%; height: 6px; border-radius: 6px; background: #e2e8f0; outline: none; cursor: pointer; }
+    input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 20px; height: 20px; border-radius: 50%; background: #4527a0; cursor: pointer; box-shadow: 0 1px 4px rgba(0,0,0,0.2); }
+    input[type=range]::-moz-range-thumb { width: 20px; height: 20px; border-radius: 50%; background: #4527a0; cursor: pointer; border: none; box-shadow: 0 1px 4px rgba(0,0,0,0.2); }
+    .scenario-card { background: #f8f9ff; border: 1px solid #e2e8f0; border-radius: 14px; padding: 16px 20px; }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="bg-white/90 backdrop-blur-xl sticky top-0 z-50 border-b border-slate-200">
+  <div class="max-w-5xl mx-auto px-5 py-3 flex items-center justify-between">
+    <a href="index.html" class="flex items-center gap-1.5 text-slate-600 hover:text-slate-900 text-sm font-medium transition-colors">
+      <span class="material-symbols-outlined text-[18px]">arrow_back</span>
+      BudgetTools
+    </a>
+    <span class="bg-emerald-100 text-emerald-700 text-xs font-semibold px-3 py-1 rounded-full">Free Calculator</span>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div style="background: linear-gradient(135deg, #2f0c7a 0%, #4527a0 100%);" class="py-14 px-5 text-center">
+  <div class="max-w-2xl mx-auto">
+    <div class="inline-flex items-center gap-2 bg-white/15 text-white/90 text-xs font-semibold px-4 py-1.5 rounded-full mb-6 backdrop-blur-sm">
+      <span class="material-symbols-outlined text-[14px]">bolt</span>
+      Free &middot; No sign-up &middot; Instant results
+    </div>
+    <h1 class="text-3xl md:text-4xl font-bold text-white mb-4 leading-tight">Will Your Event Make Money?</h1>
+    <p class="text-white/80 text-base md:text-lg">Enter your costs and ticket price to find out exactly how many attendees you need to break even — and what profit looks like at full capacity.</p>
+  </div>
+</div>
+
+<!-- CALCULATOR -->
+<div class="max-w-5xl mx-auto px-5 py-10">
+  <div class="grid md:grid-cols-2 gap-6 items-start">
+
+    <!-- INPUTS -->
+    <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
+      <h2 class="text-lg font-bold mb-5 flex items-center gap-2">
+        <span class="material-symbols-outlined text-[20px] text-[#4527a0]">tune</span>
+        Event Details
+      </h2>
+
+      <div class="space-y-5">
+
+        <div class="border-b border-slate-100 pb-4 mb-1">
+          <p class="text-xs font-semibold uppercase tracking-widest text-slate-400 mb-3">Fixed Costs</p>
+          <div class="space-y-4">
+            <div>
+              <label class="field-label">Venue Hire ($)</label>
+              <input type="number" id="venue" class="field" value="5000" min="0" oninput="calculate()"/>
+            </div>
+            <div>
+              <label class="field-label">Speakers &amp; Talent ($)</label>
+              <input type="number" id="speakers" class="field" value="2000" min="0" oninput="calculate()"/>
+            </div>
+            <div>
+              <label class="field-label">AV &amp; Production ($)</label>
+              <input type="number" id="av" class="field" value="1500" min="0" oninput="calculate()"/>
+            </div>
+            <div>
+              <label class="field-label">Marketing &amp; Promotion ($)</label>
+              <input type="number" id="marketing" class="field" value="800" min="0" oninput="calculate()"/>
+            </div>
+            <div>
+              <label class="field-label">Other Fixed Costs ($)</label>
+              <input type="number" id="otherfixed" class="field" value="500" min="0" oninput="calculate()"/>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <p class="text-xs font-semibold uppercase tracking-widest text-slate-400 mb-3">Variable &amp; Revenue</p>
+          <div class="space-y-4">
+            <div>
+              <label class="field-label">Catering Per Attendee ($)</label>
+              <input type="number" id="catering" class="field" value="35" min="0" oninput="calculate()"/>
+            </div>
+            <div>
+              <label class="field-label">Ticket Price ($)</label>
+              <input type="number" id="ticketPrice" class="field" value="120" min="0" oninput="calculate()"/>
+            </div>
+            <div>
+              <div class="flex justify-between mb-1.5">
+                <label class="field-label">Expected Attendees</label>
+                <span id="attendeesDisplay" class="text-sm font-bold text-[#4527a0]">200</span>
+              </div>
+              <input type="range" id="attendees" min="10" max="2000" value="200" step="10"
+                oninput="document.getElementById('attendeesDisplay').textContent=this.value; calculate()"/>
+              <div class="flex justify-between text-xs text-slate-400 mt-1"><span>10</span><span>2,000</span></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- RESULTS -->
+    <div class="space-y-4">
+
+      <!-- Break-Even -->
+      <div class="result-card">
+        <p class="text-xs font-semibold uppercase tracking-widest text-slate-400 mb-1">Break-Even Attendees</p>
+        <p id="r-breakeven" class="result-number text-slate-800">0</p>
+        <p id="r-breakeven-note" class="text-xs text-slate-400 mt-1">Minimum attendees needed to cover all costs</p>
+      </div>
+
+      <!-- P&L -->
+      <div class="result-card">
+        <p class="text-xs font-semibold uppercase tracking-widest text-slate-400 mb-1">Projected Profit / Loss</p>
+        <p id="r-profit" class="result-number">$0</p>
+        <p class="text-xs text-slate-400 mt-1">At your expected attendee count</p>
+      </div>
+
+      <div class="grid grid-cols-2 gap-3">
+        <div class="result-card">
+          <p class="text-xs font-semibold uppercase tracking-widest text-slate-400 mb-1">Total Revenue</p>
+          <p id="r-revenue" class="font-headline font-bold text-xl text-slate-700">$0</p>
+        </div>
+        <div class="result-card">
+          <p class="text-xs font-semibold uppercase tracking-widest text-slate-400 mb-1">Total Costs</p>
+          <p id="r-costs" class="font-headline font-bold text-xl text-slate-700">$0</p>
+        </div>
+      </div>
+
+      <!-- Margin -->
+      <div class="result-card">
+        <p class="text-xs font-semibold uppercase tracking-widest text-slate-400 mb-1">Profit Margin</p>
+        <p id="r-margin" class="result-number text-slate-800">0%</p>
+        <p class="text-xs text-slate-400 mt-1">As a % of ticket revenue</p>
+      </div>
+
+      <!-- SCENARIOS -->
+      <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200">
+        <h3 class="text-base font-bold mb-3 flex items-center gap-2">
+          <span class="material-symbols-outlined text-[18px] text-[#4527a0]">compare_arrows</span>
+          Scenario Comparison
+        </h3>
+        <div class="grid grid-cols-2 gap-3">
+          <div class="scenario-card">
+            <p class="text-xs font-bold uppercase tracking-widest text-slate-400 mb-2">At Break-Even</p>
+            <p class="text-xs text-slate-500 mb-0.5">Revenue <span id="s-be-rev" class="font-semibold text-slate-700 float-right">$0</span></p>
+            <p class="text-xs text-slate-500 mb-0.5">Costs <span id="s-be-cost" class="font-semibold text-slate-700 float-right">$0</span></p>
+            <p class="text-xs text-slate-500 pt-1 border-t border-slate-200 mt-1">Profit <span id="s-be-profit" class="font-semibold text-emerald-600 float-right">$0</span></p>
+          </div>
+          <div class="scenario-card">
+            <p class="text-xs font-bold uppercase tracking-widest text-slate-400 mb-2">At Expected</p>
+            <p class="text-xs text-slate-500 mb-0.5">Revenue <span id="s-ex-rev" class="font-semibold text-slate-700 float-right">$0</span></p>
+            <p class="text-xs text-slate-500 mb-0.5">Costs <span id="s-ex-cost" class="font-semibold text-slate-700 float-right">$0</span></p>
+            <p class="text-xs text-slate-500 pt-1 border-t border-slate-200 mt-1">Profit <span id="s-ex-profit" class="font-semibold float-right">$0</span></p>
+          </div>
+        </div>
+      </div>
+
+      <!-- UPSELL -->
+      <div class="rounded-2xl p-6 text-white" style="background: linear-gradient(135deg, #2f0c7a 0%, #4527a0 100%);">
+        <div class="flex items-start gap-3">
+          <span class="material-symbols-outlined filled text-3xl text-white/80">analytics</span>
+          <div>
+            <p class="font-bold text-base mb-1">Ready to track the full picture?</p>
+            <p class="text-white/80 text-sm mb-4">Log every cost, sponsor, and ticket sale in the Event Budget &amp; Profit Tracker.</p>
+            <a href="event-budget.html"
+               class="inline-flex items-center gap-2 bg-white text-[#4527a0] font-bold text-sm px-5 py-2.5 rounded-xl hover:bg-white/90 transition-colors">
+              Open Event Tracker
+              <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+            </a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer class="border-t border-slate-200 bg-white mt-6 py-8">
+  <div class="max-w-5xl mx-auto px-5 flex flex-col sm:flex-row items-center justify-between gap-3 text-sm text-slate-400">
+    <a href="index.html" class="font-bold text-slate-600 hover:text-slate-900">BudgetTools</a>
+    <span>&copy; 2026 BudgetTools. Free planning tools for life's biggest moments.</span>
+  </div>
+</footer>
+
+<script>
+  function fmt(n) {
+    const abs = Math.abs(Math.round(n));
+    return (n < 0 ? '-$' : '$') + abs.toLocaleString('en-US');
+  }
+
+  function calculate() {
+    const venue      = parseFloat(document.getElementById('venue').value)      || 0;
+    const speakers   = parseFloat(document.getElementById('speakers').value)   || 0;
+    const av         = parseFloat(document.getElementById('av').value)         || 0;
+    const marketing  = parseFloat(document.getElementById('marketing').value)  || 0;
+    const otherfixed = parseFloat(document.getElementById('otherfixed').value) || 0;
+    const catering   = parseFloat(document.getElementById('catering').value)   || 0;
+    const ticket     = parseFloat(document.getElementById('ticketPrice').value)|| 0;
+    const attendees  = parseInt(document.getElementById('attendees').value)    || 0;
+
+    const fixedCosts   = venue + speakers + av + marketing + otherfixed;
+    const totalCosts   = fixedCosts + (catering * attendees);
+    const totalRevenue = ticket * attendees;
+    const profit       = totalRevenue - totalCosts;
+
+    const contributionMargin = ticket - catering;
+    const breakEven = contributionMargin > 0 ? Math.ceil(fixedCosts / contributionMargin) : Infinity;
+
+    const profitMargin = totalRevenue > 0 ? (profit / totalRevenue) * 100 : 0;
+
+    // Break-even card
+    const beEl = document.getElementById('r-breakeven');
+    const beNote = document.getElementById('r-breakeven-note');
+    if (isFinite(breakEven)) {
+      beEl.textContent = breakEven.toLocaleString('en-US');
+      if (attendees >= breakEven) {
+        beEl.className = 'result-number text-emerald-600';
+        beNote.textContent = `You're above break-even by ${(attendees - breakEven).toLocaleString()} attendees`;
+      } else {
+        beEl.className = 'result-number text-red-500';
+        beNote.textContent = `You need ${(breakEven - attendees).toLocaleString()} more attendees to break even`;
+      }
+    } else {
+      beEl.textContent = 'N/A';
+      beEl.className = 'result-number text-slate-400';
+      beNote.textContent = 'Ticket price must exceed catering cost per person';
+    }
+
+    // Profit card
+    const profitEl = document.getElementById('r-profit');
+    profitEl.textContent = fmt(profit);
+    profitEl.className = 'result-number ' + (profit >= 0 ? 'text-emerald-600' : 'text-red-500');
+
+    document.getElementById('r-revenue').textContent = fmt(totalRevenue);
+    document.getElementById('r-costs').textContent   = fmt(totalCosts);
+
+    // Margin card
+    const marginEl = document.getElementById('r-margin');
+    marginEl.textContent = profitMargin.toFixed(1) + '%';
+    if (profitMargin >= 15) marginEl.className = 'result-number text-emerald-600';
+    else if (profitMargin >= 5) marginEl.className = 'result-number text-amber-500';
+    else marginEl.className = 'result-number text-red-500';
+
+    // Scenarios
+    // At break-even
+    if (isFinite(breakEven)) {
+      const beRev  = ticket * breakEven;
+      const beCost = fixedCosts + (catering * breakEven);
+      document.getElementById('s-be-rev').textContent    = fmt(beRev);
+      document.getElementById('s-be-cost').textContent   = fmt(beCost);
+      document.getElementById('s-be-profit').textContent = '$0';
+    } else {
+      document.getElementById('s-be-rev').textContent    = 'N/A';
+      document.getElementById('s-be-cost').textContent   = 'N/A';
+      document.getElementById('s-be-profit').textContent = 'N/A';
+    }
+
+    // At expected
+    document.getElementById('s-ex-rev').textContent    = fmt(totalRevenue);
+    document.getElementById('s-ex-cost').textContent   = fmt(totalCosts);
+    const exProfitEl = document.getElementById('s-ex-profit');
+    exProfitEl.textContent  = fmt(profit);
+    exProfitEl.className    = 'font-semibold float-right ' + (profit >= 0 ? 'text-emerald-600' : 'text-red-500');
+  }
+
+  calculate();
+</script>
+</body>
+</html>

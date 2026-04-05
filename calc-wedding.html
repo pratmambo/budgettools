@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Wedding Budget Calculator | BudgetTools</title>
+  <meta name="description" content="Estimate your total wedding cost based on guest count, venue type, catering, and decor. Get a suggested budget split — free, instant, no sign-up."/>
+  <meta name="robots" content="index, follow"/>
+  <link rel="canonical" href="https://budgettools.app/calc-wedding.html"/>
+  <meta property="og:title" content="Wedding Budget Calculator | BudgetTools"/>
+  <meta property="og:description" content="Estimate your total wedding cost based on guest count, venue type, catering, and decor. Get a suggested budget split — free, instant, no sign-up."/>
+  <meta property="og:type" content="website"/>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,400;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@400,0..1&display=swap" rel="stylesheet"/>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: "#506351",
+            surface: "#f8f9fa",
+            "on-surface": "#1a1a2e",
+          },
+          fontFamily: {
+            headline: ["Noto Serif", "serif"],
+            body: ["Plus Jakarta Sans", "sans-serif"],
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body { font-family: 'Plus Jakarta Sans', sans-serif; background: #f8f9fa; color: #1a1a2e; }
+    h1, h2, h3 { font-family: 'Noto Serif', serif; }
+    .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; vertical-align: middle; }
+    .filled { font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+    .field {
+      width: 100%; background: #f1f5f9; border: 1px solid #e2e8f0; border-radius: 10px;
+      padding: 10px 14px; font-size: 15px; color: #1a1a2e; outline: none;
+      font-family: 'Plus Jakarta Sans', sans-serif; transition: border-color 0.15s, box-shadow 0.15s;
+      appearance: none;
+    }
+    .field:focus { border-color: #506351; box-shadow: 0 0 0 3px #50635120; }
+    .field-label { display: block; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; color: #64748b; margin-bottom: 6px; }
+    .result-card { background: white; border-radius: 16px; padding: 20px 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); border: 1px solid #e2e8f0; }
+    .result-number { font-family: 'Noto Serif', serif; font-size: 2rem; font-weight: 700; line-height: 1.1; }
+    input[type=range] { -webkit-appearance: none; appearance: none; width: 100%; height: 6px; border-radius: 6px; background: #e2e8f0; outline: none; cursor: pointer; }
+    input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 20px; height: 20px; border-radius: 50%; background: #506351; cursor: pointer; box-shadow: 0 1px 4px rgba(0,0,0,0.2); }
+    input[type=range]::-moz-range-thumb { width: 20px; height: 20px; border-radius: 50%; background: #506351; cursor: pointer; border: none; box-shadow: 0 1px 4px rgba(0,0,0,0.2); }
+    select.field { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath fill='%2364748b' d='M7 7l3 3 3-3'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; background-size: 20px; padding-right: 36px; }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="bg-white/90 backdrop-blur-xl sticky top-0 z-50 border-b border-slate-200">
+  <div class="max-w-5xl mx-auto px-5 py-3 flex items-center justify-between">
+    <a href="index.html" class="flex items-center gap-1.5 text-slate-600 hover:text-slate-900 text-sm font-medium transition-colors">
+      <span class="material-symbols-outlined text-[18px]">arrow_back</span>
+      BudgetTools
+    </a>
+    <span class="bg-emerald-100 text-emerald-700 text-xs font-semibold px-3 py-1 rounded-full">Free Calculator</span>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div style="background: linear-gradient(135deg, #2d3a2e 0%, #506351 100%);" class="py-14 px-5 text-center">
+  <div class="max-w-2xl mx-auto">
+    <div class="inline-flex items-center gap-2 bg-white/15 text-white/90 text-xs font-semibold px-4 py-1.5 rounded-full mb-6 backdrop-blur-sm">
+      <span class="material-symbols-outlined text-[14px]">bolt</span>
+      Free &middot; No sign-up &middot; Instant results
+    </div>
+    <h1 class="text-3xl md:text-4xl font-bold text-white mb-4 leading-tight">How Much Will Your Wedding Cost?</h1>
+    <p class="text-white/80 text-base md:text-lg">Enter a few details and see your estimated total budget and category breakdown in seconds.</p>
+  </div>
+</div>
+
+<!-- CALCULATOR -->
+<div class="max-w-5xl mx-auto px-5 py-10">
+  <div class="grid md:grid-cols-2 gap-6 items-start">
+
+    <!-- INPUTS -->
+    <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
+      <h2 class="text-lg font-bold mb-5 flex items-center gap-2">
+        <span class="material-symbols-outlined text-[20px] text-[#506351]">tune</span>
+        Your Wedding Details
+      </h2>
+
+      <div class="space-y-5">
+
+        <!-- Guest Count -->
+        <div>
+          <div class="flex justify-between mb-1.5">
+            <label class="field-label">Number of Guests</label>
+            <span id="guestDisplay" class="text-sm font-bold text-[#506351]">120</span>
+          </div>
+          <input type="range" id="guests" min="20" max="400" value="120" step="10"
+            oninput="document.getElementById('guestDisplay').textContent=this.value; calculate()"/>
+          <div class="flex justify-between text-xs text-slate-400 mt-1"><span>20</span><span>400</span></div>
+        </div>
+
+        <!-- Venue Type -->
+        <div>
+          <label class="field-label">Venue Type</label>
+          <select id="venue" class="field" onchange="calculate()">
+            <option value="800">Backyard / Farm</option>
+            <option value="2500">Local Hall</option>
+            <option value="8000" selected>Hotel Ballroom</option>
+            <option value="18000">Luxury Estate</option>
+            <option value="25000">Destination</option>
+          </select>
+        </div>
+
+        <!-- Catering Per Person -->
+        <div>
+          <label class="field-label">Catering Per Person ($)</label>
+          <input type="number" id="catering" class="field" value="85" min="0" oninput="calculate()"/>
+        </div>
+
+        <!-- Decor Level -->
+        <div>
+          <label class="field-label">Decor &amp; Florals Level</label>
+          <select id="decor" class="field" onchange="calculate()">
+            <option value="800">Minimal</option>
+            <option value="2500" selected>Standard</option>
+            <option value="6000">Premium</option>
+            <option value="15000">Luxury</option>
+          </select>
+        </div>
+
+        <!-- Photography -->
+        <div>
+          <label class="field-label">Photography &amp; Video</label>
+          <select id="photo" class="field" onchange="calculate()">
+            <option value="800">Budget</option>
+            <option value="2200" selected>Standard</option>
+            <option value="4500">Premium</option>
+          </select>
+        </div>
+
+        <!-- Attire -->
+        <div>
+          <label class="field-label">Clothing &amp; Attire (total)</label>
+          <input type="number" id="attire" class="field" value="2500" min="0" oninput="calculate()"/>
+        </div>
+
+        <!-- Other -->
+        <div>
+          <label class="field-label">Music, Officiant &amp; Other</label>
+          <input type="number" id="other" class="field" value="1500" min="0" oninput="calculate()"/>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- RESULTS -->
+    <div class="space-y-4">
+
+      <!-- Estimated Total -->
+      <div class="result-card">
+        <p class="text-xs font-semibold uppercase tracking-widest text-slate-400 mb-1">Estimated Total</p>
+        <p id="r-total" class="result-number text-emerald-600">$0</p>
+        <p class="text-xs text-slate-400 mt-1">Includes 12% contingency buffer</p>
+      </div>
+
+      <div class="grid grid-cols-2 gap-3">
+        <!-- Without Buffer -->
+        <div class="result-card">
+          <p class="text-xs font-semibold uppercase tracking-widest text-slate-400 mb-1">Without Buffer</p>
+          <p id="r-subtotal" class="font-headline font-bold text-xl text-slate-700">$0</p>
+          <p class="text-xs text-slate-400 mt-1">Base estimate</p>
+        </div>
+
+        <!-- Buffer -->
+        <div class="result-card">
+          <p class="text-xs font-semibold uppercase tracking-widest text-slate-400 mb-1">12% Buffer</p>
+          <p id="r-buffer" class="font-headline font-bold text-xl text-amber-500">$0</p>
+          <p class="text-xs text-slate-400 mt-1">Hidden fees &amp; surprises</p>
+        </div>
+      </div>
+
+      <!-- Per Guest -->
+      <div class="result-card">
+        <p class="text-xs font-semibold uppercase tracking-widest text-slate-400 mb-1">Cost Per Guest</p>
+        <p id="r-per-guest" class="result-number text-blue-600">$0</p>
+        <p class="text-xs text-slate-400 mt-1">Total estimate ÷ guest count</p>
+      </div>
+
+      <!-- Category Breakdown -->
+      <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
+        <h3 class="text-base font-bold mb-4 flex items-center gap-2">
+          <span class="material-symbols-outlined text-[18px] text-[#506351]">pie_chart</span>
+          Category Breakdown
+        </h3>
+        <div class="space-y-2.5" id="breakdown">
+          <!-- populated by JS -->
+        </div>
+      </div>
+
+      <!-- UPSELL -->
+      <div class="rounded-2xl p-6 text-white" style="background: linear-gradient(135deg, #2d3a2e 0%, #506351 100%);">
+        <div class="flex items-start gap-3">
+          <span class="material-symbols-outlined filled text-3xl text-white/80">favorite</span>
+          <div>
+            <p class="font-bold text-base mb-1">This is just an estimate.</p>
+            <p class="text-white/80 text-sm mb-4">Track every vendor, payment, guest, and checklist task in the full Wedding Planner.</p>
+            <a href="wedding-planner.html"
+               class="inline-flex items-center gap-2 bg-white text-[#506351] font-bold text-sm px-5 py-2.5 rounded-xl hover:bg-white/90 transition-colors">
+              Open Wedding Planner
+              <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+            </a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer class="border-t border-slate-200 bg-white mt-6 py-8">
+  <div class="max-w-5xl mx-auto px-5 flex flex-col sm:flex-row items-center justify-between gap-3 text-sm text-slate-400">
+    <a href="index.html" class="font-bold text-slate-600 hover:text-slate-900">BudgetTools</a>
+    <span>&copy; 2026 BudgetTools. Free planning tools for life's biggest moments.</span>
+  </div>
+</footer>
+
+<script>
+  function fmt(n) {
+    return '$' + Math.round(n).toLocaleString('en-US');
+  }
+
+  function calculate() {
+    const guests   = parseInt(document.getElementById('guests').value) || 0;
+    const venue    = parseInt(document.getElementById('venue').value) || 0;
+    const catering = parseFloat(document.getElementById('catering').value) || 0;
+    const decor    = parseInt(document.getElementById('decor').value) || 0;
+    const photo    = parseInt(document.getElementById('photo').value) || 0;
+    const attire   = parseFloat(document.getElementById('attire').value) || 0;
+    const other    = parseFloat(document.getElementById('other').value) || 0;
+
+    const cateringTotal = guests * catering;
+    const subtotal = venue + cateringTotal + decor + photo + attire + other;
+    const buffer   = subtotal * 0.12;
+    const total    = subtotal + buffer;
+    const perGuest = guests > 0 ? total / guests : 0;
+
+    document.getElementById('r-total').textContent    = fmt(total);
+    document.getElementById('r-subtotal').textContent = fmt(subtotal);
+    document.getElementById('r-buffer').textContent   = fmt(buffer);
+    document.getElementById('r-per-guest').textContent = fmt(perGuest);
+
+    const items = [
+      { icon: '🏛️', label: 'Venue',          value: venue },
+      { icon: '🍽️', label: 'Catering',        value: cateringTotal },
+      { icon: '🌸', label: 'Decor & Florals', value: decor },
+      { icon: '📸', label: 'Photography',     value: photo },
+      { icon: '👗', label: 'Attire',          value: attire },
+      { icon: '🎵', label: 'Music & Other',   value: other },
+      { icon: '⚠️', label: 'Buffer (12%)',    value: buffer },
+    ];
+
+    const maxVal = Math.max(...items.map(i => i.value), 1);
+    document.getElementById('breakdown').innerHTML = items.map(item => {
+      const pct = Math.round((item.value / maxVal) * 100);
+      const barColor = item.label === 'Buffer (12%)' ? '#f59e0b' : '#506351';
+      return `
+        <div>
+          <div class="flex justify-between text-sm mb-1">
+            <span class="font-medium text-slate-600">${item.icon} ${item.label}</span>
+            <span class="font-semibold text-slate-800">${fmt(item.value)}</span>
+          </div>
+          <div class="h-1.5 bg-slate-100 rounded-full overflow-hidden">
+            <div style="width:${pct}%; background:${barColor};" class="h-full rounded-full transition-all duration-300"></div>
+          </div>
+        </div>`;
+    }).join('');
+  }
+
+  calculate();
+</script>
+</body>
+</html>

@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Freelancer Take-Home Pay Calculator | BudgetTools</title>
+<meta name="description" content="Calculate your real take-home income as a freelancer after expenses, taxes, and subscriptions. Know exactly what you keep. Free, instant, no sign-up."/>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,400;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@400,0..1&display=swap" rel="stylesheet"/>
+<script>
+  tailwind.config = { theme: { extend: { fontFamily: { headline:['Noto Serif','serif'], body:['Plus Jakarta Sans','sans-serif'] } } } }
+</script>
+<style>
+* { box-sizing: border-box; }
+body { font-family: 'Plus Jakarta Sans', sans-serif; background: #f8fafc; color: #1e293b; }
+h1,h2,h3 { font-family: 'Noto Serif', serif; }
+.material-symbols-outlined { font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24; vertical-align:middle; line-height:1; }
+.filled { font-variation-settings:'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 24; }
+.field { width:100%; background:#f1f5f9; border:1px solid #e2e8f0; border-radius:10px; padding:10px 14px; font-size:15px; color:#1e293b; outline:none; font-family:'Plus Jakarta Sans',sans-serif; transition: border-color 0.15s, box-shadow 0.15s; }
+.field:focus { border-color: var(--accent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 15%, transparent); }
+.field-label { display:block; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:#64748b; margin-bottom:6px; }
+.result-card { background:white; border-radius:14px; padding:20px; box-shadow:0 1px 4px rgba(0,0,0,0.06); border:1px solid #e2e8f0; }
+.result-num { font-family:'Noto Serif',serif; font-size:2rem; font-weight:700; line-height:1.1; }
+.result-label { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:#64748b; margin-bottom:6px; }
+.result-note { font-size:12px; color:#94a3b8; margin-top:4px; }
+select.field { cursor:pointer; }
+input[type=range] { width:100%; accent-color: var(--accent); }
+</style>
+</head>
+<body style="--accent: #0f766e;">
+
+<!-- Nav -->
+<nav class="bg-white border-b border-slate-100 px-6 py-4 flex items-center justify-between sticky top-0 z-10">
+  <a href="index.html" class="text-sm font-semibold" style="color:#0f766e;">← BudgetTools</a>
+  <span class="bg-green-100 text-green-800 text-xs font-bold px-3 py-1 rounded-full">Free Calculator</span>
+</nav>
+
+<!-- Hero -->
+<section style="background: linear-gradient(135deg, #064e3b 0%, #0f766e 60%, #14b8a6 100%); padding: 3rem 1.5rem;" class="text-center text-white">
+  <div class="inline-block bg-white/20 text-white text-xs font-bold px-3 py-1 rounded-full mb-4 tracking-widest uppercase">Free Tool</div>
+  <h1 class="text-3xl md:text-4xl font-bold mb-3" style="font-family:'Noto Serif',serif;">What Do You Actually Take Home?</h1>
+  <p class="text-lg max-w-xl mx-auto mb-6" style="color:rgba(255,255,255,0.75);">Enter your freelance revenue and expenses to see your real take-home after tax reserve and costs — not just your invoice total.</p>
+  <div class="flex flex-wrap justify-center gap-3">
+    <span class="bg-white/15 text-white text-xs font-semibold px-4 py-2 rounded-full">⚡ Instant</span>
+    <span class="bg-white/15 text-white text-xs font-semibold px-4 py-2 rounded-full">📊 No sign-up</span>
+    <span class="bg-white/15 text-white text-xs font-semibold px-4 py-2 rounded-full">🔒 Private</span>
+  </div>
+</section>
+
+<!-- Calculator -->
+<section class="py-10 px-4 max-w-4xl mx-auto">
+  <div class="grid md:grid-cols-2 gap-6">
+
+    <!-- Inputs -->
+    <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100">
+      <h3 class="text-lg font-bold mb-5" style="font-family:'Noto Serif',serif;">Your Numbers</h3>
+      <div style="display:flex;flex-direction:column;gap:1.25rem;">
+
+        <div>
+          <label class="field-label">Monthly Revenue (before tax)</label>
+          <div style="position:relative;">
+            <span style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:#64748b;font-size:15px;">$</span>
+            <input type="number" id="revenue" class="field" style="padding-left:26px;" value="8500" min="0" step="100" oninput="calculate()"/>
+          </div>
+        </div>
+
+        <div>
+          <label class="field-label">Software &amp; Subscriptions</label>
+          <div style="position:relative;">
+            <span style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:#64748b;font-size:15px;">$</span>
+            <input type="number" id="software" class="field" style="padding-left:26px;" value="280" min="0" step="10" oninput="calculate()"/>
+          </div>
+        </div>
+
+        <div>
+          <label class="field-label">Other Business Expenses</label>
+          <div style="position:relative;">
+            <span style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:#64748b;font-size:15px;">$</span>
+            <input type="number" id="otherExp" class="field" style="padding-left:26px;" value="400" min="0" step="10" oninput="calculate()"/>
+          </div>
+        </div>
+
+        <div>
+          <label class="field-label" style="display:flex;justify-content:space-between;">
+            <span>Tax Reserve Rate</span>
+            <span id="taxPctLabel" style="color:#0f766e;font-size:12px;font-weight:700;">28%</span>
+          </label>
+          <input type="range" id="taxPct" min="15" max="45" value="28" step="1" oninput="calculate()"/>
+          <div style="display:flex;justify-content:space-between;font-size:11px;color:#94a3b8;margin-top:2px;"><span>15%</span><span>45%</span></div>
+        </div>
+
+        <div>
+          <label class="field-label" style="display:flex;justify-content:space-between;">
+            <span>Super / Retirement Contribution</span>
+            <span id="superPctLabel" style="color:#0f766e;font-size:12px;font-weight:700;">10%</span>
+          </label>
+          <input type="range" id="superPct" min="0" max="15" value="10" step="1" oninput="calculate()"/>
+          <div style="display:flex;justify-content:space-between;font-size:11px;color:#94a3b8;margin-top:2px;"><span>0%</span><span>15%</span></div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Results -->
+    <div style="display:flex;flex-direction:column;gap:1rem;">
+
+      <div class="result-card">
+        <div class="result-label">Monthly Take-Home</div>
+        <div class="result-num" id="r-takehome" style="color:#0f766e;">$0</div>
+        <div class="result-note">After tax reserve &amp; retirement</div>
+      </div>
+
+      <div class="result-card">
+        <div class="result-label">Tax Reserve / Month</div>
+        <div class="result-num" id="r-tax" style="color:#d97706;">$0</div>
+        <div class="result-note">Set aside, don't spend</div>
+      </div>
+
+      <div class="result-card">
+        <div class="result-label">Retirement / Super</div>
+        <div class="result-num" id="r-super" style="color:#2563eb;">$0</div>
+        <div class="result-note" id="r-super-note">10% of gross profit</div>
+      </div>
+
+      <div class="grid grid-cols-2 gap-3">
+        <div class="result-card">
+          <div class="result-label">Effective Rate</div>
+          <div class="result-num" id="r-rate" style="color:#475569;font-size:1.5rem;">0%</div>
+          <div class="result-note">Take-home as % of gross revenue</div>
+        </div>
+        <div class="result-card">
+          <div class="result-label">Annual Take-Home</div>
+          <div class="result-num" id="r-annual" style="color:#15803d;font-size:1.5rem;">$0</div>
+          <div class="result-note">Estimated (×12)</div>
+        </div>
+      </div>
+
+      <!-- Breakdown Bar -->
+      <div class="result-card">
+        <div class="result-label mb-2">Every $100 You Invoice</div>
+        <div id="breakdown-bar" style="display:flex;border-radius:8px;overflow:hidden;height:28px;width:100%;"></div>
+        <div id="breakdown-legend" style="display:flex;flex-wrap:wrap;gap:10px;margin-top:10px;font-size:12px;"></div>
+      </div>
+
+      <!-- Upsell -->
+      <div style="background:linear-gradient(135deg,#064e3b,#0f766e);border-radius:16px;padding:24px;color:white;">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+          <span class="material-symbols-outlined filled" style="font-size:28px;color:rgba(255,255,255,0.9);">work</span>
+          <span style="font-size:16px;font-weight:700;font-family:'Noto Serif',serif;">Track every invoice and expense month by month.</span>
+        </div>
+        <p style="font-size:13px;color:rgba(255,255,255,0.8);margin-bottom:16px;line-height:1.6;">The Freelancer Income &amp; Tax Tracker logs clients, invoices, expenses, and auto-calculates your quarterly tax reserve.</p>
+        <button disabled style="background:rgba(255,255,255,0.2);color:white;border:1.5px solid rgba(255,255,255,0.35);border-radius:10px;padding:10px 20px;font-size:13px;font-weight:700;cursor:not-allowed;opacity:0.7;font-family:'Plus Jakarta Sans',sans-serif;">Freelancer Tracker — Coming Soon</button>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="bg-slate-800 text-white py-8 text-center text-sm" style="color:rgba(255,255,255,0.5);">
+  <p>© 2026 BudgetTools — Free financial tools for every life event.</p>
+  <p class="mt-2"><a href="index.html" style="color:rgba(255,255,255,0.6);text-decoration:underline;">← Back to all tools</a></p>
+</footer>
+
+<script>
+function fmt(n){ return '$' + Math.round(n).toLocaleString(); }
+function fmtN(n){ return Math.round(n).toLocaleString(); }
+function fmtPct(n){ return Math.round(n) + '%'; }
+
+function calculate() {
+  const revenue  = parseFloat(document.getElementById('revenue').value)  || 0;
+  const software = parseFloat(document.getElementById('software').value) || 0;
+  const otherExp = parseFloat(document.getElementById('otherExp').value) || 0;
+  const taxPct   = parseFloat(document.getElementById('taxPct').value)   || 0;
+  const superPct = parseFloat(document.getElementById('superPct').value) || 0;
+
+  document.getElementById('taxPctLabel').textContent  = taxPct + '%';
+  document.getElementById('superPctLabel').textContent = superPct + '%';
+
+  const totalExpenses = software + otherExp;
+  const grossProfit   = Math.max(0, revenue - totalExpenses);
+  const taxReserve    = grossProfit * (taxPct / 100);
+  const superAmt      = grossProfit * (superPct / 100);
+  const takeHome      = grossProfit - taxReserve - superAmt;
+  const effectiveRate = revenue > 0 ? (takeHome / revenue) * 100 : 0;
+  const annualTakeHome = takeHome * 12;
+
+  document.getElementById('r-takehome').textContent = fmt(takeHome);
+  document.getElementById('r-tax').textContent      = fmt(taxReserve);
+  document.getElementById('r-super').textContent    = fmt(superAmt);
+  document.getElementById('r-super-note').textContent = superPct + '% of gross profit';
+  document.getElementById('r-rate').textContent     = effectiveRate.toFixed(1) + '%';
+  document.getElementById('r-annual').textContent   = fmt(annualTakeHome);
+
+  // Breakdown bar (per $100)
+  if (revenue > 0) {
+    const keepPct    = (takeHome / revenue) * 100;
+    const taxPctBar  = (taxReserve / revenue) * 100;
+    const superPctBar = (superAmt / revenue) * 100;
+    const expPctBar  = (totalExpenses / revenue) * 100;
+
+    const bar = document.getElementById('breakdown-bar');
+    bar.innerHTML = '';
+    const segments = [
+      { pct: keepPct,    color: '#0f766e', label: 'Keep $' + keepPct.toFixed(0) },
+      { pct: taxPctBar,  color: '#d97706', label: 'Tax $' + taxPctBar.toFixed(0) },
+      { pct: superPctBar,color: '#2563eb', label: 'Super $' + superPctBar.toFixed(0) },
+      { pct: expPctBar,  color: '#94a3b8', label: 'Expenses $' + expPctBar.toFixed(0) },
+    ];
+    segments.forEach(s => {
+      if (s.pct > 0) {
+        const d = document.createElement('div');
+        d.style.width = Math.max(s.pct, 0) + '%';
+        d.style.background = s.color;
+        d.title = s.label;
+        bar.appendChild(d);
+      }
+    });
+
+    const legend = document.getElementById('breakdown-legend');
+    legend.innerHTML = segments.filter(s => s.pct > 0).map(s =>
+      `<span style="display:flex;align-items:center;gap:4px;"><span style="width:10px;height:10px;border-radius:2px;background:${s.color};display:inline-block;"></span>${s.label}</span>`
+    ).join('');
+  }
+}
+
+document.addEventListener('DOMContentLoaded', calculate);
+</script>
+</body>
+</html>

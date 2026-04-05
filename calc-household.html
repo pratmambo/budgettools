@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Household Savings Rate Calculator | BudgetTools</title>
+  <meta name="description" content="Calculate your current savings rate, see your gap to your savings goal, and get suggestions on where to cut. Free instant calculator."/>
+  <meta name="robots" content="index, follow"/>
+  <link rel="canonical" href="https://budgettools.app/calc-household.html"/>
+  <meta property="og:title" content="Household Savings Rate Calculator | BudgetTools"/>
+  <meta property="og:description" content="Calculate your current savings rate, see your gap to your savings goal, and get suggestions on where to cut. Free instant calculator."/>
+  <meta property="og:type" content="website"/>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,400;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@400,0..1&display=swap" rel="stylesheet"/>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: "#00355f",
+            surface: "#f8f9fa",
+            "on-surface": "#1a1a2e",
+          },
+          fontFamily: {
+            headline: ["Noto Serif", "serif"],
+            body: ["Plus Jakarta Sans", "sans-serif"],
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body { font-family: 'Plus Jakarta Sans', sans-serif; background: #f8f9fa; color: #1a1a2e; }
+    h1, h2, h3 { font-family: 'Noto Serif', serif; }
+    .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; vertical-align: middle; }
+    .filled { font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+    .field {
+      width: 100%; background: #f1f5f9; border: 1px solid #e2e8f0; border-radius: 10px;
+      padding: 10px 14px; font-size: 15px; color: #1a1a2e; outline: none;
+      font-family: 'Plus Jakarta Sans', sans-serif; transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    .field:focus { border-color: #00355f; box-shadow: 0 0 0 3px #00355f20; }
+    .field-label { display: block; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; color: #64748b; margin-bottom: 6px; }
+    .result-card { background: white; border-radius: 16px; padding: 20px 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); border: 1px solid #e2e8f0; }
+    .result-number { font-family: 'Noto Serif', serif; font-size: 2rem; font-weight: 700; line-height: 1.1; }
+    input[type=range] { -webkit-appearance: none; appearance: none; width: 100%; height: 6px; border-radius: 6px; background: #e2e8f0; outline: none; cursor: pointer; }
+    input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 20px; height: 20px; border-radius: 50%; background: #00355f; cursor: pointer; box-shadow: 0 1px 4px rgba(0,0,0,0.2); }
+    input[type=range]::-moz-range-thumb { width: 20px; height: 20px; border-radius: 50%; background: #00355f; cursor: pointer; border: none; box-shadow: 0 1px 4px rgba(0,0,0,0.2); }
+    .gauge-track { height: 10px; background: #e2e8f0; border-radius: 999px; overflow: hidden; }
+    .gauge-bar { height: 100%; border-radius: 999px; transition: width 0.35s ease, background 0.35s ease; }
+    .tip-row { display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #f1f5f9; }
+    .tip-row:last-child { border-bottom: none; }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="bg-white/90 backdrop-blur-xl sticky top-0 z-50 border-b border-slate-200">
+  <div class="max-w-5xl mx-auto px-5 py-3 flex items-center justify-between">
+    <a href="index.html" class="flex items-center gap-1.5 text-slate-600 hover:text-slate-900 text-sm font-medium transition-colors">
+      <span class="material-symbols-outlined text-[18px]">arrow_back</span>
+      BudgetTools
+    </a>
+    <span class="bg-emerald-100 text-emerald-700 text-xs font-semibold px-3 py-1 rounded-full">Free Calculator</span>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div style="background: linear-gradient(135deg, #001a30 0%, #00355f 100%);" class="py-14 px-5 text-center">
+  <div class="max-w-2xl mx-auto">
+    <div class="inline-flex items-center gap-2 bg-white/15 text-white/90 text-xs font-semibold px-4 py-1.5 rounded-full mb-6 backdrop-blur-sm">
+      <span class="material-symbols-outlined text-[14px]">bolt</span>
+      Free &middot; No sign-up &middot; Instant results
+    </div>
+    <h1 class="text-3xl md:text-4xl font-bold text-white mb-4 leading-tight">Are You Saving Enough?</h1>
+    <p class="text-white/80 text-base md:text-lg">Enter your income and monthly expenses to find your savings rate, your gap to your goal, and where to find more savings.</p>
+  </div>
+</div>
+
+<!-- CALCULATOR -->
+<div class="max-w-5xl mx-auto px-5 py-10">
+  <div class="grid md:grid-cols-2 gap-6 items-start">
+
+    <!-- INPUTS -->
+    <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
+      <h2 class="text-lg font-bold mb-5 flex items-center gap-2">
+        <span class="material-symbols-outlined text-[20px] text-[#00355f]">tune</span>
+        Your Monthly Finances
+      </h2>
+
+      <div class="space-y-5">
+
+        <div>
+          <label class="field-label">Monthly Take-Home Income ($)</label>
+          <input type="number" id="income" class="field" value="6500" min="0" oninput="calculate()"/>
+        </div>
+
+        <div class="border-t border-slate-100 pt-4">
+          <p class="text-xs font-semibold uppercase tracking-widest text-slate-400 mb-3">Monthly Expenses</p>
+          <div class="space-y-4">
+
+            <div>
+              <label class="field-label">Rent or Mortgage ($)</label>
+              <input type="number" id="rent" class="field" value="1800" min="0" oninput="calculate()"/>
+            </div>
+            <div>
+              <label class="field-label">Groceries &amp; Food ($)</label>
+              <input type="number" id="groceries" class="field" value="500" min="0" oninput="calculate()"/>
+            </div>
+            <div>
+              <label class="field-label">Utilities, Phone &amp; Subscriptions ($)</label>
+              <input type="number" id="utilities" class="field" value="280" min="0" oninput="calculate()"/>
+            </div>
+            <div>
+              <label class="field-label">Transport &amp; Car ($)</label>
+              <input type="number" id="transport" class="field" value="350" min="0" oninput="calculate()"/>
+            </div>
+            <div>
+              <label class="field-label">Dining Out &amp; Entertainment ($)</label>
+              <input type="number" id="entertainment" class="field" value="300" min="0" oninput="calculate()"/>
+            </div>
+            <div>
+              <label class="field-label">Other Regular Expenses ($)</label>
+              <input type="number" id="other" class="field" value="400" min="0" oninput="calculate()"/>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="border-t border-slate-100 pt-4">
+          <div class="flex justify-between mb-1.5">
+            <label class="field-label">Target Savings Rate (%)</label>
+            <span id="goalDisplay" class="text-sm font-bold text-[#00355f]">20%</span>
+          </div>
+          <input type="range" id="goalPct" min="5" max="50" value="20" step="1"
+            oninput="document.getElementById('goalDisplay').textContent=this.value+'%'; calculate()"/>
+          <div class="flex justify-between text-xs text-slate-400 mt-1"><span>5%</span><span>50%</span></div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- RESULTS -->
+    <div class="space-y-4">
+
+      <!-- Savings Rate Gauge -->
+      <div class="result-card">
+        <div class="flex items-start justify-between mb-2">
+          <div>
+            <p class="text-xs font-semibold uppercase tracking-widest text-slate-400 mb-1">Current Savings Rate</p>
+            <p id="r-rate" class="result-number text-slate-800">0%</p>
+          </div>
+          <div class="text-right">
+            <p class="text-xs text-slate-400 mb-1">Target</p>
+            <p id="r-target-rate" class="font-headline font-bold text-lg text-[#00355f]">20%</p>
+          </div>
+        </div>
+        <div class="gauge-track mt-3">
+          <div id="gauge-bar" class="gauge-bar" style="width:0%;background:#10b981;"></div>
+        </div>
+        <p id="r-rate-note" class="text-xs text-slate-400 mt-2">Your savings as a % of take-home income</p>
+      </div>
+
+      <div class="grid grid-cols-2 gap-3">
+        <!-- Current Savings -->
+        <div class="result-card">
+          <p class="text-xs font-semibold uppercase tracking-widest text-slate-400 mb-1">Current Savings</p>
+          <p id="r-savings" class="font-headline font-bold text-xl text-emerald-600">$0</p>
+          <p class="text-xs text-slate-400 mt-1">Per month</p>
+        </div>
+        <!-- Target Savings -->
+        <div class="result-card">
+          <p class="text-xs font-semibold uppercase tracking-widest text-slate-400 mb-1">Target Savings</p>
+          <p id="r-target-savings" class="font-headline font-bold text-xl text-[#00355f]">$0</p>
+          <p class="text-xs text-slate-400 mt-1">Per month</p>
+        </div>
+      </div>
+
+      <!-- Gap to Target -->
+      <div class="result-card">
+        <p class="text-xs font-semibold uppercase tracking-widest text-slate-400 mb-1">Gap to Target</p>
+        <p id="r-gap" class="result-number text-red-500">$0</p>
+        <p id="r-gap-note" class="text-xs text-slate-400 mt-1">Monthly difference from your goal</p>
+      </div>
+
+      <!-- Where to Find Savings -->
+      <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200">
+        <h3 class="text-base font-bold mb-1 flex items-center gap-2">
+          <span class="material-symbols-outlined text-[18px] text-[#00355f]">lightbulb</span>
+          Where to Find More Savings
+        </h3>
+        <p class="text-xs text-slate-400 mb-3">Top 3 expenses — 10% reduction opportunity</p>
+        <div id="tips-list">
+          <!-- populated by JS -->
+        </div>
+      </div>
+
+      <!-- Annual Impact -->
+      <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200">
+        <h3 class="text-base font-bold mb-3 flex items-center gap-2">
+          <span class="material-symbols-outlined text-[18px] text-[#00355f]">calendar_month</span>
+          Annual Impact
+        </h3>
+        <div class="grid grid-cols-2 gap-3">
+          <div class="bg-slate-50 rounded-xl p-3 text-center">
+            <p class="text-xs text-slate-400 mb-1">Current (12 months)</p>
+            <p id="r-annual-current" class="font-headline font-bold text-lg text-emerald-600">$0</p>
+          </div>
+          <div class="bg-slate-50 rounded-xl p-3 text-center">
+            <p class="text-xs text-slate-400 mb-1">At Target (12 months)</p>
+            <p id="r-annual-target" class="font-headline font-bold text-lg text-[#00355f]">$0</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- UPSELL -->
+      <div class="rounded-2xl p-6 text-white" style="background: linear-gradient(135deg, #001a30 0%, #00355f 100%);">
+        <div class="flex items-start gap-3">
+          <span class="material-symbols-outlined filled text-3xl text-white/80">home</span>
+          <div>
+            <p class="font-bold text-base mb-1">See the full picture every month.</p>
+            <p class="text-white/80 text-sm mb-4">Track every income source, bill, and savings goal in the Household Budget Planner — coming soon.</p>
+            <button disabled
+               class="inline-flex items-center gap-2 bg-white/25 text-white/60 font-bold text-sm px-5 py-2.5 rounded-xl cursor-not-allowed border border-white/20">
+              <span class="material-symbols-outlined text-[16px]">schedule</span>
+              Coming Soon
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer class="border-t border-slate-200 bg-white mt-6 py-8">
+  <div class="max-w-5xl mx-auto px-5 flex flex-col sm:flex-row items-center justify-between gap-3 text-sm text-slate-400">
+    <a href="index.html" class="font-bold text-slate-600 hover:text-slate-900">BudgetTools</a>
+    <span>&copy; 2026 BudgetTools. Free planning tools for life's biggest moments.</span>
+  </div>
+</footer>
+
+<script>
+  function fmt(n) {
+    const abs = Math.abs(Math.round(n));
+    return (n < 0 ? '-$' : '$') + abs.toLocaleString('en-US');
+  }
+
+  function calculate() {
+    const income        = parseFloat(document.getElementById('income').value)        || 0;
+    const rent          = parseFloat(document.getElementById('rent').value)          || 0;
+    const groceries     = parseFloat(document.getElementById('groceries').value)     || 0;
+    const utilities     = parseFloat(document.getElementById('utilities').value)     || 0;
+    const transport     = parseFloat(document.getElementById('transport').value)     || 0;
+    const entertainment = parseFloat(document.getElementById('entertainment').value) || 0;
+    const other         = parseFloat(document.getElementById('other').value)         || 0;
+    const goalPct       = parseFloat(document.getElementById('goalPct').value)       || 0;
+
+    const totalExpenses   = rent + groceries + utilities + transport + entertainment + other;
+    const currentSavings  = income - totalExpenses;
+    const currentRate     = income > 0 ? (currentSavings / income) * 100 : 0;
+    const targetSavings   = income * (goalPct / 100);
+    const gap             = targetSavings - currentSavings;
+
+    // Savings rate card
+    const rateEl = document.getElementById('r-rate');
+    rateEl.textContent = currentRate.toFixed(1) + '%';
+    if (currentRate >= 20) rateEl.className = 'result-number text-emerald-600';
+    else if (currentRate >= 10) rateEl.className = 'result-number text-amber-500';
+    else rateEl.className = 'result-number text-red-500';
+
+    document.getElementById('r-target-rate').textContent = goalPct + '%';
+
+    // Gauge
+    const gaugeBar = document.getElementById('gauge-bar');
+    const gaugePct = Math.min(Math.max(currentRate, 0), 100);
+    gaugeBar.style.width = gaugePct + '%';
+    if (currentRate >= 20) gaugeBar.style.background = '#10b981';
+    else if (currentRate >= 10) gaugeBar.style.background = '#f59e0b';
+    else gaugeBar.style.background = '#ef4444';
+
+    // Savings cards
+    const savingsEl = document.getElementById('r-savings');
+    savingsEl.textContent = fmt(currentSavings);
+    savingsEl.className = 'font-headline font-bold text-xl ' + (currentSavings >= 0 ? 'text-emerald-600' : 'text-red-500');
+
+    document.getElementById('r-target-savings').textContent = fmt(targetSavings);
+
+    // Gap card
+    const gapEl   = document.getElementById('r-gap');
+    const gapNote = document.getElementById('r-gap-note');
+    if (gap <= 0) {
+      gapEl.textContent = fmt(Math.abs(gap));
+      gapEl.className   = 'result-number text-emerald-600';
+      gapNote.textContent = `On track! You're $${Math.abs(Math.round(gap)).toLocaleString()} above your target`;
+    } else {
+      gapEl.textContent = fmt(gap);
+      gapEl.className   = 'result-number text-red-500';
+      gapNote.textContent = `Save $${Math.round(gap).toLocaleString()} more per month to hit your goal`;
+    }
+
+    // Tips — top 3 expenses
+    const expenses = [
+      { label: 'Rent / Mortgage', icon: '🏠', value: rent },
+      { label: 'Groceries & Food', icon: '🛒', value: groceries },
+      { label: 'Utilities & Bills', icon: '💡', value: utilities },
+      { label: 'Transport & Car', icon: '🚗', value: transport },
+      { label: 'Dining & Entertainment', icon: '🎭', value: entertainment },
+      { label: 'Other Expenses', icon: '📦', value: other },
+    ];
+    const top3 = [...expenses].sort((a, b) => b.value - a.value).slice(0, 3);
+    document.getElementById('tips-list').innerHTML = top3.map(e => {
+      const saving = e.value * 0.10;
+      return `
+        <div class="tip-row">
+          <span class="text-sm font-medium text-slate-600">${e.icon} ${e.label}</span>
+          <span class="text-sm font-semibold text-emerald-600 shrink-0 ml-3">
+            Cut 10% → save ${fmt(saving)}/mo
+          </span>
+        </div>`;
+    }).join('');
+
+    // Annual impact
+    document.getElementById('r-annual-current').textContent = fmt(currentSavings * 12);
+    document.getElementById('r-annual-target').textContent  = fmt(targetSavings * 12);
+
+    // Rate note
+    document.getElementById('r-rate-note').textContent =
+      `${fmt(currentSavings)}/mo saved out of ${fmt(income)}/mo income`;
+  }
+
+  calculate();
+</script>
+</body>
+</html>

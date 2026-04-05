@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Product Margin & Pricing Calculator | BudgetTools</title>
+  <meta name="description" content="Calculate gross profit, net margin, and the minimum price floor for any product. Enter cost, selling price, platform fees, and shipping — free instant calculator."/>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,400;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@400,0..1&display=swap" rel="stylesheet"/>
+  <script>
+    tailwind.config = { theme: { extend: { fontFamily: { headline: ['Noto Serif','serif'], body: ['Plus Jakarta Sans','sans-serif'] } } } }
+  </script>
+  <style>
+    * { box-sizing: border-box; }
+    body { font-family: 'Plus Jakarta Sans', sans-serif; background: #f8fafc; color: #1e293b; }
+    h1,h2,h3 { font-family: 'Noto Serif', serif; }
+    .material-symbols-outlined { font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24; vertical-align:middle; line-height:1; }
+    .filled { font-variation-settings:'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 24; }
+    .field { width:100%; background:#f1f5f9; border:1px solid #e2e8f0; border-radius:10px; padding:10px 14px; font-size:15px; color:#1e293b; outline:none; font-family:'Plus Jakarta Sans',sans-serif; transition: border-color 0.15s, box-shadow 0.15s; }
+    .field:focus { border-color: var(--accent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 15%, transparent); }
+    .field-label { display:block; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:#64748b; margin-bottom:6px; }
+    .result-card { background:white; border-radius:14px; padding:20px; box-shadow:0 1px 4px rgba(0,0,0,0.06); border:1px solid #e2e8f0; }
+    .result-num { font-family:'Noto Serif',serif; font-size:2rem; font-weight:700; line-height:1.1; }
+    .result-label { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:#64748b; margin-bottom:6px; }
+    .result-note { font-size:12px; color:#94a3b8; margin-top:4px; }
+    select.field { cursor:pointer; }
+    input[type=range] { width:100%; accent-color: var(--accent); }
+  </style>
+</head>
+<body style="--accent: #5d1a0a">
+
+  <!-- NAV -->
+  <nav class="bg-white border-b border-slate-200 px-6 py-4 flex items-center justify-between sticky top-0 z-10">
+    <a href="index.html" class="text-sm font-semibold flex items-center gap-1" style="color:#5d1a0a">
+      <span class="material-symbols-outlined text-base">arrow_back</span>
+      BudgetTools
+    </a>
+    <span class="text-xs font-bold px-3 py-1 rounded-full bg-green-100 text-green-700">Free Calculator</span>
+  </nav>
+
+  <!-- HERO -->
+  <section style="background:linear-gradient(135deg,#3b0e02 0%,#5d1a0a 60%,#9c4a2a 100%)" class="py-12 px-6 text-center text-white">
+    <span class="inline-block text-xs font-bold uppercase tracking-widest bg-white/20 text-white px-3 py-1 rounded-full mb-4">Free Tool</span>
+    <h1 class="text-3xl md:text-4xl font-bold mb-3 max-w-2xl mx-auto">Are You Actually Making Money on This Product?</h1>
+    <p class="text-white/75 text-lg max-w-xl mx-auto mb-6">Enter your cost price, platform fees, and shipping to instantly see your net margin — and find the minimum price you can charge without losing money.</p>
+    <div class="flex flex-wrap justify-center gap-3">
+      <span class="bg-white/15 text-white text-xs font-semibold px-4 py-1.5 rounded-full">⚡ Instant</span>
+      <span class="bg-white/15 text-white text-xs font-semibold px-4 py-1.5 rounded-full">📊 No sign-up</span>
+      <span class="bg-white/15 text-white text-xs font-semibold px-4 py-1.5 rounded-full">🔒 Private</span>
+    </div>
+  </section>
+
+  <!-- CALCULATOR -->
+  <section class="py-10 px-4 max-w-4xl mx-auto">
+    <div class="grid md:grid-cols-2 gap-6 items-start">
+
+      <!-- INPUTS -->
+      <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100">
+        <h3 class="text-xl font-bold mb-5 flex items-center gap-2">
+          <span class="material-symbols-outlined filled text-xl" style="color:#5d1a0a">storefront</span>
+          Your Numbers
+        </h3>
+        <div class="space-y-5">
+
+          <div>
+            <label class="field-label">Cost Price / Cost of Goods</label>
+            <div class="relative">
+              <span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 font-semibold">$</span>
+              <input type="number" id="cogs" class="field pl-7" value="8.50" min="0" step="0.01" oninput="calculate()"/>
+            </div>
+          </div>
+
+          <div>
+            <label class="field-label">Selling Price</label>
+            <div class="relative">
+              <span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 font-semibold">$</span>
+              <input type="number" id="sellingPrice" class="field pl-7" value="24.99" min="0" step="0.01" oninput="calculate()"/>
+            </div>
+          </div>
+
+          <div>
+            <div class="flex justify-between items-center mb-2">
+              <label class="field-label" style="margin-bottom:0">Platform / Transaction Fee (%)</label>
+              <span id="platformLabel" class="text-sm font-bold" style="color:#5d1a0a">8%</span>
+            </div>
+            <input type="range" id="platformFee" min="0" max="20" step="0.5" value="8" oninput="document.getElementById('platformLabel').textContent=parseFloat(this.value).toFixed(1)+'%'; calculate()"/>
+            <div class="flex justify-between text-xs text-slate-400 mt-1"><span>0%</span><span>20%</span></div>
+          </div>
+
+          <div>
+            <label class="field-label">Shipping & Fulfilment</label>
+            <div class="relative">
+              <span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 font-semibold">$</span>
+              <input type="number" id="shipping" class="field pl-7" value="3.50" min="0" step="0.01" oninput="calculate()"/>
+            </div>
+          </div>
+
+          <div>
+            <div class="flex justify-between items-center mb-2">
+              <label class="field-label" style="margin-bottom:0">Returns / Refunds Rate (%)</label>
+              <span id="returnsLabel" class="text-sm font-bold" style="color:#5d1a0a">5%</span>
+            </div>
+            <input type="range" id="returnsPct" min="0" max="20" step="1" value="5" oninput="document.getElementById('returnsLabel').textContent=this.value+'%'; calculate()"/>
+            <div class="flex justify-between text-xs text-slate-400 mt-1"><span>0%</span><span>20%</span></div>
+          </div>
+
+          <div>
+            <div class="flex justify-between items-center mb-2">
+              <label class="field-label" style="margin-bottom:0">Target Net Margin (%)</label>
+              <span id="targetMarginLabel" class="text-sm font-bold" style="color:#5d1a0a">25%</span>
+            </div>
+            <input type="range" id="targetMargin" min="5" max="60" step="1" value="25" oninput="document.getElementById('targetMarginLabel').textContent=this.value+'%'; calculate()"/>
+            <div class="flex justify-between text-xs text-slate-400 mt-1"><span>5%</span><span>60%</span></div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- RESULTS -->
+      <div class="space-y-4">
+
+        <!-- Net Profit -->
+        <div class="result-card">
+          <div class="flex items-start justify-between">
+            <div>
+              <div class="result-label">Net Profit Per Sale</div>
+              <div id="res-netProfit" class="result-num text-green-700">$0.00</div>
+              <div id="res-netProfit-note" class="result-note">0.0% net margin</div>
+            </div>
+            <span id="marginBadge" class="text-xs font-bold px-3 py-1 rounded-full bg-green-100 text-green-700 mt-1">Excellent</span>
+          </div>
+        </div>
+
+        <!-- Gross Profit -->
+        <div class="result-card">
+          <div class="result-label">Gross Profit</div>
+          <div id="res-grossProfit" class="result-num text-green-700">$0.00</div>
+          <div id="res-grossProfit-note" class="result-note">0.0% gross margin</div>
+        </div>
+
+        <!-- Price Floor -->
+        <div class="result-card">
+          <div class="result-label">Minimum Price Floor</div>
+          <div id="res-priceFloor" class="result-num" style="color:#5d1a0a">$0.00</div>
+          <div class="result-note">Break even at this price</div>
+        </div>
+
+        <!-- Recommended Price -->
+        <div class="result-card">
+          <div class="result-label">Price for Target Margin</div>
+          <div id="res-recPrice" class="result-num text-blue-700">$0.00</div>
+          <div id="res-recPrice-note" class="result-note">To achieve 25% net margin</div>
+        </div>
+
+        <!-- Cost Breakdown -->
+        <div class="result-card">
+          <div class="result-label mb-3">Cost Breakdown</div>
+          <div class="grid grid-cols-2 gap-2 text-sm">
+            <div class="bg-slate-50 rounded-lg px-3 py-2">
+              <div class="text-xs text-slate-500 font-semibold uppercase tracking-wide mb-0.5">COGS</div>
+              <div id="bd-cogs" class="font-bold text-slate-700">$0.00</div>
+            </div>
+            <div class="bg-slate-50 rounded-lg px-3 py-2">
+              <div class="text-xs text-slate-500 font-semibold uppercase tracking-wide mb-0.5">Platform Fee</div>
+              <div id="bd-platform" class="font-bold text-slate-700">$0.00</div>
+            </div>
+            <div class="bg-slate-50 rounded-lg px-3 py-2">
+              <div class="text-xs text-slate-500 font-semibold uppercase tracking-wide mb-0.5">Shipping</div>
+              <div id="bd-shipping" class="font-bold text-slate-700">$0.00</div>
+            </div>
+            <div class="bg-slate-50 rounded-lg px-3 py-2">
+              <div class="text-xs text-slate-500 font-semibold uppercase tracking-wide mb-0.5">Returns</div>
+              <div id="bd-returns" class="font-bold text-slate-700">$0.00</div>
+            </div>
+          </div>
+          <div class="flex justify-between items-center mt-3 pt-3 border-t border-slate-100">
+            <span class="text-sm font-bold text-slate-600">Total Costs</span>
+            <span id="bd-total" class="font-bold text-slate-800">$0.00</span>
+          </div>
+          <p class="text-xs text-slate-400 mt-2 italic">Healthy e-commerce net margins: 15–25%. Retail/cafe: 10–20%.</p>
+        </div>
+
+        <!-- What-if section -->
+        <div class="result-card bg-blue-50 border-blue-100">
+          <div class="result-label text-blue-600">What If You Raise the Price by $2?</div>
+          <div class="grid grid-cols-2 gap-3 mt-2">
+            <div>
+              <div class="text-xs text-slate-500 font-semibold uppercase tracking-wide mb-1">New Net Profit</div>
+              <div id="wi-profit" class="font-bold text-lg text-blue-700 font-headline">—</div>
+            </div>
+            <div>
+              <div class="text-xs text-slate-500 font-semibold uppercase tracking-wide mb-1">New Net Margin</div>
+              <div id="wi-margin" class="font-bold text-lg text-blue-700 font-headline">—</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Upsell -->
+        <div class="rounded-2xl p-6 text-white" style="background:linear-gradient(135deg,#3b0e02 0%,#5d1a0a 60%,#9c4a2a 100%)">
+          <div class="flex items-center gap-2 mb-2">
+            <span class="material-symbols-outlined filled text-2xl">restaurant</span>
+            <span class="font-bold text-lg">Costing every item in your menu or catalogue?</span>
+          </div>
+          <p class="text-white/80 text-sm mb-4">The Cafe Costing template calculates food cost %, GP per dish, and break-even covers across your full menu.</p>
+          <a href="cafe-costing.html" class="inline-block bg-white font-bold text-sm px-5 py-2.5 rounded-xl transition hover:bg-orange-50" style="color:#5d1a0a">
+            Open Cafe Costing →
+          </a>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="bg-slate-800 text-white/50 py-8 text-center text-sm">
+    <p>© 2026 BudgetTools · Free financial calculators · <a href="index.html" class="underline hover:text-white/80">Back to all tools</a></p>
+  </footer>
+
+  <script>
+    function fmt(n) { return '$' + Math.abs(n).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
+    function fmtPct(n) { return n.toFixed(1) + '%'; }
+    function fmtSigned(n) { return (n >= 0 ? '$' : '-$') + Math.abs(n).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
+
+    function calcNetProfit(sp, cogs, platformPct, shipping, returnsPct) {
+      const platformFeeAmt = sp * (platformPct / 100);
+      const returnsCost = sp * (returnsPct / 100);
+      const totalCosts = cogs + platformFeeAmt + shipping + returnsCost;
+      const netProfit = sp - totalCosts;
+      const netMargin = sp > 0 ? (netProfit / sp) * 100 : 0;
+      return { netProfit, netMargin, totalCosts, platformFeeAmt, returnsCost };
+    }
+
+    function calculate() {
+      const cogs = parseFloat(document.getElementById('cogs').value) || 0;
+      const sellingPrice = parseFloat(document.getElementById('sellingPrice').value) || 0;
+      const platformFeePct = parseFloat(document.getElementById('platformFee').value) || 0;
+      const shipping = parseFloat(document.getElementById('shipping').value) || 0;
+      const returnsPct = parseFloat(document.getElementById('returnsPct').value) || 0;
+      const targetMarginPct = parseFloat(document.getElementById('targetMargin').value) || 25;
+
+      const platformFeeAmt = sellingPrice * (platformFeePct / 100);
+      const returnsCost = sellingPrice * (returnsPct / 100);
+      const totalCosts = cogs + platformFeeAmt + shipping + returnsCost;
+
+      const grossProfit = sellingPrice - cogs;
+      const grossMargin = sellingPrice > 0 ? (grossProfit / sellingPrice) * 100 : 0;
+
+      const netProfit = sellingPrice - totalCosts;
+      const netMargin = sellingPrice > 0 ? (netProfit / sellingPrice) * 100 : 0;
+
+      const denom = 1 - platformFeePct / 100 - returnsPct / 100;
+      const priceFloor = denom > 0 ? (cogs + shipping) / denom : 0;
+
+      const denomTarget = denom - targetMarginPct / 100;
+      const recommendedPrice = denomTarget > 0 ? (cogs + shipping) / denomTarget : 0;
+
+      // Net profit display
+      const netEl = document.getElementById('res-netProfit');
+      netEl.textContent = fmtSigned(netProfit);
+      netEl.style.color = netProfit > 0 ? '#15803d' : '#dc2626';
+      document.getElementById('res-netProfit-note').textContent = fmtPct(netMargin) + ' net margin';
+
+      // Gross profit
+      const grossEl = document.getElementById('res-grossProfit');
+      grossEl.textContent = fmtSigned(grossProfit);
+      grossEl.style.color = grossProfit > 0 ? '#15803d' : '#dc2626';
+      document.getElementById('res-grossProfit-note').textContent = fmtPct(grossMargin) + ' gross margin';
+
+      // Price floor & recommended
+      document.getElementById('res-priceFloor').textContent = fmt(priceFloor);
+      document.getElementById('res-recPrice').textContent = fmt(recommendedPrice);
+      document.getElementById('res-recPrice-note').textContent = 'To achieve ' + targetMarginPct + '% net margin';
+
+      // Breakdown
+      document.getElementById('bd-cogs').textContent = fmt(cogs);
+      document.getElementById('bd-platform').textContent = fmt(platformFeeAmt);
+      document.getElementById('bd-shipping').textContent = fmt(shipping);
+      document.getElementById('bd-returns').textContent = fmt(returnsCost);
+      document.getElementById('bd-total').textContent = fmt(totalCosts);
+
+      // Margin badge
+      const badge = document.getElementById('marginBadge');
+      if (netMargin >= 25) {
+        badge.textContent = 'Excellent'; badge.className = 'text-xs font-bold px-3 py-1 rounded-full bg-green-100 text-green-700 mt-1';
+      } else if (netMargin >= 15) {
+        badge.textContent = 'Healthy'; badge.className = 'text-xs font-bold px-3 py-1 rounded-full bg-blue-100 text-blue-600 mt-1';
+      } else if (netMargin >= 5) {
+        badge.textContent = 'Thin — watch costs'; badge.className = 'text-xs font-bold px-3 py-1 rounded-full bg-amber-100 text-amber-700 mt-1';
+      } else {
+        badge.textContent = 'Risky — reprice'; badge.className = 'text-xs font-bold px-3 py-1 rounded-full bg-red-100 text-red-700 mt-1';
+      }
+
+      // What-if: +$2
+      const wiPrice = sellingPrice + 2;
+      const wi = calcNetProfit(wiPrice, cogs, platformFeePct, shipping, returnsPct);
+      document.getElementById('wi-profit').textContent = fmtSigned(wi.netProfit);
+      document.getElementById('wi-profit').style.color = wi.netProfit > 0 ? '#1d4ed8' : '#dc2626';
+      document.getElementById('wi-margin').textContent = fmtPct(wi.netMargin);
+      document.getElementById('wi-margin').style.color = wi.netProfit > 0 ? '#1d4ed8' : '#dc2626';
+    }
+
+    document.addEventListener('DOMContentLoaded', calculate);
+  </script>
+</body>
+</html>

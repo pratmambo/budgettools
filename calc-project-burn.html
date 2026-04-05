@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Project Budget Burn Rate Calculator | BudgetTools</title>
+<meta name="description" content="Calculate your project's burn rate, projected total cost, and over-budget risk. Enter budget, spend to date, and timeline — get instant insights. Free project calculator."/>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,400;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@400,0..1&display=swap" rel="stylesheet"/>
+<script>
+  tailwind.config = { theme: { extend: { fontFamily: { headline:['Noto Serif','serif'], body:['Plus Jakarta Sans','sans-serif'] } } } }
+</script>
+<style>
+* { box-sizing: border-box; }
+body { font-family: 'Plus Jakarta Sans', sans-serif; background: #f8fafc; color: #1e293b; }
+h1,h2,h3 { font-family: 'Noto Serif', serif; }
+.material-symbols-outlined { font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24; vertical-align:middle; line-height:1; }
+.filled { font-variation-settings:'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 24; }
+.field { width:100%; background:#f1f5f9; border:1px solid #e2e8f0; border-radius:10px; padding:10px 14px; font-size:15px; color:#1e293b; outline:none; font-family:'Plus Jakarta Sans',sans-serif; transition: border-color 0.15s, box-shadow 0.15s; }
+.field:focus { border-color: var(--accent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 15%, transparent); }
+.field-label { display:block; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:#64748b; margin-bottom:6px; }
+.result-card { background:white; border-radius:14px; padding:20px; box-shadow:0 1px 4px rgba(0,0,0,0.06); border:1px solid #e2e8f0; }
+.result-num { font-family:'Noto Serif',serif; font-size:2rem; font-weight:700; line-height:1.1; }
+.result-label { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:#64748b; margin-bottom:6px; }
+.result-note { font-size:12px; color:#94a3b8; margin-top:4px; }
+select.field { cursor:pointer; }
+input[type=range] { width:100%; accent-color: var(--accent); }
+</style>
+</head>
+<body style="--accent: #7c3aed;">
+
+<!-- Nav -->
+<nav class="bg-white border-b border-slate-100 px-6 py-4 flex items-center justify-between sticky top-0 z-10">
+  <a href="index.html" class="text-sm font-semibold" style="color:#7c3aed;">← BudgetTools</a>
+  <span class="bg-green-100 text-green-800 text-xs font-bold px-3 py-1 rounded-full">Free Calculator</span>
+</nav>
+
+<!-- Hero -->
+<section style="background: linear-gradient(135deg, #4c1d95 0%, #7c3aed 60%, #a78bfa 100%); padding: 3rem 1.5rem;" class="text-center text-white">
+  <div class="inline-block bg-white/20 text-white text-xs font-bold px-3 py-1 rounded-full mb-4 tracking-widest uppercase">Free Tool</div>
+  <h1 class="text-3xl md:text-4xl font-bold mb-3" style="font-family:'Noto Serif',serif;">Is Your Project Budget on Track?</h1>
+  <p class="text-lg max-w-xl mx-auto mb-6" style="color:rgba(255,255,255,0.75);">Enter your project budget, current spend, and timeline to see your burn rate, projected final cost, and how much over-budget risk you're carrying.</p>
+  <div class="flex flex-wrap justify-center gap-3">
+    <span class="bg-white/15 text-white text-xs font-semibold px-4 py-2 rounded-full">⚡ Instant</span>
+    <span class="bg-white/15 text-white text-xs font-semibold px-4 py-2 rounded-full">📊 No sign-up</span>
+    <span class="bg-white/15 text-white text-xs font-semibold px-4 py-2 rounded-full">🔒 Private</span>
+  </div>
+</section>
+
+<!-- Calculator -->
+<section class="py-10 px-4 max-w-4xl mx-auto">
+  <div class="grid md:grid-cols-2 gap-6">
+
+    <!-- Inputs -->
+    <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100">
+      <h3 class="text-lg font-bold mb-5" style="font-family:'Noto Serif',serif;">Your Numbers</h3>
+      <div style="display:flex;flex-direction:column;gap:1.25rem;">
+
+        <div>
+          <label class="field-label">Total Project Budget</label>
+          <div style="position:relative;">
+            <span style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:#64748b;font-size:15px;">$</span>
+            <input type="number" id="budget" class="field" style="padding-left:26px;" value="50000" min="1" step="1000" oninput="calculate()"/>
+          </div>
+        </div>
+
+        <div>
+          <label class="field-label">Spent to Date</label>
+          <div style="position:relative;">
+            <span style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:#64748b;font-size:15px;">$</span>
+            <input type="number" id="spent" class="field" style="padding-left:26px;" value="18000" min="0" step="500" oninput="calculate()"/>
+          </div>
+        </div>
+
+        <div>
+          <label class="field-label" style="display:flex;justify-content:space-between;">
+            <span>Days Completed</span>
+            <span id="daysCompLabel" style="color:#7c3aed;font-size:12px;font-weight:700;">45 days</span>
+          </label>
+          <input type="range" id="daysComp" min="1" max="365" value="45" step="1" oninput="calculate()"/>
+          <div style="display:flex;justify-content:space-between;font-size:11px;color:#94a3b8;margin-top:2px;"><span>1 day</span><span>365 days</span></div>
+        </div>
+
+        <div>
+          <label class="field-label">Total Project Duration (days)</label>
+          <input type="number" id="totalDays" class="field" value="120" min="1" step="1" oninput="calculate()"/>
+        </div>
+
+        <div style="border-top:1px solid #f1f5f9;padding-top:1rem;">
+          <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#7c3aed;margin-bottom:12px;">Team Cost</div>
+
+          <div>
+            <label class="field-label" style="display:flex;justify-content:space-between;">
+              <span>Team Size</span>
+              <span id="teamSizeLabel" style="color:#7c3aed;font-size:12px;font-weight:700;">5 people</span>
+            </label>
+            <input type="range" id="teamSize" min="1" max="20" value="5" step="1" oninput="calculate()"/>
+            <div style="display:flex;justify-content:space-between;font-size:11px;color:#94a3b8;margin-top:2px;"><span>1</span><span>20</span></div>
+          </div>
+
+          <div style="margin-top:1rem;">
+            <label class="field-label">Daily Cost Per Person ($)</label>
+            <div style="position:relative;">
+              <span style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:#64748b;font-size:15px;">$</span>
+              <input type="number" id="dailyCost" class="field" style="padding-left:26px;" value="420" min="0" step="10" oninput="calculate()"/>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Results -->
+    <div style="display:flex;flex-direction:column;gap:1rem;">
+
+      <!-- Budget Health Badge -->
+      <div class="result-card" style="text-align:center;padding:16px 20px;">
+        <div class="result-label mb-2">Budget Health</div>
+        <div id="health-badge" style="display:inline-block;font-size:18px;font-weight:700;padding:10px 24px;border-radius:50px;background:#f1f5f9;color:#1e293b;">—</div>
+      </div>
+
+      <div class="result-card">
+        <div class="result-label">Daily Burn Rate</div>
+        <div style="display:flex;align-items:baseline;gap:6px;">
+          <div class="result-num" id="r-burn" style="color:#7c3aed;">$0</div>
+          <span style="font-size:14px;color:#64748b;font-weight:600;">/day</span>
+        </div>
+        <div class="result-note" id="r-burn-note">Ideal: $—/day</div>
+      </div>
+
+      <div class="result-card">
+        <div class="result-label">Projected Total Cost</div>
+        <div class="result-num" id="r-projected" style="color:#15803d;">$0</div>
+        <div class="result-note" id="r-projected-note">—</div>
+      </div>
+
+      <div class="grid grid-cols-2 gap-3">
+        <div class="result-card">
+          <div class="result-label">Budget Remaining</div>
+          <div class="result-num" id="r-remaining" style="font-size:1.5rem;color:#15803d;">$0</div>
+          <div class="result-note" id="r-remaining-note">—</div>
+        </div>
+        <div class="result-card">
+          <div class="result-label">Days Remaining</div>
+          <div class="result-num" id="r-daysrem" style="font-size:1.5rem;color:#475569;">0</div>
+          <div class="result-note" id="r-daysrem-note">—</div>
+        </div>
+      </div>
+
+      <div class="result-card">
+        <div class="result-label">% Complete (Time)</div>
+        <div style="display:flex;align-items:baseline;gap:6px;">
+          <div class="result-num" id="r-pctcomp" style="color:#2563eb;font-size:1.5rem;">0%</div>
+        </div>
+        <div class="result-note" id="r-pctcomp-note">—% of budget used</div>
+      </div>
+
+      <!-- Risk Indicator -->
+      <div class="result-card">
+        <div class="result-label mb-3">Budget vs Time Progress</div>
+
+        <div style="margin-bottom:10px;">
+          <div style="display:flex;justify-content:space-between;font-size:11px;color:#64748b;margin-bottom:4px;">
+            <span>Budget Used</span>
+            <span id="pct-budget-used-label">0%</span>
+          </div>
+          <div style="background:#f1f5f9;border-radius:6px;height:14px;overflow:hidden;">
+            <div id="bar-budget" style="height:100%;background:#ef4444;border-radius:6px;transition:width 0.3s;width:0%;"></div>
+          </div>
+        </div>
+
+        <div style="margin-bottom:10px;">
+          <div style="display:flex;justify-content:space-between;font-size:11px;color:#64748b;margin-bottom:4px;">
+            <span>Time Elapsed</span>
+            <span id="pct-time-label">0%</span>
+          </div>
+          <div style="background:#f1f5f9;border-radius:6px;height:14px;overflow:hidden;">
+            <div id="bar-time" style="height:100%;background:#2563eb;border-radius:6px;transition:width 0.3s;width:0%;"></div>
+          </div>
+        </div>
+
+        <p style="font-size:11px;color:#94a3b8;font-style:italic;margin-top:6px;">If budget % > time %, you're burning too fast.</p>
+      </div>
+
+      <!-- Upsell -->
+      <div style="background:linear-gradient(135deg,#4c1d95,#7c3aed);border-radius:16px;padding:24px;color:white;">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+          <span class="material-symbols-outlined filled" style="font-size:28px;color:rgba(255,255,255,0.9);">account_tree</span>
+          <span style="font-size:16px;font-weight:700;font-family:'Noto Serif',serif;">Track phases, resources, and milestones.</span>
+        </div>
+        <p style="font-size:13px;color:rgba(255,255,255,0.8);margin-bottom:16px;line-height:1.6;">The Project Budget &amp; Resource Planner tracks spend by phase, team hours, and flags overrun risk before it happens.</p>
+        <button disabled style="background:rgba(255,255,255,0.2);color:white;border:1.5px solid rgba(255,255,255,0.35);border-radius:10px;padding:10px 20px;font-size:13px;font-weight:700;cursor:not-allowed;opacity:0.7;font-family:'Plus Jakarta Sans',sans-serif;">Project Planner — Coming Soon</button>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="bg-slate-800 text-white py-8 text-center text-sm" style="color:rgba(255,255,255,0.5);">
+  <p>© 2026 BudgetTools — Free financial tools for every life event.</p>
+  <p class="mt-2"><a href="index.html" style="color:rgba(255,255,255,0.6);text-decoration:underline;">← Back to all tools</a></p>
+</footer>
+
+<script>
+function fmt(n){ return '$' + Math.round(n).toLocaleString(); }
+function fmtN(n){ return Math.round(n).toLocaleString(); }
+
+function calculate() {
+  const budget      = parseFloat(document.getElementById('budget').value)    || 1;
+  const spent       = parseFloat(document.getElementById('spent').value)     || 0;
+  const daysComp    = parseFloat(document.getElementById('daysComp').value)  || 1;
+  const totalDays   = parseFloat(document.getElementById('totalDays').value) || 1;
+  const teamSize    = parseFloat(document.getElementById('teamSize').value)  || 1;
+  const dailyCost   = parseFloat(document.getElementById('dailyCost').value) || 0;
+
+  document.getElementById('daysCompLabel').textContent = daysComp + (daysComp === 1 ? ' day' : ' days');
+  document.getElementById('teamSizeLabel').textContent = teamSize + (teamSize === 1 ? ' person' : ' people');
+
+  const safeDaysComp  = Math.max(daysComp, 1);
+  const daysRemaining = Math.max(totalDays - daysComp, 0);
+  const pctComplete   = Math.min((daysComp / totalDays) * 100, 100);
+  const burnRate      = spent / safeDaysComp;
+  const projectedTotal = burnRate * totalDays;
+  const budgetRemaining = budget - spent;
+  const variance      = projectedTotal - budget;
+  const idealBurnRate = budget / totalDays;
+  const pctBudgetUsed = Math.min((spent / budget) * 100, 100);
+  const dailyTeamCostTotal = teamSize * dailyCost;
+
+  document.getElementById('r-burn').textContent      = fmt(burnRate);
+  document.getElementById('r-burn-note').textContent = 'Ideal: ' + fmt(idealBurnRate) + '/day';
+
+  const projEl = document.getElementById('r-projected');
+  const projNote = document.getElementById('r-projected-note');
+  projEl.textContent = fmt(projectedTotal);
+  if (variance >= 0) {
+    projEl.style.color = '#dc2626';
+    projNote.innerHTML = '<span style="color:#dc2626;">⚠ ' + fmt(variance) + ' over budget</span>';
+  } else {
+    projEl.style.color = '#15803d';
+    projNote.innerHTML = '<span style="color:#15803d;">✓ ' + fmt(Math.abs(variance)) + ' under budget</span>';
+  }
+
+  const remEl = document.getElementById('r-remaining');
+  const remNote = document.getElementById('r-remaining-note');
+  remEl.textContent = fmt(budgetRemaining);
+  remEl.style.color = budgetRemaining >= 0 ? '#15803d' : '#dc2626';
+  remNote.textContent = budgetRemaining >= 0 ? 'Left to spend' : 'Already overspent';
+
+  document.getElementById('r-daysrem').textContent      = fmtN(daysRemaining);
+  document.getElementById('r-daysrem-note').textContent = 'of ' + fmtN(totalDays) + ' total days';
+
+  document.getElementById('r-pctcomp').textContent      = pctComplete.toFixed(1) + '%';
+  document.getElementById('r-pctcomp-note').textContent = pctBudgetUsed.toFixed(1) + '% of budget used';
+
+  // Progress bars
+  document.getElementById('bar-budget').style.width = Math.min(pctBudgetUsed, 100) + '%';
+  document.getElementById('bar-time').style.width   = Math.min(pctComplete, 100) + '%';
+  document.getElementById('pct-budget-used-label').textContent = pctBudgetUsed.toFixed(1) + '%';
+  document.getElementById('pct-time-label').textContent        = pctComplete.toFixed(1) + '%';
+
+  // Budget Health
+  const badge = document.getElementById('health-badge');
+  if (projectedTotal <= budget * 0.9) {
+    badge.textContent    = '🟢 On Track';
+    badge.style.background = '#dcfce7';
+    badge.style.color      = '#166534';
+  } else if (projectedTotal <= budget) {
+    badge.textContent    = '🟡 Watch';
+    badge.style.background = '#fef9c3';
+    badge.style.color      = '#854d0e';
+  } else if (projectedTotal <= budget * 1.15) {
+    badge.textContent    = '🟠 At Risk';
+    badge.style.background = '#ffedd5';
+    badge.style.color      = '#9a3412';
+  } else {
+    badge.textContent    = '🔴 Over Budget';
+    badge.style.background = '#fee2e2';
+    badge.style.color      = '#991b1b';
+  }
+}
+
+document.addEventListener('DOMContentLoaded', calculate);
+</script>
+</body>
+</html>

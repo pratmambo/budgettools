@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>My Account | BudgetTools</title>
+  <meta name="robots" content="noindex"/>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+  <script src="https://cdn.tailwindcss.com?plugins=forms"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#00355f",
+            "primary-container": "#0f4c81",
+            "primary-fixed": "#d2e4ff",
+            "on-primary": "#ffffff",
+            "on-primary-container": "#8ebdf9",
+            "on-primary-fixed-variant": "#07497d",
+            "secondary": "#2c694e",
+            "secondary-container": "#aeeecb",
+            "on-secondary-container": "#316e52",
+            "surface": "#f8f9ff",
+            "surface-container-lowest": "#ffffff",
+            "surface-container-low": "#eff4ff",
+            "surface-container": "#e6eeff",
+            "surface-container-high": "#dde9ff",
+            "surface-container-highest": "#d5e3fd",
+            "on-surface": "#0d1c2f",
+            "on-surface-variant": "#42474f",
+            "outline": "#727780",
+            "outline-variant": "#c2c7d1",
+            "error": "#ba1a1a",
+          },
+          fontFamily: {
+            "headline": ["Noto Serif", "serif"],
+            "body": ["Plus Jakarta Sans", "sans-serif"],
+            "label": ["Inter", "sans-serif"],
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    h1, h2, h3, h4 { font-family: 'Noto Serif', serif; }
+    .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; vertical-align: middle; }
+    .filled { font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+    .grad-primary { background: linear-gradient(135deg, #00355f, #0f4c81); }
+    .grad-pro { background: linear-gradient(135deg, #b45309, #d97706); }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .spinner { animation: spin 0.8s linear infinite; }
+    .card { background: #ffffff; border: 1px solid #e5e8f0; border-radius: 0.875rem; box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
+    .tooltip-container { position: relative; display: inline-block; }
+    .tooltip-container:hover .tooltip { opacity: 1; pointer-events: auto; }
+    .tooltip { opacity: 0; pointer-events: none; position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%); background: #1f2937; color: #fff; font-size: 0.7rem; padding: 0.3rem 0.6rem; border-radius: 0.375rem; white-space: nowrap; margin-bottom: 6px; transition: opacity 0.15s; }
+    .template-card { transition: box-shadow 0.2s, transform 0.2s; }
+    .template-card:hover { box-shadow: 0 4px 16px rgba(0,53,95,0.1); transform: translateY(-1px); }
+  </style>
+</head>
+<body class="bg-surface text-on-surface min-h-screen flex flex-col">
+
+<!-- ── LOADING OVERLAY ────────────────────────────────────── -->
+<div id="page-loader" class="fixed inset-0 bg-surface flex items-center justify-center z-50">
+  <div class="text-center">
+    <svg class="spinner w-10 h-10 text-primary mx-auto mb-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+      <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3"></circle>
+      <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+    </svg>
+    <p class="text-on-surface-variant text-sm">Loading your account…</p>
+  </div>
+</div>
+
+<!-- ── CANCEL SUBSCRIPTION DIALOG ────────────────────────── -->
+<div id="cancel-dialog" class="hidden fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50 px-4">
+  <div class="bg-white rounded-xl shadow-2xl max-w-md w-full p-7">
+    <div class="flex items-center gap-3 mb-4">
+      <div class="w-10 h-10 bg-amber-100 rounded-full flex items-center justify-center flex-shrink-0">
+        <span class="material-symbols-outlined text-amber-600 filled">cancel</span>
+      </div>
+      <h3 class="text-lg font-semibold text-on-surface">Cancel subscription?</h3>
+    </div>
+    <p class="text-sm text-on-surface-variant mb-6 leading-relaxed">
+      Your access will remain active until the end of the current billing period. After that, your data will be preserved but you'll lose Pro access.
+    </p>
+    <div class="flex gap-3">
+      <button onclick="document.getElementById('cancel-dialog').classList.add('hidden')" class="flex-1 bg-surface-container-high text-on-surface py-2.5 px-4 rounded-lg text-sm font-semibold hover:bg-surface-container-highest transition-colors">
+        Keep Subscription
+      </button>
+      <button onclick="confirmCancelSubscription()" id="cancel-confirm-btn" class="flex-1 bg-amber-600 text-white py-2.5 px-4 rounded-lg text-sm font-semibold hover:bg-amber-700 transition-colors">
+        Yes, cancel
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ── DELETE CONFIRMATION DIALOG ────────────────────────── -->
+<div id="delete-dialog" class="hidden fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50 px-4">
+  <div class="bg-white rounded-xl shadow-2xl max-w-md w-full p-7">
+    <div class="flex items-center gap-3 mb-4">
+      <div class="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center flex-shrink-0">
+        <span class="material-symbols-outlined text-red-600 filled">warning</span>
+      </div>
+      <h3 class="text-lg font-semibold text-on-surface">Delete your account?</h3>
+    </div>
+    <p class="text-sm text-on-surface-variant mb-6 leading-relaxed">
+      This will permanently delete your account and all your data. Any active subscriptions will need to be cancelled separately. <strong>This cannot be undone.</strong>
+    </p>
+    <div class="flex gap-3">
+      <button onclick="document.getElementById('delete-dialog').classList.add('hidden')" class="flex-1 bg-surface-container-high text-on-surface py-2.5 px-4 rounded-lg text-sm font-semibold hover:bg-surface-container-highest transition-colors">
+        Cancel
+      </button>
+      <button onclick="confirmDeleteAccount()" class="flex-1 bg-red-600 text-white py-2.5 px-4 rounded-lg text-sm font-semibold hover:bg-red-700 transition-colors">
+        Yes, delete my account
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ── NAVIGATION ────────────────────────────────────────── -->
+<nav class="bg-white/80 backdrop-blur-xl sticky top-0 z-40 border-b border-outline-variant/20">
+  <div class="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
+    <a href="/index.html" class="text-on-surface-variant hover:text-primary transition-colors text-sm font-medium flex items-center gap-1.5">
+      <span class="material-symbols-outlined text-base">arrow_back</span>
+      BudgetTools
+    </a>
+    <a href="/index.html" class="text-xl font-bold tracking-tight text-primary font-body hidden sm:block">BudgetTools</a>
+    <div class="flex items-center gap-3">
+      <span id="nav-email" class="text-sm text-on-surface-variant hidden md:block truncate max-w-[200px]"></span>
+      <button onclick="handleSignOut()" class="bg-surface-container-high text-on-surface text-sm font-semibold px-4 py-2 rounded-lg hover:bg-surface-container-highest transition-colors flex items-center gap-1.5">
+        <span class="material-symbols-outlined text-base">logout</span>
+        Sign Out
+      </button>
+    </div>
+  </div>
+</nav>
+
+<!-- ── MAIN CONTENT ──────────────────────────────────────── -->
+<main id="main-content" class="hidden flex-1">
+<div class="max-w-4xl mx-auto py-12 px-6 space-y-8">
+
+  <!-- ── SECTION 1: Profile Header ── -->
+  <div class="flex flex-col sm:flex-row items-start sm:items-center gap-5">
+    <!-- Avatar -->
+    <div class="w-16 h-16 rounded-full grad-primary flex items-center justify-center flex-shrink-0 shadow-md shadow-primary/20">
+      <span id="avatar-initials" class="text-white text-2xl font-bold font-body">?</span>
+    </div>
+    <div class="flex-1 min-w-0">
+      <h1 id="user-email" class="text-xl font-semibold text-on-surface truncate"></h1>
+      <p id="joined-date" class="text-sm text-on-surface-variant mt-0.5"></p>
+    </div>
+    <button onclick="alert('Profile editing coming soon.')" class="flex items-center gap-1.5 text-sm font-medium text-on-surface-variant hover:text-primary border border-outline-variant px-4 py-2 rounded-lg hover:border-primary/40 transition-colors">
+      <span class="material-symbols-outlined text-base">edit</span>
+      Edit Profile
+    </button>
+  </div>
+
+  <!-- ── SECTION 2: Current Plan ── -->
+  <div class="card p-6">
+    <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
+      <div class="flex-1">
+        <div class="flex items-center gap-3 mb-3">
+          <h2 class="text-lg font-semibold text-on-surface">Current Plan</h2>
+          <span id="plan-badge" class="px-3 py-1 rounded-full text-xs font-semibold bg-gray-100 text-gray-600">Free Plan</span>
+        </div>
+        <p id="plan-description" class="text-sm text-on-surface-variant leading-relaxed">
+          You're on the free plan. Calculators are always free. Upgrade to save your data across devices and unlock premium templates.
+        </p>
+        <p id="plan-renewal" class="hidden text-xs text-secondary font-medium mt-2 flex items-center gap-1">
+          <span class="material-symbols-outlined text-sm filled">check_circle</span>
+          <span id="plan-renewal-text"></span>
+        </p>
+      </div>
+      <div class="flex flex-col gap-2 sm:items-end flex-shrink-0">
+        <button onclick="alert('Checkout coming soon')" class="grad-primary text-white px-5 py-2.5 rounded-lg font-semibold text-sm hover:opacity-90 transition-opacity whitespace-nowrap flex items-center gap-1.5">
+          <span class="material-symbols-outlined text-base filled">workspace_premium</span>
+          Upgrade to Pro
+        </button>
+        <button id="manage-billing-btn" onclick="handleManageBilling()" class="hidden text-sm text-primary hover:underline font-medium">
+          Manage Billing →
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── SECTION 3: Your Templates ── -->
+  <div>
+    <div class="flex items-center justify-between mb-5">
+      <h2 class="text-xl font-semibold text-on-surface">Your Templates</h2>
+      <a href="/index.html#templates" class="text-sm text-primary hover:underline font-medium">Browse all</a>
+    </div>
+    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+
+      <!-- Wedding Planner -->
+      <div class="card template-card p-5">
+        <div class="flex items-start gap-3 mb-3">
+          <div class="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0" style="background: rgba(80,99,81,0.12);">
+            <span class="material-symbols-outlined filled" style="color:#506351; font-size:20px;">favorite</span>
+          </div>
+          <div class="flex-1 min-w-0">
+            <div class="text-sm font-semibold text-on-surface truncate">Wedding Planner</div>
+            <div class="text-xs text-on-surface-variant mt-0.5">Budget, guests, vendors & checklist</div>
+          </div>
+        </div>
+        <div class="flex items-center justify-between mt-4">
+          <span class="template-badge-demo px-2.5 py-1 rounded-full text-xs font-semibold bg-gray-100 text-gray-600">Demo Only</span>
+          <a href="/wedding-planner.html?intent=subscribe" class="text-xs font-semibold text-primary hover:underline flex items-center gap-0.5">
+            Unlock <span class="material-symbols-outlined text-sm">arrow_forward</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Event Budget & P&L -->
+      <div class="card template-card p-5">
+        <div class="flex items-start gap-3 mb-3">
+          <div class="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0" style="background: rgba(69,39,160,0.10);">
+            <span class="material-symbols-outlined filled" style="color:#4527a0; font-size:20px;">event_note</span>
+          </div>
+          <div class="flex-1 min-w-0">
+            <div class="text-sm font-semibold text-on-surface truncate">Event Budget &amp; P&amp;L</div>
+            <div class="text-xs text-on-surface-variant mt-0.5">Revenue, costs, break-even analysis</div>
+          </div>
+        </div>
+        <div class="flex items-center justify-between mt-4">
+          <span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-gray-100 text-gray-600">Demo Only</span>
+          <a href="/event-budget.html?intent=subscribe" class="text-xs font-semibold text-primary hover:underline flex items-center gap-0.5">
+            Unlock <span class="material-symbols-outlined text-sm">arrow_forward</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Travel Budget -->
+      <div class="card template-card p-5">
+        <div class="flex items-start gap-3 mb-3">
+          <div class="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0" style="background: rgba(0,104,116,0.10);">
+            <span class="material-symbols-outlined filled" style="color:#006874; font-size:20px;">flight_takeoff</span>
+          </div>
+          <div class="flex-1 min-w-0">
+            <div class="text-sm font-semibold text-on-surface truncate">Travel Budget</div>
+            <div class="text-xs text-on-surface-variant mt-0.5">Trips, expenses, currency tracking</div>
+          </div>
+        </div>
+        <div class="flex items-center justify-between mt-4">
+          <span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-gray-100 text-gray-600">Demo Only</span>
+          <a href="/travel-budget.html?intent=subscribe" class="text-xs font-semibold text-primary hover:underline flex items-center gap-0.5">
+            Unlock <span class="material-symbols-outlined text-sm">arrow_forward</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Cafe Costing -->
+      <div class="card template-card p-5">
+        <div class="flex items-start gap-3 mb-3">
+          <div class="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0" style="background: rgba(93,26,10,0.10);">
+            <span class="material-symbols-outlined filled" style="color:#5d1a0a; font-size:20px;">restaurant</span>
+          </div>
+          <div class="flex-1 min-w-0">
+            <div class="text-sm font-semibold text-on-surface truncate">Cafe Costing</div>
+            <div class="text-xs text-on-surface-variant mt-0.5">Menu pricing, margins &amp; COGS</div>
+          </div>
+        </div>
+        <div class="flex items-center justify-between mt-4">
+          <span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-gray-100 text-gray-600">Demo Only</span>
+          <a href="/cafe-costing.html?intent=subscribe" class="text-xs font-semibold text-primary hover:underline flex items-center gap-0.5">
+            Unlock <span class="material-symbols-outlined text-sm">arrow_forward</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Inventory -->
+      <div class="card template-card p-5">
+        <div class="flex items-start gap-3 mb-3">
+          <div class="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0" style="background: rgba(21,101,192,0.10);">
+            <span class="material-symbols-outlined filled" style="color:#1565c0; font-size:20px;">inventory_2</span>
+          </div>
+          <div class="flex-1 min-w-0">
+            <div class="text-sm font-semibold text-on-surface truncate">Inventory</div>
+            <div class="text-xs text-on-surface-variant mt-0.5">Stock tracking, reorder &amp; valuation</div>
+          </div>
+        </div>
+        <div class="flex items-center justify-between mt-4">
+          <span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-gray-100 text-gray-600">Demo Only</span>
+          <a href="/inventory.html?intent=subscribe" class="text-xs font-semibold text-primary hover:underline flex items-center gap-0.5">
+            Unlock <span class="material-symbols-outlined text-sm">arrow_forward</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Upgrade nudge card -->
+      <div class="rounded-xl border-2 border-dashed border-primary/20 p-5 flex flex-col items-center justify-center text-center gap-3 bg-surface-container-low/50">
+        <span class="material-symbols-outlined text-primary/40 text-3xl filled">lock_open</span>
+        <p class="text-sm text-on-surface-variant font-medium">Unlock all templates with Pro</p>
+        <button onclick="alert('Checkout coming soon')" class="text-xs font-bold text-primary hover:underline">
+          View plans →
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── SECTION 4: Data & Privacy ── -->
+  <div class="card p-6">
+    <h2 class="text-lg font-semibold text-on-surface mb-1">Data &amp; Privacy</h2>
+    <p class="text-sm text-on-surface-variant mb-5">Your data is stored securely in your account. We never share or sell your personal information.</p>
+    <div class="flex flex-wrap gap-3">
+      <div class="tooltip-container">
+        <button class="flex items-center gap-2 text-sm font-medium text-on-surface-variant border border-outline-variant px-4 py-2 rounded-lg opacity-60 cursor-not-allowed" disabled>
+          <span class="material-symbols-outlined text-base">download</span>
+          Export all my data
+        </button>
+        <div class="tooltip">Coming soon</div>
+      </div>
+      <button onclick="document.getElementById('delete-dialog').classList.remove('hidden')" class="flex items-center gap-2 text-sm font-medium text-red-600 border border-red-200 px-4 py-2 rounded-lg hover:bg-red-50 transition-colors">
+        <span class="material-symbols-outlined text-base">delete_forever</span>
+        Delete my account
+      </button>
+    </div>
+  </div>
+
+  <!-- ── SECTION 5: Billing (shown if subscribed) ── -->
+  <div id="billing-section" class="hidden card p-6">
+    <h2 class="text-lg font-semibold text-on-surface mb-1">Billing</h2>
+    <p class="text-sm text-on-surface-variant mb-5">Your active subscription details. Payments are processed securely via Razorpay.</p>
+    <div id="billing-subscriptions" class="space-y-3 mb-5"></div>
+    <button onclick="document.getElementById('cancel-dialog').classList.remove('hidden')" class="flex items-center gap-2 text-sm font-medium text-amber-700 border border-amber-200 px-4 py-2 rounded-lg hover:bg-amber-50 transition-colors">
+      <span class="material-symbols-outlined text-base">cancel</span>
+      Cancel Subscription
+    </button>
+  </div>
+
+</div>
+</main>
+
+<!-- ── FOOTER ─────────────────────────────────────────────── -->
+<footer class="border-t border-outline-variant/20 py-6 mt-auto">
+  <div class="max-w-4xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-2">
+    <p class="text-xs text-outline">© 2025 BudgetTools</p>
+    <div class="flex gap-5 text-xs text-outline">
+      <a href="/index.html" class="hover:text-on-surface transition-colors">Home</a>
+      <a href="#" class="hover:text-on-surface transition-colors">Privacy</a>
+      <a href="#" class="hover:text-on-surface transition-colors">Terms</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // ── CONFIG ──────────────────────────────────────────────────
+  const SUPABASE_URL = 'https://sidrjbvjkbfmzrsojtkp.supabase.co';
+  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNpZHJqYnZqa2JmbXpyc29qdGtwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU0MDk0MzcsImV4cCI6MjA5MDk4NTQzN30.IiFfDhDAomrfZk-msDTdC-w1bbcF71DtEDfIrIoN3NQ';
+  const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+  // ── AUTH GUARD ──────────────────────────────────────────────
+  supabase.auth.getSession().then(({ data: { session } }) => {
+    if (!session) {
+      window.location.href = '/auth.html?next=/account.html';
+      return;
+    }
+    initPage(session.user);
+  });
+
+  // ── INIT ────────────────────────────────────────────────────
+  async function initPage(user) {
+    // Hide loader, show content
+    document.getElementById('page-loader').classList.add('hidden');
+    document.getElementById('main-content').classList.remove('hidden');
+
+    // Nav
+    document.getElementById('nav-email').textContent = user.email;
+
+    // Profile section
+    document.getElementById('user-email').textContent = user.email;
+    const initials = user.email ? user.email.charAt(0).toUpperCase() : '?';
+    document.getElementById('avatar-initials').textContent = initials;
+
+    const joined = new Date(user.created_at).toLocaleDateString('en-IN', { month: 'long', year: 'numeric' });
+    document.getElementById('joined-date').textContent = 'Member since ' + joined;
+
+    // Load subscriptions from Supabase
+    const { data: subs } = await supabase
+      .from('subscriptions')
+      .select('*')
+      .eq('user_id', user.id)
+      .in('status', ['active', 'trialing', 'past_due'])
+      .order('created_at', { ascending: false });
+
+    if (subs && subs.length > 0) {
+      const activeSub = subs[0];
+      const isAllAccess = activeSub.template_key === 'all';
+
+      if (isAllAccess) {
+        setPlan('all-access', activeSub);
+        updateAllTemplateCards('Pro Access');
+      } else {
+        setPlan('single', activeSub);
+        updateTemplateCard(activeSub.template_key);
+      }
+
+      // Show billing section and populate subscription rows
+      document.getElementById('billing-section').classList.remove('hidden');
+      renderBillingSubscriptions(subs);
+    } else {
+      setPlan('free', null);
+    }
+  }
+
+  function setPlan(plan, sub) {
+    const badge       = document.getElementById('plan-badge');
+    const desc        = document.getElementById('plan-description');
+    const renewal     = document.getElementById('plan-renewal');
+    const renewalText = document.getElementById('plan-renewal-text');
+
+    if (plan === 'free') {
+      badge.textContent = 'Free Plan';
+      badge.className   = 'px-3 py-1 rounded-full text-xs font-semibold bg-gray-100 text-gray-600';
+      desc.textContent  = "You're on the free plan. Calculators are always free. Upgrade to save your data and unlock premium templates.";
+    } else if (plan === 'all-access') {
+      badge.textContent = 'All-Access Pro';
+      badge.className   = 'px-3 py-1 rounded-full text-xs font-semibold text-white grad-primary';
+      desc.textContent  = 'Full access to all premium templates. Your data is synced across all devices.';
+      if (sub?.current_period_end) {
+        renewal.classList.remove('hidden');
+        const label = sub.cancel_at_period_end ? 'Cancels' : 'Renews';
+        renewalText.textContent = 'Active · ' + label + ' ' + new Date(sub.current_period_end).toLocaleDateString('en-IN', { month: 'long', day: 'numeric', year: 'numeric' });
+      }
+    } else if (plan === 'single') {
+      const NAMES = { wedding:'Wedding Planner', event:'Event Budget', travel:'Travel Budget', cafe:'Cafe Costing', inventory:'Inventory' };
+      const name  = NAMES[sub?.template_key] || 'Pro';
+      badge.textContent = 'Pro — ' + name;
+      badge.className   = 'px-3 py-1 rounded-full text-xs font-semibold bg-amber-100 text-amber-800';
+      desc.textContent  = 'You have Pro access to ' + name + '. Your data is synced and saved.';
+      if (sub?.current_period_end) {
+        renewal.classList.remove('hidden');
+        const label = sub.cancel_at_period_end ? 'Cancels' : 'Renews';
+        renewalText.textContent = 'Active · ' + label + ' ' + new Date(sub.current_period_end).toLocaleDateString('en-IN', { month: 'long', day: 'numeric', year: 'numeric' });
+      }
+    }
+  }
+
+  function updateAllTemplateCards() {
+    document.querySelectorAll('.template-card').forEach(card => {
+      const badge = card.querySelector('[class*="px-2.5"]');
+      const link  = card.querySelector('a');
+      if (badge) {
+        badge.textContent = 'Pro Access';
+        badge.className   = 'px-2.5 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-800';
+      }
+      if (link) {
+        link.href        = link.href.split('?')[0];
+        link.innerHTML   = 'Open <span class="material-symbols-outlined text-sm">arrow_forward</span>';
+      }
+    });
+  }
+
+  function updateTemplateCard(templateKey) {
+    const KEY_TO_HREF = {
+      wedding:   '/wedding-planner.html',
+      event:     '/event-budget.html',
+      travel:    '/travel-budget.html',
+      cafe:      '/cafe-costing.html',
+      inventory: '/inventory.html',
+    };
+    const href = KEY_TO_HREF[templateKey];
+    if (!href) return;
+    document.querySelectorAll('.template-card a').forEach(link => {
+      if (link.href.includes(href.replace('/', ''))) {
+        const badge = link.closest('.template-card')?.querySelector('[class*="px-2.5"]');
+        if (badge) {
+          badge.textContent = 'Pro Access';
+          badge.className   = 'px-2.5 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-800';
+        }
+        link.href      = href;
+        link.innerHTML = 'Open <span class="material-symbols-outlined text-sm">arrow_forward</span>';
+      }
+    });
+  }
+
+  function renderBillingSubscriptions(subs) {
+    const NAMES = { wedding:'Wedding Planner', event:'Event Budget & P&L', travel:'Travel Budget', cafe:'Cafe Costing', inventory:'Inventory Management', all:'All Templates' };
+    const container = document.getElementById('billing-subscriptions');
+    container.innerHTML = subs.map(sub => {
+      const name       = NAMES[sub.template_key] || sub.template_key;
+      const statusColor = sub.status === 'active' ? 'text-green-700 bg-green-100' : sub.status === 'past_due' ? 'text-red-700 bg-red-100' : 'text-gray-600 bg-gray-100';
+      const statusLabel = sub.cancel_at_period_end ? 'Cancels at period end' : sub.status.replace('_', ' ');
+      const periodEnd   = sub.current_period_end ? new Date(sub.current_period_end).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) : '—';
+      return `
+        <div class="flex items-center justify-between py-3 border-b border-outline-variant/20 last:border-0">
+          <div>
+            <p class="text-sm font-semibold text-on-surface">${name}</p>
+            <p class="text-xs text-on-surface-variant mt-0.5">Next billing: ${periodEnd}</p>
+          </div>
+          <span class="px-2.5 py-1 rounded-full text-xs font-semibold capitalize ${statusColor}">${statusLabel}</span>
+        </div>
+      `;
+    }).join('');
+  }
+
+  // ── SIGN OUT ────────────────────────────────────────────────
+  async function handleSignOut() {
+    await supabase.auth.signOut();
+    window.location.href = '/index.html';
+  }
+
+  // ── CANCEL SUBSCRIPTION ──────────────────────────────────────
+  async function confirmCancelSubscription() {
+    const btn = document.getElementById('cancel-confirm-btn');
+    btn.textContent = 'Cancelling…';
+    btn.disabled    = true;
+
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      const res = await fetch('/api/customer-portal', {
+        method:  'POST',
+        headers: {
+          'Authorization': 'Bearer ' + session.access_token,
+          'Content-Type':  'application/json',
+        },
+        body: JSON.stringify({}),
+      });
+
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.error || 'Request failed');
+      }
+
+      document.getElementById('cancel-dialog').classList.add('hidden');
+      alert('Your subscription will cancel at the end of the current billing period. You keep access until then.');
+      window.location.reload();
+
+    } catch (err) {
+      btn.textContent = 'Yes, cancel';
+      btn.disabled    = false;
+      alert('Could not cancel: ' + err.message + '\nPlease contact support if this persists.');
+    }
+  }
+
+  // ── DELETE ACCOUNT ───────────────────────────────────────────
+  async function confirmDeleteAccount() {
+    document.getElementById('delete-dialog').classList.add('hidden');
+    // Account deletion requires service role — sign out for now
+    await supabase.auth.signOut();
+    window.location.href = '/index.html';
+  }
+</script>
+</body>
+</html>

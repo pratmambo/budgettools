@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Rental Property Yield Calculator | BudgetTools</title>
+  <meta name="description" content="Calculate gross rental yield, net rental yield, and annual cash flow for any investment property. Free instant calculator — no sign-up required."/>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,400;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@400,0..1&display=swap" rel="stylesheet"/>
+  <script>
+    tailwind.config = { theme: { extend: { fontFamily: { headline: ['Noto Serif','serif'], body: ['Plus Jakarta Sans','sans-serif'] } } } }
+  </script>
+  <style>
+    * { box-sizing: border-box; }
+    body { font-family: 'Plus Jakarta Sans', sans-serif; background: #f8fafc; color: #1e293b; }
+    h1,h2,h3 { font-family: 'Noto Serif', serif; }
+    .material-symbols-outlined { font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24; vertical-align:middle; line-height:1; }
+    .filled { font-variation-settings:'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 24; }
+    .field { width:100%; background:#f1f5f9; border:1px solid #e2e8f0; border-radius:10px; padding:10px 14px; font-size:15px; color:#1e293b; outline:none; font-family:'Plus Jakarta Sans',sans-serif; transition: border-color 0.15s, box-shadow 0.15s; }
+    .field:focus { border-color: var(--accent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 15%, transparent); }
+    .field-label { display:block; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:#64748b; margin-bottom:6px; }
+    .result-card { background:white; border-radius:14px; padding:20px; box-shadow:0 1px 4px rgba(0,0,0,0.06); border:1px solid #e2e8f0; }
+    .result-num { font-family:'Noto Serif',serif; font-size:2rem; font-weight:700; line-height:1.1; }
+    .result-label { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:#64748b; margin-bottom:6px; }
+    .result-note { font-size:12px; color:#94a3b8; margin-top:4px; }
+    select.field { cursor:pointer; }
+    input[type=range] { width:100%; accent-color: var(--accent); }
+  </style>
+</head>
+<body style="--accent: #0d5c3a">
+
+  <!-- NAV -->
+  <nav class="bg-white border-b border-slate-200 px-6 py-4 flex items-center justify-between sticky top-0 z-10">
+    <a href="index.html" class="text-sm font-semibold flex items-center gap-1" style="color:#0d5c3a">
+      <span class="material-symbols-outlined text-base">arrow_back</span>
+      BudgetTools
+    </a>
+    <span class="text-xs font-bold px-3 py-1 rounded-full bg-green-100 text-green-700">Free Calculator</span>
+  </nav>
+
+  <!-- HERO -->
+  <section style="background:linear-gradient(135deg,#052e16 0%,#0d5c3a 60%,#16a34a 100%)" class="py-12 px-6 text-center text-white">
+    <span class="inline-block text-xs font-bold uppercase tracking-widest bg-white/20 text-white px-3 py-1 rounded-full mb-4">Free Tool</span>
+    <h1 class="text-3xl md:text-4xl font-bold mb-3 max-w-2xl mx-auto">Is This Rental Property Worth Buying?</h1>
+    <p class="text-white/75 text-lg max-w-xl mx-auto mb-6">Enter the property price, rental income, and ongoing costs to instantly see gross yield, net yield, and actual annual cash flow — the numbers that matter.</p>
+    <div class="flex flex-wrap justify-center gap-3">
+      <span class="bg-white/15 text-white text-xs font-semibold px-4 py-1.5 rounded-full">⚡ Instant</span>
+      <span class="bg-white/15 text-white text-xs font-semibold px-4 py-1.5 rounded-full">📊 No sign-up</span>
+      <span class="bg-white/15 text-white text-xs font-semibold px-4 py-1.5 rounded-full">🔒 Private</span>
+    </div>
+  </section>
+
+  <!-- CALCULATOR -->
+  <section class="py-10 px-4 max-w-4xl mx-auto">
+    <div class="grid md:grid-cols-2 gap-6 items-start">
+
+      <!-- INPUTS -->
+      <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100">
+        <h3 class="text-xl font-bold mb-5 flex items-center gap-2">
+          <span class="material-symbols-outlined filled text-xl" style="color:#0d5c3a">apartment</span>
+          Your Numbers
+        </h3>
+        <div class="space-y-5">
+
+          <div>
+            <label class="field-label">Property Purchase Price</label>
+            <div class="relative">
+              <span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 font-semibold">$</span>
+              <input type="number" id="propPrice" class="field pl-7" value="550000" min="0" oninput="calculate()"/>
+            </div>
+          </div>
+
+          <div>
+            <label class="field-label">Monthly Rental Income</label>
+            <div class="relative">
+              <span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 font-semibold">$</span>
+              <input type="number" id="monthlyRent" class="field pl-7" value="2400" min="0" oninput="calculate()"/>
+            </div>
+          </div>
+
+          <div>
+            <label class="field-label">Annual Property Taxes / Council Rates</label>
+            <div class="relative">
+              <span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 font-semibold">$</span>
+              <input type="number" id="taxes" class="field pl-7" value="3200" min="0" oninput="calculate()"/>
+            </div>
+          </div>
+
+          <div>
+            <label class="field-label">Landlord Insurance (annual)</label>
+            <div class="relative">
+              <span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 font-semibold">$</span>
+              <input type="number" id="insurance" class="field pl-7" value="1500" min="0" oninput="calculate()"/>
+            </div>
+          </div>
+
+          <div>
+            <label class="field-label">Maintenance & Repairs (annual)</label>
+            <div class="relative">
+              <span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 font-semibold">$</span>
+              <input type="number" id="maintenance" class="field pl-7" value="2200" min="0" oninput="calculate()"/>
+            </div>
+          </div>
+
+          <div>
+            <div class="flex justify-between items-center mb-2">
+              <label class="field-label" style="margin-bottom:0">Property Management Fee (%)</label>
+              <span id="mgmtLabel" class="text-sm font-bold" style="color:#0d5c3a">8%</span>
+            </div>
+            <input type="range" id="mgmtFee" min="0" max="15" step="0.5" value="8" oninput="document.getElementById('mgmtLabel').textContent=parseFloat(this.value).toFixed(1)+'%'; calculate()"/>
+            <div class="flex justify-between text-xs text-slate-400 mt-1"><span>0%</span><span>15%</span></div>
+          </div>
+
+          <div>
+            <div class="flex justify-between items-center mb-2">
+              <label class="field-label" style="margin-bottom:0">Vacancy Rate (%)</label>
+              <span id="vacancyLabel" class="text-sm font-bold" style="color:#0d5c3a">5%</span>
+            </div>
+            <input type="range" id="vacancyRate" min="0" max="20" step="1" value="5" oninput="document.getElementById('vacancyLabel').textContent=this.value+'%'; calculate()"/>
+            <div class="flex justify-between text-xs text-slate-400 mt-1"><span>0%</span><span>20%</span></div>
+          </div>
+
+          <div class="pt-2 border-t border-slate-100">
+            <p class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-4">Mortgage (optional)</p>
+
+            <div class="mb-5">
+              <div class="flex justify-between items-center mb-2">
+                <label class="field-label" style="margin-bottom:0">Mortgage Interest Rate (%)</label>
+                <span id="mortgageRateLabel" class="text-sm font-bold" style="color:#0d5c3a">6.5%</span>
+              </div>
+              <input type="range" id="mortgageRate" min="0" max="12" step="0.1" value="6.5" oninput="document.getElementById('mortgageRateLabel').textContent=parseFloat(this.value).toFixed(1)+'%'; calculate()"/>
+              <div class="flex justify-between text-xs text-slate-400 mt-1"><span>0%</span><span>12%</span></div>
+            </div>
+
+            <div>
+              <div class="flex justify-between items-center mb-2">
+                <label class="field-label" style="margin-bottom:0">Loan-to-Value Ratio (%)</label>
+                <span id="ltvLabel" class="text-sm font-bold" style="color:#0d5c3a">80%</span>
+              </div>
+              <input type="range" id="ltv" min="0" max="95" step="5" value="80" oninput="document.getElementById('ltvLabel').textContent=this.value+'%'; calculate()"/>
+              <div class="flex justify-between text-xs text-slate-400 mt-1"><span>0%</span><span>95%</span></div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- RESULTS -->
+      <div class="space-y-4">
+
+        <!-- Gross Yield -->
+        <div class="result-card">
+          <div class="flex items-start justify-between">
+            <div>
+              <div class="result-label">Gross Rental Yield</div>
+              <div id="res-grossYield" class="result-num" style="color:#0d5c3a">0.0%</div>
+              <div class="result-note">Before expenses and vacancy</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Net Yield -->
+        <div class="result-card">
+          <div class="flex items-start justify-between">
+            <div>
+              <div class="result-label">Net Rental Yield</div>
+              <div id="res-netYield" class="result-num text-green-700">0.0%</div>
+              <div class="result-note">After all costs and vacancy</div>
+            </div>
+            <span id="yieldBadge" class="text-xs font-bold px-3 py-1 rounded-full bg-green-100 text-green-700 mt-1 whitespace-nowrap">Excellent Yield</span>
+          </div>
+          <p class="text-xs text-slate-400 mt-3 italic">Typical residential: Gross 4–7% | Net 2.5–5%. Above 5% net is considered strong.</p>
+        </div>
+
+        <!-- Annual Cash Flow (before mortgage) -->
+        <div class="result-card">
+          <div class="result-label">Annual Cash Flow</div>
+          <div id="res-annualCF" class="result-num text-green-700">$0</div>
+          <div class="result-note">Before mortgage payments</div>
+        </div>
+
+        <!-- Monthly Cash Flow after mortgage -->
+        <div class="result-card">
+          <div class="result-label">Monthly Cash Flow (after mortgage)</div>
+          <div id="res-monthlyCF" class="result-num text-green-700">$0</div>
+          <div id="res-monthlyCF-note" class="result-note">After 6.5% interest on 80% LTV</div>
+        </div>
+
+        <!-- Expense Breakdown -->
+        <div class="result-card">
+          <div class="result-label mb-3">Expense Breakdown</div>
+          <div class="grid grid-cols-2 gap-2 text-sm">
+            <div class="bg-slate-50 rounded-lg px-3 py-2">
+              <div class="text-xs text-slate-500 font-semibold uppercase tracking-wide mb-0.5">Taxes</div>
+              <div id="bd-taxes" class="font-bold text-slate-700">$0</div>
+            </div>
+            <div class="bg-slate-50 rounded-lg px-3 py-2">
+              <div class="text-xs text-slate-500 font-semibold uppercase tracking-wide mb-0.5">Insurance</div>
+              <div id="bd-insurance" class="font-bold text-slate-700">$0</div>
+            </div>
+            <div class="bg-slate-50 rounded-lg px-3 py-2">
+              <div class="text-xs text-slate-500 font-semibold uppercase tracking-wide mb-0.5">Maintenance</div>
+              <div id="bd-maintenance" class="font-bold text-slate-700">$0</div>
+            </div>
+            <div class="bg-slate-50 rounded-lg px-3 py-2">
+              <div class="text-xs text-slate-500 font-semibold uppercase tracking-wide mb-0.5">Management</div>
+              <div id="bd-mgmt" class="font-bold text-slate-700">$0</div>
+            </div>
+          </div>
+          <div class="flex justify-between items-center mt-3 pt-3 border-t border-slate-100">
+            <span class="text-sm font-bold text-slate-600">Total Annual Expenses</span>
+            <span id="bd-total" class="font-bold text-slate-800">$0</span>
+          </div>
+        </div>
+
+        <!-- Vacancy Impact -->
+        <div class="result-card bg-emerald-50 border-emerald-100">
+          <div class="result-label text-emerald-700 mb-3">Impact of Vacancy</div>
+          <table class="w-full text-sm">
+            <thead>
+              <tr class="text-xs text-slate-500 font-bold uppercase tracking-wide">
+                <th class="text-left pb-2">Vacancy</th>
+                <th class="text-right pb-2">Annual Cash Flow</th>
+                <th class="text-right pb-2">Net Yield</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-emerald-100">
+              <tr>
+                <td class="py-2 font-semibold text-slate-600">0%</td>
+                <td id="vi-cf0" class="py-2 text-right font-bold text-slate-700">—</td>
+                <td id="vi-ny0" class="py-2 text-right font-bold text-slate-700">—</td>
+              </tr>
+              <tr>
+                <td class="py-2 font-semibold text-slate-600">5%</td>
+                <td id="vi-cf5" class="py-2 text-right font-bold text-slate-700">—</td>
+                <td id="vi-ny5" class="py-2 text-right font-bold text-slate-700">—</td>
+              </tr>
+              <tr>
+                <td class="py-2 font-semibold text-slate-600">10%</td>
+                <td id="vi-cf10" class="py-2 text-right font-bold text-slate-700">—</td>
+                <td id="vi-ny10" class="py-2 text-right font-bold text-slate-700">—</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Upsell -->
+        <div class="rounded-2xl p-6 text-white" style="background:linear-gradient(135deg,#052e16 0%,#0d5c3a 60%,#16a34a 100%)">
+          <div class="flex items-center gap-2 mb-2">
+            <span class="material-symbols-outlined filled text-2xl">apartment</span>
+            <span class="font-bold text-lg">Track multiple properties and tenants.</span>
+          </div>
+          <p class="text-white/80 text-sm mb-4">The Rental Property Income & Expense Tracker manages rent collection, maintenance, vacancies, and ROI across your full portfolio.</p>
+          <button disabled class="inline-block bg-white font-bold text-sm px-5 py-2.5 rounded-xl cursor-not-allowed opacity-70" style="color:#0d5c3a">
+            Rental Property Tracker — Coming Soon
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="bg-slate-800 text-white/50 py-8 text-center text-sm">
+    <p>© 2026 BudgetTools · Free financial calculators · <a href="index.html" class="underline hover:text-white/80">Back to all tools</a></p>
+  </footer>
+
+  <script>
+    function fmt(n) { return '$' + Math.abs(Math.round(n)).toLocaleString(); }
+    function fmtPct(n) { return n.toFixed(1) + '%'; }
+    function fmtSigned(n) { return (n >= 0 ? '' : '-') + '$' + Math.abs(Math.round(n)).toLocaleString(); }
+
+    function calcAtVacancy(annualRent, propPrice, taxes, insurance, maintenance, mgmtFeePct, vacRate) {
+      const effectiveRent = annualRent * (1 - vacRate / 100);
+      const mgmtFeeAmt = effectiveRent * (mgmtFeePct / 100);
+      const totalExpenses = taxes + insurance + maintenance + mgmtFeeAmt;
+      const cashFlow = effectiveRent - totalExpenses;
+      const netYield = propPrice > 0 ? (cashFlow / propPrice) * 100 : 0;
+      return { cashFlow, netYield };
+    }
+
+    function calculate() {
+      const propPrice = parseFloat(document.getElementById('propPrice').value) || 0;
+      const monthlyRent = parseFloat(document.getElementById('monthlyRent').value) || 0;
+      const taxes = parseFloat(document.getElementById('taxes').value) || 0;
+      const insurance = parseFloat(document.getElementById('insurance').value) || 0;
+      const maintenance = parseFloat(document.getElementById('maintenance').value) || 0;
+      const mgmtFeePct = parseFloat(document.getElementById('mgmtFee').value) || 0;
+      const vacancyRate = parseFloat(document.getElementById('vacancyRate').value) || 0;
+      const mortgageRate = parseFloat(document.getElementById('mortgageRate').value) || 0;
+      const ltv = parseFloat(document.getElementById('ltv').value) || 0;
+
+      const annualRent = monthlyRent * 12;
+      const effectiveRent = annualRent * (1 - vacancyRate / 100);
+      const mgmtFeeAmt = effectiveRent * (mgmtFeePct / 100);
+      const totalExpenses = taxes + insurance + maintenance + mgmtFeeAmt;
+
+      const grossYield = propPrice > 0 ? (annualRent / propPrice) * 100 : 0;
+      const annualCashFlow = effectiveRent - totalExpenses;
+      const netYield = propPrice > 0 ? (annualCashFlow / propPrice) * 100 : 0;
+
+      const loanAmount = propPrice * (ltv / 100);
+      const annualInterest = loanAmount * (mortgageRate / 100);
+      const cashFlowAfterMortgage = annualCashFlow - annualInterest;
+      const monthlyCashFlow = cashFlowAfterMortgage / 12;
+
+      // Gross yield
+      document.getElementById('res-grossYield').textContent = fmtPct(grossYield);
+
+      // Net yield
+      const netEl = document.getElementById('res-netYield');
+      netEl.textContent = fmtPct(netYield);
+      const badge = document.getElementById('yieldBadge');
+      if (netYield >= 5) {
+        netEl.style.color = '#15803d';
+        badge.textContent = 'Excellent Yield';
+        badge.className = 'text-xs font-bold px-3 py-1 rounded-full bg-green-100 text-green-700 mt-1 whitespace-nowrap';
+      } else if (netYield >= 3) {
+        netEl.style.color = '#d97706';
+        badge.textContent = 'Average Yield';
+        badge.className = 'text-xs font-bold px-3 py-1 rounded-full bg-amber-100 text-amber-700 mt-1 whitespace-nowrap';
+      } else {
+        netEl.style.color = '#dc2626';
+        badge.textContent = 'Below Average';
+        badge.className = 'text-xs font-bold px-3 py-1 rounded-full bg-red-100 text-red-700 mt-1 whitespace-nowrap';
+      }
+
+      // Cash flows
+      const cfEl = document.getElementById('res-annualCF');
+      cfEl.textContent = fmtSigned(annualCashFlow);
+      cfEl.style.color = annualCashFlow >= 0 ? '#15803d' : '#dc2626';
+
+      const mcfEl = document.getElementById('res-monthlyCF');
+      mcfEl.textContent = fmtSigned(monthlyCashFlow);
+      mcfEl.style.color = monthlyCashFlow >= 0 ? '#15803d' : '#dc2626';
+      document.getElementById('res-monthlyCF-note').textContent = 'After ' + fmtPct(mortgageRate) + ' interest on ' + fmtPct(ltv) + ' LTV';
+
+      // Expense breakdown
+      document.getElementById('bd-taxes').textContent = fmt(taxes);
+      document.getElementById('bd-insurance').textContent = fmt(insurance);
+      document.getElementById('bd-maintenance').textContent = fmt(maintenance);
+      document.getElementById('bd-mgmt').textContent = fmt(mgmtFeeAmt);
+      document.getElementById('bd-total').textContent = fmt(totalExpenses);
+
+      // Vacancy impact table
+      const v0 = calcAtVacancy(annualRent, propPrice, taxes, insurance, maintenance, mgmtFeePct, 0);
+      const v5 = calcAtVacancy(annualRent, propPrice, taxes, insurance, maintenance, mgmtFeePct, 5);
+      const v10 = calcAtVacancy(annualRent, propPrice, taxes, insurance, maintenance, mgmtFeePct, 10);
+
+      function setCFCell(id, val) {
+        const el = document.getElementById(id);
+        el.textContent = fmtSigned(val);
+        el.style.color = val >= 0 ? '#0d5c3a' : '#dc2626';
+      }
+
+      setCFCell('vi-cf0', v0.cashFlow);
+      setCFCell('vi-cf5', v5.cashFlow);
+      setCFCell('vi-cf10', v10.cashFlow);
+      document.getElementById('vi-ny0').textContent = fmtPct(v0.netYield);
+      document.getElementById('vi-ny5').textContent = fmtPct(v5.netYield);
+      document.getElementById('vi-ny10').textContent = fmtPct(v10.netYield);
+    }
+
+    document.addEventListener('DOMContentLoaded', calculate);
+  </script>
+</body>
+</html>

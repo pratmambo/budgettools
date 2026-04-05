@@ -1,0 +1,20 @@
+# Secret files — never commit these
+supabase.txt
+*.env
+.env
+.env.local
+.env.production
+secrets.txt
+keys.txt
+
+# Node
+node_modules/
+npm-debug.log*
+package-lock.json
+
+# Netlify build cache
+.netlify/
+
+# OS
+.DS_Store
+Thumbs.db

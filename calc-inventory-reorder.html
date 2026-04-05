@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Inventory Reorder Point Calculator | BudgetTools</title>
+<meta name="description" content="Calculate the exact reorder point and recommended order quantity for any stock item. Never run out — or overstock — again. Free inventory calculator."/>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,400;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@400,0..1&display=swap" rel="stylesheet"/>
+<script>
+  tailwind.config = { theme: { extend: { fontFamily: { headline:['Noto Serif','serif'], body:['Plus Jakarta Sans','sans-serif'] } } } }
+</script>
+<style>
+* { box-sizing: border-box; }
+body { font-family: 'Plus Jakarta Sans', sans-serif; background: #f8fafc; color: #1e293b; }
+h1,h2,h3 { font-family: 'Noto Serif', serif; }
+.material-symbols-outlined { font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24; vertical-align:middle; line-height:1; }
+.filled { font-variation-settings:'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 24; }
+.field { width:100%; background:#f1f5f9; border:1px solid #e2e8f0; border-radius:10px; padding:10px 14px; font-size:15px; color:#1e293b; outline:none; font-family:'Plus Jakarta Sans',sans-serif; transition: border-color 0.15s, box-shadow 0.15s; }
+.field:focus { border-color: var(--accent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 15%, transparent); }
+.field-label { display:block; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:#64748b; margin-bottom:6px; }
+.result-card { background:white; border-radius:14px; padding:20px; box-shadow:0 1px 4px rgba(0,0,0,0.06); border:1px solid #e2e8f0; }
+.result-num { font-family:'Noto Serif',serif; font-size:2rem; font-weight:700; line-height:1.1; }
+.result-label { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:#64748b; margin-bottom:6px; }
+.result-note { font-size:12px; color:#94a3b8; margin-top:4px; }
+select.field { cursor:pointer; }
+input[type=range] { width:100%; accent-color: var(--accent); }
+</style>
+</head>
+<body style="--accent: #1565c0;">
+
+<!-- Nav -->
+<nav class="bg-white border-b border-slate-100 px-6 py-4 flex items-center justify-between sticky top-0 z-10">
+  <a href="index.html" class="text-sm font-semibold" style="color:#1565c0;">← BudgetTools</a>
+  <span class="bg-green-100 text-green-800 text-xs font-bold px-3 py-1 rounded-full">Free Calculator</span>
+</nav>
+
+<!-- Hero -->
+<section style="background: linear-gradient(135deg, #0d47a1 0%, #1565c0 60%, #4a90d9 100%); padding: 3rem 1.5rem;" class="text-center text-white">
+  <div class="inline-block bg-white/20 text-white text-xs font-bold px-3 py-1 rounded-full mb-4 tracking-widest uppercase">Free Tool</div>
+  <h1 class="text-3xl md:text-4xl font-bold mb-3" style="font-family:'Noto Serif',serif;">When Should You Reorder This Item?</h1>
+  <p class="text-lg max-w-xl mx-auto mb-6" style="color:rgba(255,255,255,0.75);">Enter your sales rate, supplier lead time, and safety stock to find your exact reorder point — the moment you should place the next order.</p>
+  <div class="flex flex-wrap justify-center gap-3">
+    <span class="bg-white/15 text-white text-xs font-semibold px-4 py-2 rounded-full">⚡ Instant</span>
+    <span class="bg-white/15 text-white text-xs font-semibold px-4 py-2 rounded-full">📊 No sign-up</span>
+    <span class="bg-white/15 text-white text-xs font-semibold px-4 py-2 rounded-full">🔒 Private</span>
+  </div>
+</section>
+
+<!-- Calculator -->
+<section class="py-10 px-4 max-w-4xl mx-auto">
+  <div class="grid md:grid-cols-2 gap-6">
+
+    <!-- Inputs -->
+    <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100">
+      <h3 class="text-lg font-bold mb-5" style="font-family:'Noto Serif',serif;">Your Numbers</h3>
+      <div style="display:flex;flex-direction:column;gap:1.25rem;">
+
+        <div>
+          <label class="field-label">Average Daily Sales (units)</label>
+          <input type="number" id="dailySales" class="field" value="15" min="0.5" step="0.5" oninput="calculate()"/>
+        </div>
+
+        <div>
+          <label class="field-label" style="display:flex;justify-content:space-between;">
+            <span>Supplier Lead Time (days)</span>
+            <span id="leadTimeLabel" style="color:#1565c0;font-size:12px;font-weight:700;">5 days</span>
+          </label>
+          <input type="range" id="leadTime" min="1" max="30" value="5" step="1" oninput="calculate()"/>
+          <div style="display:flex;justify-content:space-between;font-size:11px;color:#94a3b8;margin-top:2px;"><span>1 day</span><span>30 days</span></div>
+        </div>
+
+        <div>
+          <label class="field-label" style="display:flex;justify-content:space-between;">
+            <span>Safety Stock Buffer (days)</span>
+            <span id="safetyLabel" style="color:#1565c0;font-size:12px;font-weight:700;">3 days</span>
+          </label>
+          <input type="range" id="safetyDays" min="0" max="14" value="3" step="1" oninput="calculate()"/>
+          <div style="display:flex;justify-content:space-between;font-size:11px;color:#94a3b8;margin-top:2px;"><span>0 days</span><span>14 days</span></div>
+        </div>
+
+        <div>
+          <label class="field-label">Unit Cost ($)</label>
+          <div style="position:relative;">
+            <span style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:#64748b;font-size:15px;">$</span>
+            <input type="number" id="unitCost" class="field" style="padding-left:26px;" value="4.50" min="0.01" step="0.01" oninput="calculate()"/>
+          </div>
+        </div>
+
+        <div>
+          <label class="field-label">Cost Per Order ($, shipping/admin)</label>
+          <div style="position:relative;">
+            <span style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:#64748b;font-size:15px;">$</span>
+            <input type="number" id="orderCost" class="field" style="padding-left:26px;" value="25" min="0" step="1" oninput="calculate()"/>
+          </div>
+        </div>
+
+        <div>
+          <label class="field-label" style="display:flex;justify-content:space-between;">
+            <span>Annual Holding Cost (% of unit cost)</span>
+            <span id="holdingLabel" style="color:#1565c0;font-size:12px;font-weight:700;">20%</span>
+          </label>
+          <input type="range" id="holdingPct" min="5" max="40" value="20" step="5" oninput="calculate()"/>
+          <div style="display:flex;justify-content:space-between;font-size:11px;color:#94a3b8;margin-top:2px;"><span>5%</span><span>40%</span></div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Results -->
+    <div style="display:flex;flex-direction:column;gap:1rem;">
+
+      <div class="result-card">
+        <div class="result-label">Reorder Point</div>
+        <div style="display:flex;align-items:baseline;gap:8px;">
+          <div class="result-num" id="r-reorder" style="color:#1565c0;">0</div>
+          <span style="font-size:14px;color:#64748b;font-weight:600;">units</span>
+        </div>
+        <div class="result-note">Place order when stock drops to this level</div>
+      </div>
+
+      <div class="result-card">
+        <div class="result-label">Recommended Order Qty (EOQ)</div>
+        <div style="display:flex;align-items:baseline;gap:8px;">
+          <div class="result-num" id="r-eoq" style="color:#15803d;">0</div>
+          <span style="font-size:14px;color:#64748b;font-weight:600;">units</span>
+        </div>
+        <div class="result-note">Most cost-efficient order size</div>
+      </div>
+
+      <div class="grid grid-cols-2 gap-3">
+        <div class="result-card">
+          <div class="result-label">Safety Stock</div>
+          <div style="display:flex;align-items:baseline;gap:6px;">
+            <div class="result-num" id="r-safety" style="color:#b45309;font-size:1.5rem;">0</div>
+            <span style="font-size:13px;color:#64748b;font-weight:600;">units</span>
+          </div>
+          <div class="result-note">Buffer against supply delays</div>
+        </div>
+        <div class="result-card">
+          <div class="result-label">Days of Stock at Reorder</div>
+          <div style="display:flex;align-items:baseline;gap:6px;">
+            <div class="result-num" id="r-days" style="color:#2563eb;font-size:1.5rem;">0</div>
+            <span style="font-size:13px;color:#64748b;font-weight:600;">days</span>
+          </div>
+          <div class="result-note">How long stock lasts at reorder point</div>
+        </div>
+      </div>
+
+      <div class="result-card">
+        <div class="result-label">Est. Order Cost</div>
+        <div class="result-num" id="r-ordercost" style="color:#475569;font-size:1.5rem;">$0</div>
+        <div class="result-note" id="r-ordercost-note">— units × $—</div>
+      </div>
+
+      <!-- Timeline Diagram -->
+      <div class="result-card">
+        <div class="result-label mb-3">Stock Level Timeline</div>
+        <div style="position:relative;height:56px;background:#f1f5f9;border-radius:8px;overflow:hidden;">
+          <div id="bar-reorder" style="position:absolute;top:0;left:0;height:100%;background:#1565c0;opacity:0.85;transition:width 0.3s;display:flex;align-items:center;justify-content:flex-end;padding-right:8px;">
+            <span style="font-size:10px;font-weight:700;color:white;white-space:nowrap;">Reorder Point</span>
+          </div>
+          <div id="bar-safety" style="position:absolute;top:0;left:0;height:100%;background:#b45309;opacity:0.7;transition:width 0.3s;"></div>
+          <div id="bar-leadtime" style="position:absolute;top:0;left:0;height:100%;border-right:3px dashed #d97706;background:transparent;transition:width 0.3s;"></div>
+        </div>
+        <div style="display:flex;gap:16px;margin-top:10px;font-size:11px;flex-wrap:wrap;">
+          <span style="display:flex;align-items:center;gap:4px;"><span style="width:10px;height:10px;border-radius:2px;background:#1565c0;display:inline-block;"></span>Reorder Point</span>
+          <span style="display:flex;align-items:center;gap:4px;"><span style="width:10px;height:10px;border-radius:2px;background:#b45309;display:inline-block;"></span>Safety Stock</span>
+          <span style="display:flex;align-items:center;gap:4px;"><span style="width:10px;height:2px;border-top:2px dashed #d97706;display:inline-block;"></span>Lead Time</span>
+        </div>
+      </div>
+
+      <!-- Upsell -->
+      <div style="background:linear-gradient(135deg,#0d47a1,#1565c0);border-radius:16px;padding:24px;color:white;">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+          <span class="material-symbols-outlined filled" style="font-size:28px;color:rgba(255,255,255,0.9);">inventory_2</span>
+          <span style="font-size:16px;font-weight:700;font-family:'Noto Serif',serif;">Track all your SKUs in one place.</span>
+        </div>
+        <p style="font-size:13px;color:rgba(255,255,255,0.8);margin-bottom:16px;line-height:1.6;">The Inventory Management Tracker monitors real-time stock levels, logs every movement, and alerts you when items hit their reorder point.</p>
+        <a href="inventory.html" style="display:inline-block;background:white;color:#1565c0;border-radius:10px;padding:10px 20px;font-size:13px;font-weight:700;text-decoration:none;font-family:'Plus Jakarta Sans',sans-serif;">Open Inventory Tracker →</a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="bg-slate-800 text-white py-8 text-center text-sm" style="color:rgba(255,255,255,0.5);">
+  <p>© 2026 BudgetTools — Free financial tools for every life event.</p>
+  <p class="mt-2"><a href="index.html" style="color:rgba(255,255,255,0.6);text-decoration:underline;">← Back to all tools</a></p>
+</footer>
+
+<script>
+function fmt(n){ return '$' + Math.round(n).toLocaleString(); }
+function fmtN(n){ return Math.round(n).toLocaleString(); }
+
+function calculate() {
+  const dailySales  = parseFloat(document.getElementById('dailySales').value)  || 0;
+  const leadTime    = parseFloat(document.getElementById('leadTime').value)     || 0;
+  const safetyDays  = parseFloat(document.getElementById('safetyDays').value)  || 0;
+  const unitCost    = parseFloat(document.getElementById('unitCost').value)     || 0;
+  const orderCost   = parseFloat(document.getElementById('orderCost').value)    || 0;
+  const holdingPct  = parseFloat(document.getElementById('holdingPct').value)  || 0;
+
+  document.getElementById('leadTimeLabel').textContent = leadTime + (leadTime === 1 ? ' day' : ' days');
+  document.getElementById('safetyLabel').textContent   = safetyDays + (safetyDays === 1 ? ' day' : ' days');
+  document.getElementById('holdingLabel').textContent  = holdingPct + '%';
+
+  const safetyStockUnits = dailySales * safetyDays;
+  const reorderPoint     = (dailySales * leadTime) + safetyStockUnits;
+  const annualDemand     = dailySales * 365;
+  const holdingCostUnit  = unitCost * (holdingPct / 100);
+  const EOQ              = holdingCostUnit > 0 ? Math.sqrt((2 * annualDemand * orderCost) / holdingCostUnit) : 0;
+  const reorderQty       = Math.round(EOQ);
+  const daysOfStock      = dailySales > 0 ? reorderPoint / dailySales : 0;
+  const orderValue       = reorderQty * unitCost;
+
+  document.getElementById('r-reorder').textContent        = fmtN(reorderPoint);
+  document.getElementById('r-eoq').textContent            = fmtN(reorderQty);
+  document.getElementById('r-safety').textContent         = fmtN(safetyStockUnits);
+  document.getElementById('r-days').textContent           = daysOfStock.toFixed(1);
+  document.getElementById('r-ordercost').textContent      = fmt(orderValue);
+  document.getElementById('r-ordercost-note').textContent = fmtN(reorderQty) + ' units × $' + unitCost.toFixed(2);
+
+  // Timeline bars (relative to reorderPoint as 100%)
+  const total = reorderPoint > 0 ? reorderPoint : 1;
+  const ltStock = dailySales * leadTime;
+
+  document.getElementById('bar-reorder').style.width  = '100%';
+  document.getElementById('bar-safety').style.width   = Math.min((safetyStockUnits / total) * 100, 100) + '%';
+  document.getElementById('bar-leadtime').style.width = Math.min((ltStock / total) * 100, 100) + '%';
+}
+
+document.addEventListener('DOMContentLoaded', calculate);
+</script>
+</body>
+</html>

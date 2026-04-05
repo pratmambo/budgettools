@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sign In or Create Account | BudgetTools</title>
+  <meta name="robots" content="noindex"/>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+  <script src="https://cdn.tailwindcss.com?plugins=forms"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#00355f",
+            "primary-container": "#0f4c81",
+            "primary-fixed": "#d2e4ff",
+            "on-primary": "#ffffff",
+            "on-primary-container": "#8ebdf9",
+            "on-primary-fixed-variant": "#07497d",
+            "secondary": "#2c694e",
+            "secondary-container": "#aeeecb",
+            "on-secondary-container": "#316e52",
+            "surface": "#f8f9ff",
+            "surface-container-lowest": "#ffffff",
+            "surface-container-low": "#eff4ff",
+            "surface-container": "#e6eeff",
+            "surface-container-high": "#dde9ff",
+            "surface-container-highest": "#d5e3fd",
+            "on-surface": "#0d1c2f",
+            "on-surface-variant": "#42474f",
+            "outline": "#727780",
+            "outline-variant": "#c2c7d1",
+            "error": "#ba1a1a",
+          },
+          fontFamily: {
+            "headline": ["Noto Serif", "serif"],
+            "body": ["Plus Jakarta Sans", "sans-serif"],
+            "label": ["Inter", "sans-serif"],
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    h1, h2, h3, h4 { font-family: 'Noto Serif', serif; }
+    .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; vertical-align: middle; }
+    .filled { font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+    .brand-panel { background: linear-gradient(160deg, #001a30 0%, #00355f 60%, #0f4c81 100%); }
+    .btn-primary { background: linear-gradient(135deg, #00355f, #0f4c81); }
+    .btn-primary:hover { opacity: 0.92; }
+    .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
+    .strength-bar { height: 3px; border-radius: 2px; transition: width 0.3s ease, background-color 0.3s ease; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .spinner { animation: spin 0.8s linear infinite; }
+    input:focus { outline: none; box-shadow: 0 0 0 3px rgba(0,53,95,0.15); }
+    .form-input {
+      width: 100%;
+      padding: 0.625rem 0.875rem;
+      border: 1px solid #c2c7d1;
+      border-radius: 0.5rem;
+      font-size: 0.9rem;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      color: #0d1c2f;
+      background: #ffffff;
+      transition: border-color 0.2s;
+    }
+    .form-input:focus { border-color: #00355f; }
+    .form-input::placeholder { color: #9ca3af; }
+  </style>
+</head>
+<body class="bg-surface min-h-screen flex">
+
+<!-- ── SPLIT LAYOUT ───────────────────────────────────────── -->
+<div class="flex w-full min-h-screen">
+
+  <!-- LEFT: Brand Panel (hidden on mobile) -->
+  <div class="hidden lg:flex lg:w-[45%] xl:w-[42%] brand-panel flex-col justify-between p-12 relative overflow-hidden">
+    <!-- Background decoration -->
+    <div class="absolute top-0 right-0 w-96 h-96 bg-white/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none"></div>
+    <div class="absolute bottom-0 left-0 w-80 h-80 bg-white/5 rounded-full blur-3xl translate-y-1/2 -translate-x-1/4 pointer-events-none"></div>
+
+    <!-- Logo -->
+    <div class="relative z-10">
+      <a href="/index.html" class="text-2xl font-bold text-white tracking-tight font-body">BudgetTools</a>
+    </div>
+
+    <!-- Main copy -->
+    <div class="relative z-10 flex-1 flex flex-col justify-center py-16">
+      <h2 class="text-3xl xl:text-4xl font-semibold text-white leading-tight mb-8">
+        Your financial plans.<br/>
+        <span class="italic font-light text-blue-200">Saved, synced, and<br/>always with you.</span>
+      </h2>
+      <ul class="space-y-4 mb-12">
+        <li class="flex items-center gap-3 text-blue-100">
+          <span class="flex-shrink-0 w-6 h-6 rounded-full bg-white/20 flex items-center justify-center text-xs font-bold text-white">✓</span>
+          <span class="text-sm font-medium">Access from any device, anytime</span>
+        </li>
+        <li class="flex items-center gap-3 text-blue-100">
+          <span class="flex-shrink-0 w-6 h-6 rounded-full bg-white/20 flex items-center justify-center text-xs font-bold text-white">✓</span>
+          <span class="text-sm font-medium">Never lose your data or progress</span>
+        </li>
+        <li class="flex items-center gap-3 text-blue-100">
+          <span class="flex-shrink-0 w-6 h-6 rounded-full bg-white/20 flex items-center justify-center text-xs font-bold text-white">✓</span>
+          <span class="text-sm font-medium">Team sharing &amp; export options</span>
+        </li>
+      </ul>
+
+      <!-- Template card mockup -->
+      <div class="bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl p-5 max-w-xs">
+        <div class="flex items-center gap-3 mb-3">
+          <div class="w-9 h-9 rounded-lg bg-pink-400/30 flex items-center justify-center">
+            <span class="material-symbols-outlined text-pink-200 text-lg filled">favorite</span>
+          </div>
+          <div>
+            <div class="text-white text-sm font-semibold">Wedding Planner</div>
+            <div class="text-blue-200 text-xs">Budget · Guest List · Vendors</div>
+          </div>
+        </div>
+        <div class="flex gap-2">
+          <div class="flex-1 bg-white/10 rounded-md p-2">
+            <div class="text-blue-200 text-xs mb-1">Budget</div>
+            <div class="text-white text-sm font-bold">$28,400</div>
+          </div>
+          <div class="flex-1 bg-white/10 rounded-md p-2">
+            <div class="text-blue-200 text-xs mb-1">Spent</div>
+            <div class="text-emerald-300 text-sm font-bold">$21,100</div>
+          </div>
+          <div class="flex-1 bg-white/10 rounded-md p-2">
+            <div class="text-blue-200 text-xs mb-1">Guests</div>
+            <div class="text-white text-sm font-bold">87</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom tagline -->
+    <div class="relative z-10">
+      <p class="text-blue-300/70 text-xs">Free calculators · Premium templates · No spreadsheets needed.</p>
+    </div>
+  </div>
+
+  <!-- RIGHT: Form Panel -->
+  <div class="flex-1 flex flex-col">
+
+    <!-- Mobile top bar -->
+    <div class="lg:hidden brand-panel px-6 py-4 flex items-center justify-between">
+      <a href="/index.html" class="text-lg font-bold text-white font-body">BudgetTools</a>
+      <a href="/index.html" class="text-blue-200 text-sm hover:text-white transition-colors">← Home</a>
+    </div>
+
+    <!-- Form area -->
+    <div class="flex-1 flex items-center justify-center px-6 py-12">
+      <div class="w-full max-w-md">
+
+        <!-- ── CALLBACK MODE ── -->
+        <div id="mode-callback" class="hidden text-center">
+          <div class="flex justify-center mb-6">
+            <svg class="spinner w-12 h-12 text-primary" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3"></circle>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+          </div>
+          <h2 class="text-2xl font-semibold text-primary mb-2">Signing you in…</h2>
+          <p class="text-on-surface-variant text-sm">Please wait while we verify your credentials.</p>
+          <div id="callback-error" class="hidden mt-6 bg-red-50 border border-red-200 text-red-700 rounded-lg p-4 text-sm flex items-start gap-2">
+            <span class="text-base leading-none mt-0.5">⚠</span>
+            <div>
+              <div class="font-semibold mb-1">Authentication failed</div>
+              <div id="callback-error-msg"></div>
+              <a href="/auth.html" class="underline hover:no-underline mt-2 inline-block">Back to sign in</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── LOGIN MODE ── -->
+        <div id="mode-login">
+          <div class="mb-8">
+            <h1 class="text-3xl font-semibold text-primary mb-2">Welcome back</h1>
+            <p class="text-on-surface-variant text-sm">Sign in to access your templates and saved data.</p>
+          </div>
+
+          <div id="login-alert" class="hidden mb-5 bg-red-50 border border-red-200 text-red-700 rounded-lg p-4 text-sm flex items-start gap-2">
+            <span class="text-base leading-none mt-0.5">⚠</span>
+            <span id="login-alert-msg"></span>
+          </div>
+          <div id="login-success" class="hidden mb-5 bg-green-50 border border-green-200 text-green-800 rounded-lg p-4 text-sm flex items-start gap-2">
+            <span class="text-base leading-none mt-0.5">✓</span>
+            <span id="login-success-msg"></span>
+          </div>
+
+          <div class="space-y-4">
+            <div>
+              <label for="login-email" class="block text-sm font-medium text-on-surface mb-1.5">Email address</label>
+              <input id="login-email" type="email" placeholder="you@example.com" class="form-input" autocomplete="email"/>
+            </div>
+            <div>
+              <label for="login-password" class="block text-sm font-medium text-on-surface mb-1.5">Password</label>
+              <div class="relative">
+                <input id="login-password" type="password" placeholder="Your password" class="form-input pr-10" autocomplete="current-password"/>
+                <button type="button" onclick="togglePassword('login-password', this)" class="absolute right-3 top-1/2 -translate-y-1/2 text-outline hover:text-on-surface-variant transition-colors" tabindex="-1">
+                  <span class="material-symbols-outlined text-lg" id="login-pw-icon">visibility</span>
+                </button>
+              </div>
+            </div>
+
+            <button id="login-btn" onclick="handleSignIn()" class="btn-primary w-full text-white py-3 px-6 rounded-lg font-semibold text-sm transition-opacity flex items-center justify-center gap-2">
+              <span id="login-btn-text">Sign In</span>
+              <svg id="login-spinner" class="hidden spinner w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+            </button>
+
+            <div class="text-right">
+              <button onclick="switchMode('magic')" class="text-sm text-primary hover:underline font-medium">Forgot password?</button>
+            </div>
+          </div>
+
+          <div class="my-6 flex items-center gap-3">
+            <div class="flex-1 h-px bg-outline-variant"></div>
+            <span class="text-xs text-outline font-medium">or</span>
+            <div class="flex-1 h-px bg-outline-variant"></div>
+          </div>
+
+          <button onclick="handleGoogle()" class="w-full bg-white border border-outline-variant text-on-surface py-3 px-6 rounded-lg font-semibold text-sm hover:bg-surface transition-colors flex items-center justify-center gap-3 shadow-sm">
+            <svg width="18" height="18" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg">
+              <path d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.875 2.684-6.615z" fill="#4285F4"/>
+              <path d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 009 18z" fill="#34A853"/>
+              <path d="M3.964 10.71A5.41 5.41 0 013.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 000 9c0 1.452.348 2.827.957 4.042l3.007-2.332z" fill="#FBBC05"/>
+              <path d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 00.957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z" fill="#EA4335"/>
+            </svg>
+            Continue with Google
+          </button>
+
+          <p class="text-center text-sm text-on-surface-variant mt-6">
+            Don't have an account?
+            <button onclick="switchMode('signup')" class="text-primary font-semibold hover:underline ml-1">Sign up →</button>
+          </p>
+        </div>
+
+        <!-- ── SIGNUP MODE ── -->
+        <div id="mode-signup" class="hidden">
+          <div class="mb-8">
+            <h1 class="text-3xl font-semibold text-primary mb-2">Create your account</h1>
+            <p class="text-on-surface-variant text-sm">Join free. Calculators stay free forever.</p>
+          </div>
+
+          <div id="signup-alert" class="hidden mb-5 bg-red-50 border border-red-200 text-red-700 rounded-lg p-4 text-sm flex items-start gap-2">
+            <span class="text-base leading-none mt-0.5">⚠</span>
+            <span id="signup-alert-msg"></span>
+          </div>
+          <div id="signup-success" class="hidden mb-5 bg-green-50 border border-green-200 text-green-800 rounded-lg p-4 text-sm flex items-start gap-2">
+            <span class="text-base leading-none mt-0.5">✓</span>
+            <span id="signup-success-msg"></span>
+          </div>
+
+          <div class="space-y-4">
+            <div>
+              <label for="signup-name" class="block text-sm font-medium text-on-surface mb-1.5">Full name</label>
+              <input id="signup-name" type="text" placeholder="Jane Smith" class="form-input" autocomplete="name"/>
+            </div>
+            <div>
+              <label for="signup-email" class="block text-sm font-medium text-on-surface mb-1.5">Email address</label>
+              <input id="signup-email" type="email" placeholder="you@example.com" class="form-input" autocomplete="email"/>
+            </div>
+            <div>
+              <label for="signup-password" class="block text-sm font-medium text-on-surface mb-1.5">Password</label>
+              <div class="relative">
+                <input id="signup-password" type="password" placeholder="Min. 8 characters" class="form-input pr-10" autocomplete="new-password" oninput="updateStrength(this.value)"/>
+                <button type="button" onclick="togglePassword('signup-password', this)" class="absolute right-3 top-1/2 -translate-y-1/2 text-outline hover:text-on-surface-variant transition-colors" tabindex="-1">
+                  <span class="material-symbols-outlined text-lg" id="signup-pw-icon">visibility</span>
+                </button>
+              </div>
+              <!-- Password strength -->
+              <div class="mt-2">
+                <div class="flex gap-1 mb-1">
+                  <div id="str-1" class="flex-1 strength-bar bg-outline-variant/40"></div>
+                  <div id="str-2" class="flex-1 strength-bar bg-outline-variant/40"></div>
+                  <div id="str-3" class="flex-1 strength-bar bg-outline-variant/40"></div>
+                  <div id="str-4" class="flex-1 strength-bar bg-outline-variant/40"></div>
+                </div>
+                <p id="str-label" class="text-xs text-outline"></p>
+              </div>
+            </div>
+
+            <button id="signup-btn" onclick="handleSignUp()" class="btn-primary w-full text-white py-3 px-6 rounded-lg font-semibold text-sm transition-opacity flex items-center justify-center gap-2">
+              <span id="signup-btn-text">Create Account</span>
+              <svg id="signup-spinner" class="hidden spinner w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+            </button>
+          </div>
+
+          <div class="my-6 flex items-center gap-3">
+            <div class="flex-1 h-px bg-outline-variant"></div>
+            <span class="text-xs text-outline font-medium">or</span>
+            <div class="flex-1 h-px bg-outline-variant"></div>
+          </div>
+
+          <button onclick="handleGoogle()" class="w-full bg-white border border-outline-variant text-on-surface py-3 px-6 rounded-lg font-semibold text-sm hover:bg-surface transition-colors flex items-center justify-center gap-3 shadow-sm">
+            <svg width="18" height="18" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg">
+              <path d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.875 2.684-6.615z" fill="#4285F4"/>
+              <path d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 009 18z" fill="#34A853"/>
+              <path d="M3.964 10.71A5.41 5.41 0 013.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 000 9c0 1.452.348 2.827.957 4.042l3.007-2.332z" fill="#FBBC05"/>
+              <path d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 00.957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z" fill="#EA4335"/>
+            </svg>
+            Continue with Google
+          </button>
+
+          <p class="text-center text-sm text-on-surface-variant mt-6">
+            Already have an account?
+            <button onclick="switchMode('login')" class="text-primary font-semibold hover:underline ml-1">Sign in →</button>
+          </p>
+          <p class="text-center text-xs text-outline mt-3 leading-relaxed">
+            By creating an account, you agree to our
+            <a href="#" class="underline hover:no-underline">Terms of Service</a> and
+            <a href="#" class="underline hover:no-underline">Privacy Policy</a>.
+          </p>
+        </div>
+
+        <!-- ── MAGIC LINK MODE ── -->
+        <div id="mode-magic" class="hidden">
+          <div class="mb-8">
+            <h1 class="text-3xl font-semibold text-primary mb-2">Email me a sign-in link</h1>
+            <p class="text-on-surface-variant text-sm">We'll send a magic link to your inbox — no password needed.</p>
+          </div>
+
+          <div id="magic-alert" class="hidden mb-5 bg-red-50 border border-red-200 text-red-700 rounded-lg p-4 text-sm flex items-start gap-2">
+            <span class="text-base leading-none mt-0.5">⚠</span>
+            <span id="magic-alert-msg"></span>
+          </div>
+
+          <!-- Send form -->
+          <div id="magic-form">
+            <div class="mb-4">
+              <label for="magic-email" class="block text-sm font-medium text-on-surface mb-1.5">Email address</label>
+              <input id="magic-email" type="email" placeholder="you@example.com" class="form-input" autocomplete="email"/>
+            </div>
+
+            <button id="magic-btn" onclick="handleMagicLink()" class="btn-primary w-full text-white py-3 px-6 rounded-lg font-semibold text-sm transition-opacity flex items-center justify-center gap-2">
+              <span id="magic-btn-text">Send Magic Link</span>
+              <svg id="magic-spinner" class="hidden spinner w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+            </button>
+          </div>
+
+          <!-- Sent success state -->
+          <div id="magic-sent" class="hidden text-center">
+            <div class="w-14 h-14 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <span class="material-symbols-outlined text-green-600 text-2xl filled">mark_email_read</span>
+            </div>
+            <h3 class="text-lg font-semibold text-on-surface mb-1">Check your inbox</h3>
+            <p class="text-sm text-on-surface-variant mb-1">We sent a magic link to</p>
+            <p id="magic-sent-email" class="text-sm font-semibold text-primary mb-5"></p>
+            <p class="text-xs text-outline mb-4">The link expires in 10 minutes.</p>
+            <button id="resend-btn" onclick="handleResend()" class="text-sm text-primary hover:underline font-medium" disabled></button>
+          </div>
+
+          <p class="text-center text-sm text-on-surface-variant mt-6">
+            <button onclick="switchMode('login')" class="text-primary font-semibold hover:underline">← Back to sign in</button>
+          </p>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="px-6 pb-6 text-center">
+      <p class="text-xs text-outline">© 2025 BudgetTools · <a href="/index.html" class="hover:underline">Home</a></p>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ── CONFIG ──────────────────────────────────────────────────
+  const SUPABASE_URL = 'https://sidrjbvjkbfmzrsojtkp.supabase.co';
+  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNpZHJqYnZqa2JmbXpyc29qdGtwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU0MDk0MzcsImV4cCI6MjA5MDk4NTQzN30.IiFfDhDAomrfZk-msDTdC-w1bbcF71DtEDfIrIoN3NQ';
+  const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+  // ── URL PARAMS ──────────────────────────────────────────────
+  const params = new URLSearchParams(window.location.search);
+  const mode = params.get('mode') || 'login';
+  const next = params.get('next') || '/account.html';
+
+  // ── INIT ────────────────────────────────────────────────────
+  document.addEventListener('DOMContentLoaded', () => {
+    // Check existing session (skip in callback mode)
+    if (mode !== 'callback') {
+      supabase.auth.getSession().then(({ data: { session } }) => {
+        if (session) window.location.href = next;
+      });
+    }
+    showMode(mode);
+  });
+
+  function showMode(m) {
+    ['login','signup','magic','callback'].forEach(id => {
+      const el = document.getElementById('mode-' + id);
+      if (el) el.classList.toggle('hidden', id !== m);
+    });
+  }
+
+  function switchMode(m) {
+    const url = new URL(window.location.href);
+    url.searchParams.set('mode', m);
+    history.pushState({}, '', url);
+    showMode(m);
+  }
+
+  // ── CALLBACK HANDLER ────────────────────────────────────────
+  if (mode === 'callback') {
+    // Handle hash fragment (magic link)
+    supabase.auth.onAuthStateChange((event, session) => {
+      if (event === 'SIGNED_IN' && session) {
+        window.location.href = next;
+      }
+    });
+
+    // Handle PKCE code exchange (OAuth)
+    supabase.auth.exchangeCodeForSession(window.location.href).catch(() => {
+      // Not a PKCE flow, handled by onAuthStateChange
+    });
+
+    // Fallback timeout — show error if nothing happens
+    setTimeout(() => {
+      supabase.auth.getSession().then(({ data: { session } }) => {
+        if (!session) {
+          document.getElementById('callback-error').classList.remove('hidden');
+          document.getElementById('callback-error-msg').textContent = 'The link may have expired or already been used.';
+          document.querySelector('#mode-callback .spinner').classList.add('hidden');
+        }
+      });
+    }, 5000);
+  }
+
+  // ── SIGN IN ─────────────────────────────────────────────────
+  async function handleSignIn() {
+    const email = document.getElementById('login-email').value.trim();
+    const password = document.getElementById('login-password').value;
+    if (!email || !password) { showAlert('login', 'Please fill in all fields.'); return; }
+    setLoading('login', true);
+    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    setLoading('login', false);
+    if (error) showAlert('login', error.message);
+    else window.location.href = next;
+  }
+
+  // ── SIGN UP ─────────────────────────────────────────────────
+  async function handleSignUp() {
+    const name = document.getElementById('signup-name').value.trim();
+    const email = document.getElementById('signup-email').value.trim();
+    const password = document.getElementById('signup-password').value;
+    if (!name || !email || !password) { showAlert('signup', 'Please fill in all fields.'); return; }
+    if (password.length < 8) { showAlert('signup', 'Password must be at least 8 characters.'); return; }
+    setLoading('signup', true);
+    const redirectTo = window.location.origin + '/auth.html?mode=callback&next=' + encodeURIComponent(next);
+    const { error } = await supabase.auth.signUp({
+      email, password,
+      options: { data: { full_name: name }, emailRedirectTo: redirectTo }
+    });
+    setLoading('signup', false);
+    if (error) showAlert('signup', error.message);
+    else {
+      document.getElementById('signup-success').classList.remove('hidden');
+      document.getElementById('signup-success-msg').textContent = 'Check your email to confirm your account.';
+      document.getElementById('signup-alert').classList.add('hidden');
+    }
+  }
+
+  // ── GOOGLE OAUTH ────────────────────────────────────────────
+  async function handleGoogle() {
+    const redirectTo = window.location.origin + '/auth.html?mode=callback&next=' + encodeURIComponent(next);
+    await supabase.auth.signInWithOAuth({ provider: 'google', options: { redirectTo } });
+  }
+
+  // ── MAGIC LINK ───────────────────────────────────────────────
+  async function handleMagicLink() {
+    const email = document.getElementById('magic-email').value.trim();
+    if (!email) { showAlert('magic', 'Please enter your email address.'); return; }
+    setLoading('magic', true);
+    const redirectTo = window.location.origin + '/auth.html?mode=callback&next=' + encodeURIComponent(next);
+    const { error } = await supabase.auth.signInWithOtp({ email, options: { emailRedirectTo: redirectTo } });
+    setLoading('magic', false);
+    if (error) { showAlert('magic', error.message); return; }
+    showMagicLinkSent(email);
+  }
+
+  function showMagicLinkSent(email) {
+    document.getElementById('magic-form').classList.add('hidden');
+    document.getElementById('magic-alert').classList.add('hidden');
+    document.getElementById('magic-sent').classList.remove('hidden');
+    document.getElementById('magic-sent-email').textContent = email;
+    startResendCountdown(30);
+  }
+
+  let resendTimer = null;
+  function startResendCountdown(seconds) {
+    const btn = document.getElementById('resend-btn');
+    btn.disabled = true;
+    let remaining = seconds;
+    btn.textContent = 'Resend in ' + remaining + 's';
+    resendTimer = setInterval(() => {
+      remaining--;
+      if (remaining <= 0) {
+        clearInterval(resendTimer);
+        btn.disabled = false;
+        btn.textContent = 'Resend magic link';
+      } else {
+        btn.textContent = 'Resend in ' + remaining + 's';
+      }
+    }, 1000);
+  }
+
+  async function handleResend() {
+    const email = document.getElementById('magic-sent-email').textContent;
+    const redirectTo = window.location.origin + '/auth.html?mode=callback&next=' + encodeURIComponent(next);
+    await supabase.auth.signInWithOtp({ email, options: { emailRedirectTo: redirectTo } });
+    startResendCountdown(30);
+  }
+
+  // ── UI HELPERS ───────────────────────────────────────────────
+  function showAlert(modeId, message) {
+    const alert = document.getElementById(modeId + '-alert');
+    const msg = document.getElementById(modeId + '-alert-msg');
+    if (alert && msg) { msg.textContent = message; alert.classList.remove('hidden'); }
+  }
+
+  function setLoading(modeId, loading) {
+    const btn = document.getElementById(modeId + '-btn');
+    const spinner = document.getElementById(modeId + '-spinner');
+    const text = document.getElementById(modeId + '-btn-text');
+    if (!btn) return;
+    btn.disabled = loading;
+    spinner && spinner.classList.toggle('hidden', !loading);
+    if (text) {
+      const labels = { login: ['Sign In', 'Signing in…'], signup: ['Create Account', 'Creating…'], magic: ['Send Magic Link', 'Sending…'] };
+      text.textContent = labels[modeId]?.[loading ? 1 : 0] || text.textContent;
+    }
+  }
+
+  function togglePassword(inputId, btn) {
+    const input = document.getElementById(inputId);
+    const icon = btn.querySelector('.material-symbols-outlined');
+    if (input.type === 'password') {
+      input.type = 'text';
+      icon.textContent = 'visibility_off';
+    } else {
+      input.type = 'password';
+      icon.textContent = 'visibility';
+    }
+  }
+
+  // ── PASSWORD STRENGTH ────────────────────────────────────────
+  function updateStrength(pw) {
+    let score = 0;
+    if (pw.length >= 8) score++;
+    if (pw.length >= 12) score++;
+    if (/[A-Z]/.test(pw) && /[a-z]/.test(pw)) score++;
+    if (/[0-9]/.test(pw)) score++;
+    if (/[^A-Za-z0-9]/.test(pw)) score++;
+    score = Math.min(score, 4);
+
+    const colors = ['', '#ef4444', '#f97316', '#eab308', '#22c55e'];
+    const labels = ['', 'Weak', 'Fair', 'Good', 'Strong'];
+    for (let i = 1; i <= 4; i++) {
+      const bar = document.getElementById('str-' + i);
+      bar.style.backgroundColor = i <= score ? colors[score] : '#e5e7eb';
+    }
+    const label = document.getElementById('str-label');
+    label.textContent = pw ? labels[score] || '' : '';
+    label.style.color = colors[score] || '#9ca3af';
+  }
+
+  // Allow Enter key to submit
+  document.addEventListener('keydown', (e) => {
+    if (e.key !== 'Enter') return;
+    const currentMode = new URLSearchParams(window.location.search).get('mode') || 'login';
+    if (currentMode === 'login') handleSignIn();
+    else if (currentMode === 'signup') handleSignUp();
+    else if (currentMode === 'magic') handleMagicLink();
+  });
+</script>
+</body>
+</html>
