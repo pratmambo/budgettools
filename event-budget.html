@@ -1,0 +1,1884 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Event Budget & Profit Tracker | BudgetTools — Free Online Event Planning Tool</title>
+  <meta name="description" content="Track event costs, ticket revenue, sponsorships and profit in real time. Break-even calculator, per-attendee metrics, P&L summary — free for birthday parties, corporate events, workshops and more."/>
+  <meta name="keywords" content="event budget tracker, event profit loss calculator, corporate event budget, party budget planner, event cost tracker, event planning spreadsheet, break even calculator events"/>
+  <meta property="og:title" content="Event Budget & Profit Tracker | BudgetTools"/>
+  <meta property="og:description" content="Stop guessing at event profitability. Track costs, revenue, and profit in real time — free forever."/>
+  <meta property="og:type" content="website"/>
+  <meta property="og:url" content="https://profound-biscuit-1631a5.netlify.app/event-budget.html"/>
+  <link rel="canonical" href="https://profound-biscuit-1631a5.netlify.app/event-budget.html"/>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+  <script src="https://cdn.tailwindcss.com?plugins=forms"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            "primary":                  "#4527a0",
+            "primary-container":        "#7c57c8",
+            "primary-fixed":            "#e8ddff",
+            "on-primary":               "#ffffff",
+            "on-primary-container":     "#f0eaff",
+            "on-primary-fixed-variant": "#2f0c7a",
+            "secondary":                "#006874",
+            "secondary-container":      "#97f0ff",
+            "on-secondary":             "#ffffff",
+            "on-secondary-container":   "#001f24",
+            "surface":                  "#fffbff",
+            "surface-container-lowest": "#ffffff",
+            "surface-container-low":    "#f7f2fa",
+            "surface-container":        "#f1ebf9",
+            "surface-container-high":   "#ebe5f3",
+            "surface-container-highest":"#e5dff0",
+            "on-surface":               "#1c1b1f",
+            "on-surface-variant":       "#49454f",
+            "outline":                  "#7a757f",
+            "outline-variant":          "#cac4d0",
+            "error":                    "#ba1a1a",
+            "error-container":          "#ffdad6",
+            "on-error":                 "#ffffff",
+            "profit":                   "#166534",
+            "profit-bg":                "#dcfce7",
+            "loss":                     "#991b1b",
+            "loss-bg":                  "#fee2e2",
+          },
+          fontFamily: {
+            "headline": ["Noto Serif","serif"],
+            "body":     ["Plus Jakarta Sans","sans-serif"],
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- JSON-LD Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Event Budget & Profit Tracker",
+    "description": "Free online event budget and profit tracker for corporate events, birthday parties, workshops, concerts and fundraisers. Real-time P&L, break-even calculator, per-attendee cost metrics.",
+    "url": "https://profound-biscuit-1631a5.netlify.app/event-budget.html",
+    "applicationCategory": "FinanceApplication",
+    "operatingSystem": "Any",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD",
+      "description": "Free forever — no credit card required"
+    },
+    "featureList": [
+      "Cost tracking by category",
+      "Ticket and sponsorship revenue tracking",
+      "Real-time profit and loss calculation",
+      "Break-even attendee calculator",
+      "Per-attendee cost metrics",
+      "P&L summary report"
+    ]
+  }
+  </script>
+
+  <style>
+    * { box-sizing: border-box; }
+    body { font-family: 'Plus Jakarta Sans', sans-serif; background: #fffbff; }
+    h1,h2,h3,h4 { font-family: 'Noto Serif', serif; }
+    .material-symbols-outlined { font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24; vertical-align:middle; line-height:1; }
+    .filled { font-variation-settings:'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 24; }
+    .grad-event { background: linear-gradient(135deg, #4527a0 0%, #7c57c8 100%); }
+    .grad-event-subtle { background: linear-gradient(135deg, #f0eaff 0%, #e8ddff 100%); }
+
+    /* ── NAV ─────────────────── */
+    .nav-item { display:flex; align-items:center; gap:10px; padding:10px 14px; border-radius:8px; cursor:pointer; font-size:13px; font-weight:500; transition:all 0.15s; width:100%; text-align:left; }
+    .nav-item.active  { background:rgba(69,39,160,0.12); color:#4527a0; font-weight:700; }
+    .nav-item.inactive{ color:#7a757f; }
+    .nav-item.inactive:hover { background:rgba(69,39,160,0.06); color:#4527a0; }
+
+    /* ── FIELDS ──────────────── */
+    .field { width:100%; background:#ebe5f3; border:none; border-radius:8px; padding:10px 14px; font-size:14px; color:#1c1b1f; outline:none; transition:box-shadow 0.15s; font-family:'Plus Jakarta Sans',sans-serif; }
+    .field:focus { box-shadow:0 0 0 2px rgba(69,39,160,0.35); }
+    .field-label { display:block; font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.08em; color:#49454f; margin-bottom:6px; }
+
+    /* ── MODALS ──────────────── */
+    .modal-overlay { position:fixed; inset:0; background:rgba(28,27,31,0.45); backdrop-filter:blur(4px); z-index:60; display:flex; align-items:center; justify-content:center; padding:16px; }
+    .modal-box { background:#fff; border-radius:20px; padding:32px; width:100%; max-width:500px; box-shadow:0 24px 60px rgba(28,27,31,0.15); max-height:90vh; overflow-y:auto; }
+
+    /* ── TABLE ROWS ──────────── */
+    .data-row:hover { background:rgba(69,39,160,0.03); }
+    ::-webkit-scrollbar { width:4px; } ::-webkit-scrollbar-thumb { background:#cac4d0; border-radius:4px; }
+
+    /* ── INLINE EDIT ─────────── */
+    .editable { cursor:pointer; padding:2px 6px; border-radius:4px; min-width:60px; display:inline-block; transition:background 0.15s; }
+    .editable:hover { background:rgba(69,39,160,0.08); }
+    .editable:focus { background:#e8ddff; outline:none; box-shadow:0 0 0 2px rgba(69,39,160,0.3); border-radius:4px; }
+
+    /* ── PRO LOCK ────────────── */
+    .pro-lock { position:relative; }
+    .pro-lock-overlay { position:absolute; inset:0; background:rgba(255,255,255,0.75); backdrop-filter:blur(3px); border-radius:inherit; z-index:10; display:flex; align-items:center; justify-content:center; }
+
+    /* ── LANDING PAGE ────────── */
+    .lp-hero { background: linear-gradient(160deg, #2e0c82 0%, #4527a0 40%, #6a3fd4 100%); }
+    .lp-mockup-wrapper { perspective: 1200px; }
+    .lp-mockup { transform: rotateY(-12deg) rotateX(4deg) scale(0.92); transform-origin: center; border-radius: 16px; overflow: hidden; box-shadow: 0 40px 80px rgba(0,0,0,0.45), 0 0 0 1px rgba(255,255,255,0.12); transition: transform 0.4s ease; }
+    .lp-mockup:hover { transform: rotateY(-6deg) rotateX(2deg) scale(0.94); }
+    .lp-stat-card { background: rgba(255,255,255,0.1); backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.15); border-radius: 12px; padding: 20px 24px; }
+    .lp-feature-card { transition: transform 0.2s, box-shadow 0.2s; }
+    .lp-feature-card:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(69,39,160,0.12); }
+    .lp-step-connector { width: 2px; height: 40px; background: linear-gradient(to bottom, #7c57c8, #e8ddff); margin: 0 auto; }
+    .faq-answer { max-height: 0; overflow: hidden; transition: max-height 0.35s ease; }
+    .faq-answer.open { max-height: 300px; }
+    .profit-pill { display:inline-flex; align-items:center; gap:4px; padding:2px 10px; border-radius:99px; font-size:11px; font-weight:700; }
+    .pill-profit { background:#dcfce7; color:#166534; }
+    .pill-loss   { background:#fee2e2; color:#991b1b; }
+    .pill-break  { background:#fef9c3; color:#854d0e; }
+
+    /* ── PROGRESS BAR ────────── */
+    .prog-bar { height:6px; border-radius:99px; background:#e5dff0; overflow:hidden; }
+    .prog-fill { height:100%; border-radius:99px; background:linear-gradient(90deg,#4527a0,#7c57c8); transition:width 0.5s ease; }
+    .prog-fill.over { background:linear-gradient(90deg,#ba1a1a,#ef4444); }
+
+    /* ── DEMO BANNER ─────────── */
+    #demo-banner { position:fixed; top:0; left:0; right:0; z-index:100; background:linear-gradient(90deg,#4527a0,#7c57c8); color:#fff; padding:10px 20px; display:flex; align-items:center; justify-between; font-size:13px; font-weight:500; }
+    #demo-banner.hidden { display:none; }
+
+    /* offset app content when demo banner is shown */
+    .demo-active #app { padding-top: 44px; }
+    .demo-active aside { top: 44px !important; }
+    .demo-active header { top: 44px !important; }
+  </style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════════════
+     DEMO BANNER
+══════════════════════════════════════════════════════ -->
+<div id="demo-banner" class="hidden">
+  <div class="flex items-center gap-2">
+    <span class="material-symbols-outlined text-base filled">info</span>
+    <span>You're exploring a <strong>demo event</strong> — TechConnect Summit 2026. No data is saved.</span>
+  </div>
+  <button onclick="showSetupModal()" class="ml-auto bg-white/20 hover:bg-white/30 transition-colors px-4 py-1.5 rounded-full text-xs font-bold">Use My Own Data →</button>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     LANDING PAGE
+══════════════════════════════════════════════════════ -->
+<div id="landing-page">
+
+  <!-- ── HERO ─────────────────────────────────────────── -->
+  <section class="lp-hero min-h-screen flex flex-col">
+    <!-- Topbar -->
+    <nav class="flex items-center justify-between px-6 md:px-12 py-5">
+      <a href="index.html" class="flex items-center gap-2 text-white/80 hover:text-white transition-colors text-sm font-semibold">
+        <span class="material-symbols-outlined text-base">arrow_back</span>
+        BudgetTools
+      </a>
+      <div class="flex items-center gap-3">
+        <button onclick="enterDemo()" class="text-white/70 hover:text-white text-sm font-medium transition-colors hidden md:block">View Demo</button>
+        <button onclick="showSetupModal()" class="bg-white text-primary text-sm font-bold px-5 py-2.5 rounded-full hover:bg-primary-fixed transition-colors">Get Started Free</button>
+      </div>
+    </nav>
+
+    <!-- Hero body -->
+    <div class="flex-1 grid md:grid-cols-2 gap-12 items-center px-6 md:px-12 py-16 max-w-7xl mx-auto w-full">
+      <!-- Left copy -->
+      <div>
+        <div class="inline-flex items-center gap-2 bg-white/10 border border-white/20 rounded-full px-4 py-1.5 text-white/80 text-xs font-semibold mb-8">
+          <span class="material-symbols-outlined text-sm filled text-yellow-300">star</span>
+          Free Forever — No credit card required
+        </div>
+        <h1 class="font-headline text-5xl md:text-6xl text-white leading-tight mb-6">
+          Run Events<br/>That Actually<br/><em>Make Money.</em>
+        </h1>
+        <p class="text-white/75 text-lg mb-4 leading-relaxed">
+          Most event organizers discover they're over budget <strong class="text-white">after</strong> the event. BudgetTools shows you your profit or loss <strong class="text-white">in real time</strong> — so you can course-correct before it's too late.
+        </p>
+        <ul class="space-y-2 mb-8">
+          <li class="flex items-center gap-2 text-white/80 text-sm"><span class="material-symbols-outlined text-base text-green-300 filled">check_circle</span>Real-time P&amp;L as you add costs</li>
+          <li class="flex items-center gap-2 text-white/80 text-sm"><span class="material-symbols-outlined text-base text-green-300 filled">check_circle</span>Break-even attendee calculator</li>
+          <li class="flex items-center gap-2 text-white/80 text-sm"><span class="material-symbols-outlined text-base text-green-300 filled">check_circle</span>Ticket, sponsorship &amp; donation revenue tracking</li>
+          <li class="flex items-center gap-2 text-white/80 text-sm"><span class="material-symbols-outlined text-base text-green-300 filled">check_circle</span>Per-attendee cost &amp; revenue metrics</li>
+        </ul>
+        <div class="flex flex-wrap gap-3">
+          <button onclick="showSetupModal()" class="bg-white text-primary font-bold px-8 py-4 rounded-xl hover:bg-primary-fixed transition-colors text-base shadow-lg">
+            Start Tracking Free
+          </button>
+          <button onclick="enterDemo()" class="border-2 border-white/40 text-white font-semibold px-8 py-4 rounded-xl hover:border-white hover:bg-white/10 transition-colors text-base">
+            Try the Demo →
+          </button>
+        </div>
+      </div>
+
+      <!-- Right: CSS app mockup -->
+      <div class="lp-mockup-wrapper hidden md:block">
+        <div class="lp-mockup bg-white" style="min-height:420px;">
+          <!-- Mockup header -->
+          <div class="grad-event px-5 py-4">
+            <div class="flex items-center justify-between">
+              <div>
+                <p class="text-white/60 text-xs font-semibold uppercase tracking-widest mb-0.5">Corporate Event</p>
+                <p class="text-white font-headline text-lg font-semibold">TechConnect Summit 2026</p>
+              </div>
+              <div class="text-right">
+                <p class="text-green-300 font-bold text-xl">+$14,200</p>
+                <p class="text-white/60 text-xs">Net Profit</p>
+              </div>
+            </div>
+          </div>
+          <!-- Mockup metrics -->
+          <div class="grid grid-cols-3 gap-3 p-4">
+            <div class="bg-surface-container-low rounded-lg p-3">
+              <p class="text-xs text-outline mb-1">Revenue</p>
+              <p class="font-bold text-on-surface text-sm">$58,500</p>
+            </div>
+            <div class="bg-surface-container-low rounded-lg p-3">
+              <p class="text-xs text-outline mb-1">Total Costs</p>
+              <p class="font-bold text-on-surface text-sm">$44,300</p>
+            </div>
+            <div class="bg-surface-container-low rounded-lg p-3">
+              <p class="text-xs text-outline mb-1">Margin</p>
+              <p class="font-bold text-primary text-sm">24.3%</p>
+            </div>
+          </div>
+          <!-- Mockup cost rows -->
+          <div class="px-4 pb-2">
+            <p class="text-xs text-outline uppercase tracking-widest mb-2 font-semibold">Top Costs</p>
+            <div class="space-y-2">
+              <div class="flex justify-between items-center py-2 border-b border-outline-variant/20">
+                <div class="flex items-center gap-2"><div class="w-2 h-2 rounded-full bg-primary"></div><span class="text-xs text-on-surface">Venue Hire</span></div>
+                <span class="text-xs font-bold text-on-surface">$18,000</span>
+              </div>
+              <div class="flex justify-between items-center py-2 border-b border-outline-variant/20">
+                <div class="flex items-center gap-2"><div class="w-2 h-2 rounded-full bg-primary-container"></div><span class="text-xs text-on-surface">Catering</span></div>
+                <span class="text-xs font-bold text-on-surface">$12,500</span>
+              </div>
+              <div class="flex justify-between items-center py-2 border-b border-outline-variant/20">
+                <div class="flex items-center gap-2"><div class="w-2 h-2 rounded-full bg-secondary"></div><span class="text-xs text-on-surface">AV & Production</span></div>
+                <span class="text-xs font-bold text-on-surface">$8,200</span>
+              </div>
+              <div class="flex justify-between items-center py-2">
+                <div class="flex items-center gap-2"><div class="w-2 h-2 rounded-full bg-yellow-400"></div><span class="text-xs text-on-surface">Marketing</span></div>
+                <span class="text-xs font-bold text-on-surface">$3,400</span>
+              </div>
+            </div>
+          </div>
+          <!-- Mockup break-even -->
+          <div class="mx-4 mb-4 mt-2 bg-primary-fixed rounded-lg p-3 flex items-center gap-3">
+            <span class="material-symbols-outlined text-primary text-lg filled">trending_up</span>
+            <div>
+              <p class="text-xs font-bold text-on-primary-fixed-variant">Break-even at 297 attendees</p>
+              <p class="text-xs text-primary/70">You have 390 registered — <span class="font-bold text-profit">93 above break-even</span></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Stats bar -->
+    <div class="border-t border-white/10 px-6 md:px-12 py-8">
+      <div class="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-6">
+        <div class="lp-stat-card text-center">
+          <p class="text-3xl font-headline font-bold text-white mb-1">72%</p>
+          <p class="text-white/60 text-xs">of event organizers go over budget</p>
+        </div>
+        <div class="lp-stat-card text-center">
+          <p class="text-3xl font-headline font-bold text-white mb-1">$3,200</p>
+          <p class="text-white/60 text-xs">average unplanned cost per event</p>
+        </div>
+        <div class="lp-stat-card text-center">
+          <p class="text-3xl font-headline font-bold text-white mb-1">1 in 3</p>
+          <p class="text-white/60 text-xs">events run at a loss without realising</p>
+        </div>
+        <div class="lp-stat-card text-center">
+          <p class="text-3xl font-headline font-bold text-white mb-1">40%</p>
+          <p class="text-white/60 text-xs">of costs hidden in service fees &amp; overruns</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── PAIN POINTS ───────────────────────────────────── -->
+  <section class="py-20 px-6 md:px-12 bg-white">
+    <div class="max-w-5xl mx-auto">
+      <div class="text-center mb-14">
+        <span class="text-primary text-xs uppercase tracking-[0.25em] font-bold block mb-3">The Problem</span>
+        <h2 class="font-headline text-4xl text-on-surface mb-4">Why Event Budgets Fail</h2>
+        <p class="text-on-surface-variant text-lg max-w-2xl mx-auto">Research from Eventbrite, Cvent, and industry surveys consistently shows the same patterns — and they're all preventable.</p>
+      </div>
+      <div class="grid md:grid-cols-3 gap-6">
+        <div class="bg-loss-bg border border-red-200 rounded-2xl p-6">
+          <div class="w-10 h-10 bg-error/10 rounded-full flex items-center justify-center mb-4">
+            <span class="material-symbols-outlined text-error text-xl filled">receipt</span>
+          </div>
+          <h3 class="font-headline text-lg text-on-surface mb-2">Hidden Fees Kill Margins</h3>
+          <p class="text-on-surface-variant text-sm leading-relaxed">Venue service charges (18–25%), catering gratuities, overtime labor, and permit fees are rarely in the original quote. They add 30–40% to your baseline cost.</p>
+        </div>
+        <div class="bg-loss-bg border border-red-200 rounded-2xl p-6">
+          <div class="w-10 h-10 bg-error/10 rounded-full flex items-center justify-center mb-4">
+            <span class="material-symbols-outlined text-error text-xl filled">show_chart</span>
+          </div>
+          <h3 class="font-headline text-lg text-on-surface mb-2">No Real-Time P&amp;L Visibility</h3>
+          <p class="text-on-surface-variant text-sm leading-relaxed">Most planners use spreadsheets updated manually once a week. By the time they realize they're over budget, it's too late to reduce costs or sell more tickets.</p>
+        </div>
+        <div class="bg-loss-bg border border-red-200 rounded-2xl p-6">
+          <div class="w-10 h-10 bg-error/10 rounded-full flex items-center justify-center mb-4">
+            <span class="material-symbols-outlined text-error text-xl filled">group_off</span>
+          </div>
+          <h3 class="font-headline text-lg text-on-surface mb-2">Break-Even Blindspot</h3>
+          <p class="text-on-surface-variant text-sm leading-relaxed">Organisers set ticket prices without knowing how many attendees they need to break even. They often under-price tickets and over-deliver on attendee experience — at a loss.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── FEATURES ──────────────────────────────────────── -->
+  <section class="py-20 px-6 md:px-12 bg-surface-container-low">
+    <div class="max-w-5xl mx-auto">
+      <div class="text-center mb-14">
+        <span class="text-primary text-xs uppercase tracking-[0.25em] font-bold block mb-3">Features</span>
+        <h2 class="font-headline text-4xl text-on-surface mb-4">Everything You Need to Run a Profitable Event</h2>
+        <p class="text-on-surface-variant text-lg max-w-2xl mx-auto">Built for corporate planners, birthday organisers, charity fundraisers, workshop hosts, and anyone who cares about their event's finances.</p>
+      </div>
+      <div class="grid md:grid-cols-3 gap-5">
+        <div class="lp-feature-card bg-white rounded-2xl p-6 shadow-sm">
+          <div class="w-10 h-10 grad-event rounded-xl flex items-center justify-center mb-4">
+            <span class="material-symbols-outlined text-white text-xl filled">real_estate_agent</span>
+          </div>
+          <h3 class="font-headline text-lg text-on-surface mb-2">Real-Time P&amp;L</h3>
+          <p class="text-on-surface-variant text-sm leading-relaxed">Every cost and revenue item updates your profit/loss instantly. No manual recalculations — see your margin update as you type.</p>
+        </div>
+        <div class="lp-feature-card bg-white rounded-2xl p-6 shadow-sm">
+          <div class="w-10 h-10 grad-event rounded-xl flex items-center justify-center mb-4">
+            <span class="material-symbols-outlined text-white text-xl filled">trending_up</span>
+          </div>
+          <h3 class="font-headline text-lg text-on-surface mb-2">Break-Even Calculator</h3>
+          <p class="text-on-surface-variant text-sm leading-relaxed">Instantly see how many ticket sales you need to cover your costs. Set your ticket price and watch the break-even point update automatically.</p>
+        </div>
+        <div class="lp-feature-card bg-white rounded-2xl p-6 shadow-sm">
+          <div class="w-10 h-10 grad-event rounded-xl flex items-center justify-center mb-4">
+            <span class="material-symbols-outlined text-white text-xl filled">person</span>
+          </div>
+          <h3 class="font-headline text-lg text-on-surface mb-2">Per-Attendee Metrics</h3>
+          <p class="text-on-surface-variant text-sm leading-relaxed">Know your cost-per-head and revenue-per-head at all times. These metrics drive smarter catering orders, venue sizing, and ticket pricing decisions.</p>
+        </div>
+        <div class="lp-feature-card bg-white rounded-2xl p-6 shadow-sm">
+          <div class="w-10 h-10 grad-event rounded-xl flex items-center justify-center mb-4">
+            <span class="material-symbols-outlined text-white text-xl filled">monetization_on</span>
+          </div>
+          <h3 class="font-headline text-lg text-on-surface mb-2">Multi-Source Revenue</h3>
+          <p class="text-on-surface-variant text-sm leading-relaxed">Track ticket sales, sponsorship packages, merchandise, donations, bar/food revenue, and any other income stream in one place.</p>
+        </div>
+        <div class="lp-feature-card bg-white rounded-2xl p-6 shadow-sm">
+          <div class="w-10 h-10 grad-event rounded-xl flex items-center justify-center mb-4">
+            <span class="material-symbols-outlined text-white text-xl filled">category</span>
+          </div>
+          <h3 class="font-headline text-lg text-on-surface mb-2">Cost Categories</h3>
+          <p class="text-on-surface-variant text-sm leading-relaxed">Organise costs by Venue, Catering, AV & Production, Marketing, Staffing, Logistics, Entertainment, and more. See where your money actually goes.</p>
+        </div>
+        <div class="lp-feature-card bg-white rounded-2xl p-6 shadow-sm">
+          <div class="w-10 h-10 grad-event rounded-xl flex items-center justify-center mb-4">
+            <span class="material-symbols-outlined text-white text-xl filled">summarize</span>
+          </div>
+          <h3 class="font-headline text-lg text-on-surface mb-2">P&amp;L Summary Report</h3>
+          <p class="text-on-surface-variant text-sm leading-relaxed">A clean summary view of all income and expenses, formatted for stakeholder presentations, board reports, or post-event analysis.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── HOW IT WORKS ──────────────────────────────────── -->
+  <section class="py-20 px-6 md:px-12 bg-white">
+    <div class="max-w-3xl mx-auto">
+      <div class="text-center mb-14">
+        <span class="text-primary text-xs uppercase tracking-[0.25em] font-bold block mb-3">How It Works</span>
+        <h2 class="font-headline text-4xl text-on-surface mb-4">Set Up in Under 2 Minutes</h2>
+      </div>
+      <div class="space-y-0">
+        <div class="flex gap-6 items-start">
+          <div class="flex flex-col items-center">
+            <div class="w-10 h-10 grad-event rounded-full flex items-center justify-center text-white font-bold text-sm shrink-0">1</div>
+            <div class="lp-step-connector mt-2"></div>
+          </div>
+          <div class="pb-10">
+            <h3 class="font-headline text-xl text-on-surface mb-2">Enter Your Event Details</h3>
+            <p class="text-on-surface-variant text-sm leading-relaxed">Tell us your event name, type, date, and expected attendee count. That's all we need to get started — takes about 30 seconds.</p>
+          </div>
+        </div>
+        <div class="flex gap-6 items-start">
+          <div class="flex flex-col items-center">
+            <div class="w-10 h-10 grad-event rounded-full flex items-center justify-center text-white font-bold text-sm shrink-0">2</div>
+            <div class="lp-step-connector mt-2"></div>
+          </div>
+          <div class="pb-10">
+            <h3 class="font-headline text-xl text-on-surface mb-2">Add Costs &amp; Revenue Streams</h3>
+            <p class="text-on-surface-variant text-sm leading-relaxed">Log venue hire, catering, AV, staffing, marketing — and your ticket revenue, sponsors, and donations. Add items in seconds and watch the P&amp;L update live.</p>
+          </div>
+        </div>
+        <div class="flex gap-6 items-start">
+          <div class="flex flex-col items-center">
+            <div class="w-10 h-10 grad-event rounded-full flex items-center justify-center text-white font-bold text-sm shrink-0">3</div>
+          </div>
+          <div class="pb-4">
+            <h3 class="font-headline text-xl text-on-surface mb-2">Know Exactly Where You Stand</h3>
+            <p class="text-on-surface-variant text-sm leading-relaxed">Your P&amp;L Summary, break-even point, and per-attendee metrics are always up to date. Share with stakeholders, adjust your plan, and run a profitable event.</p>
+          </div>
+        </div>
+      </div>
+      <div class="text-center mt-8">
+        <button onclick="showSetupModal()" class="grad-event text-white font-bold px-10 py-4 rounded-xl hover:opacity-90 transition-opacity text-base shadow-lg">
+          Start Tracking Free →
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── PRICING ────────────────────────────────────────── -->
+  <section class="py-20 px-6 md:px-12 bg-surface-container-low">
+    <div class="max-w-4xl mx-auto">
+      <div class="text-center mb-14">
+        <span class="text-primary text-xs uppercase tracking-[0.25em] font-bold block mb-3">Pricing</span>
+        <h2 class="font-headline text-4xl text-on-surface mb-4">Free for Individuals. Pro for Teams.</h2>
+        <p class="text-on-surface-variant text-lg max-w-xl mx-auto">Start free and stay free for single events. Upgrade when you need multi-event dashboards, exports, and team collaboration.</p>
+      </div>
+      <div class="grid md:grid-cols-2 gap-6 max-w-3xl mx-auto">
+        <!-- Free -->
+        <div class="bg-white rounded-2xl p-8 shadow-sm border-2 border-outline-variant/30">
+          <p class="text-xs text-outline uppercase tracking-widest font-bold mb-4">Free</p>
+          <div class="mb-6">
+            <span class="text-4xl font-headline font-bold text-on-surface">$0</span>
+            <span class="text-on-surface-variant text-sm"> / forever</span>
+          </div>
+          <ul class="space-y-3 mb-8 text-sm text-on-surface-variant">
+            <li class="flex items-center gap-2"><span class="material-symbols-outlined text-base text-profit filled">check</span>1 active event at a time</li>
+            <li class="flex items-center gap-2"><span class="material-symbols-outlined text-base text-profit filled">check</span>Unlimited cost &amp; revenue line items</li>
+            <li class="flex items-center gap-2"><span class="material-symbols-outlined text-base text-profit filled">check</span>Real-time P&amp;L calculation</li>
+            <li class="flex items-center gap-2"><span class="material-symbols-outlined text-base text-profit filled">check</span>Break-even calculator</li>
+            <li class="flex items-center gap-2"><span class="material-symbols-outlined text-base text-profit filled">check</span>Per-attendee metrics</li>
+            <li class="flex items-center gap-2"><span class="material-symbols-outlined text-base text-profit filled">check</span>P&amp;L Summary view</li>
+            <li class="flex items-center gap-2"><span class="material-symbols-outlined text-base text-profit filled">check</span>Saved locally in your browser</li>
+          </ul>
+          <button onclick="showSetupModal()" class="w-full border-2 border-primary text-primary font-bold py-3 rounded-xl hover:bg-primary-fixed transition-colors">Get Started Free</button>
+        </div>
+        <!-- Pro -->
+        <div class="bg-primary rounded-2xl p-8 shadow-lg relative overflow-hidden">
+          <div class="absolute top-4 right-4 bg-yellow-300 text-on-surface text-xs font-bold px-3 py-1 rounded-full">Coming Soon</div>
+          <p class="text-xs text-white/60 uppercase tracking-widest font-bold mb-4">Pro</p>
+          <div class="mb-6">
+            <span class="text-4xl font-headline font-bold text-white">$12</span>
+            <span class="text-white/60 text-sm"> / month</span>
+          </div>
+          <ul class="space-y-3 mb-8 text-sm text-white/80">
+            <li class="flex items-center gap-2"><span class="material-symbols-outlined text-base text-green-300 filled">check</span>Unlimited events &amp; history</li>
+            <li class="flex items-center gap-2"><span class="material-symbols-outlined text-base text-green-300 filled">check</span>Multi-event dashboard &amp; comparison</li>
+            <li class="flex items-center gap-2"><span class="material-symbols-outlined text-base text-green-300 filled">check</span>PDF &amp; CSV export</li>
+            <li class="flex items-center gap-2"><span class="material-symbols-outlined text-base text-green-300 filled">check</span>Scenario planning (what-if analysis)</li>
+            <li class="flex items-center gap-2"><span class="material-symbols-outlined text-base text-green-300 filled">check</span>Budget variance alerts</li>
+            <li class="flex items-center gap-2"><span class="material-symbols-outlined text-base text-green-300 filled">check</span>Vendor &amp; supplier tracker</li>
+            <li class="flex items-center gap-2"><span class="material-symbols-outlined text-base text-green-300 filled">check</span>Team sharing &amp; collaboration</li>
+          </ul>
+          <button class="w-full bg-white/20 text-white font-bold py-3 rounded-xl cursor-not-allowed opacity-70">Join Waitlist</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── FAQ ───────────────────────────────────────────── -->
+  <section class="py-20 px-6 md:px-12 bg-white">
+    <div class="max-w-3xl mx-auto">
+      <div class="text-center mb-14">
+        <span class="text-primary text-xs uppercase tracking-[0.25em] font-bold block mb-3">FAQ</span>
+        <h2 class="font-headline text-4xl text-on-surface mb-4">Common Questions</h2>
+      </div>
+      <div class="space-y-3" id="faq-list">
+        <div class="border border-outline-variant/30 rounded-xl overflow-hidden">
+          <button class="faq-toggle w-full text-left px-6 py-4 flex justify-between items-center" onclick="toggleFaq(this)">
+            <span class="font-semibold text-on-surface text-sm">Is this really free? What's the catch?</span>
+            <span class="material-symbols-outlined text-outline text-xl faq-icon">add</span>
+          </button>
+          <div class="faq-answer px-6 pb-4 text-on-surface-variant text-sm leading-relaxed">
+            <p>Genuinely free. The core tracker — costs, revenue, P&amp;L, break-even — is free forever for one active event. We plan to offer a paid Pro tier for teams and multi-event features, but the free version is not time-limited or crippled. Your data is saved in your browser's localStorage.</p>
+          </div>
+        </div>
+        <div class="border border-outline-variant/30 rounded-xl overflow-hidden">
+          <button class="faq-toggle w-full text-left px-6 py-4 flex justify-between items-center" onclick="toggleFaq(this)">
+            <span class="font-semibold text-on-surface text-sm">Where is my data stored?</span>
+            <span class="material-symbols-outlined text-outline text-xl faq-icon">add</span>
+          </button>
+          <div class="faq-answer px-6 pb-4 text-on-surface-variant text-sm leading-relaxed">
+            <p>Your event data is saved locally in your browser (localStorage). Nothing is sent to a server. This means your data is private — and also means clearing your browser cache will delete it. We recommend exporting important events (Pro feature coming soon).</p>
+          </div>
+        </div>
+        <div class="border border-outline-variant/30 rounded-xl overflow-hidden">
+          <button class="faq-toggle w-full text-left px-6 py-4 flex justify-between items-center" onclick="toggleFaq(this)">
+            <span class="font-semibold text-on-surface text-sm">What types of events does this work for?</span>
+            <span class="material-symbols-outlined text-outline text-xl faq-icon">add</span>
+          </button>
+          <div class="faq-answer px-6 pb-4 text-on-surface-variant text-sm leading-relaxed">
+            <p>Any event with costs and revenue: birthday parties, corporate conferences, workshops, seminars, concerts, charity fundraisers, gala dinners, product launches, community festivals — even private celebrations. The tracker is flexible enough for any event type.</p>
+          </div>
+        </div>
+        <div class="border border-outline-variant/30 rounded-xl overflow-hidden">
+          <button class="faq-toggle w-full text-left px-6 py-4 flex justify-between items-center" onclick="toggleFaq(this)">
+            <span class="font-semibold text-on-surface text-sm">How does the break-even calculator work?</span>
+            <span class="material-symbols-outlined text-outline text-xl faq-icon">add</span>
+          </button>
+          <div class="faq-answer px-6 pb-4 text-on-surface-variant text-sm leading-relaxed">
+            <p>We take your total fixed costs and divide by your revenue per attendee (ticket price) to give you the minimum number of attendees needed to cover costs. You can set a target ticket price and see how break-even changes in real time. This is one of the most important metrics for any ticketed event.</p>
+          </div>
+        </div>
+        <div class="border border-outline-variant/30 rounded-xl overflow-hidden">
+          <button class="faq-toggle w-full text-left px-6 py-4 flex justify-between items-center" onclick="toggleFaq(this)">
+            <span class="font-semibold text-on-surface text-sm">Can I track both free and paid events?</span>
+            <span class="material-symbols-outlined text-outline text-xl faq-icon">add</span>
+          </button>
+          <div class="faq-answer px-6 pb-4 text-on-surface-variant text-sm leading-relaxed">
+            <p>Yes. For free events (no ticket revenue), you simply track costs only — the P&amp;L shows your total spend, and the break-even calculator is hidden. For charity fundraisers, you can track donations as revenue. The tracker adapts to your event model.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── CTA FOOTER ─────────────────────────────────────── -->
+  <section class="lp-hero py-20 px-6 md:px-12 text-center">
+    <div class="max-w-2xl mx-auto">
+      <h2 class="font-headline text-4xl text-white mb-4">Ready to Run a Profitable Event?</h2>
+      <p class="text-white/70 text-lg mb-8">Join event planners who track their budgets in real time — not after the bill arrives.</p>
+      <div class="flex flex-wrap gap-3 justify-center">
+        <button onclick="showSetupModal()" class="bg-white text-primary font-bold px-10 py-4 rounded-xl hover:bg-primary-fixed transition-colors text-base shadow-lg">
+          Start Free — No Sign-Up
+        </button>
+        <button onclick="enterDemo()" class="border-2 border-white/40 text-white font-semibold px-10 py-4 rounded-xl hover:border-white hover:bg-white/10 transition-colors text-base">
+          See Demo First
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-on-surface py-10 px-6 md:px-12">
+    <div class="max-w-5xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+      <div>
+        <p class="font-headline text-white text-lg mb-1">BudgetTools</p>
+        <p class="text-white/40 text-xs">Free financial planning tools for every life event.</p>
+      </div>
+      <div class="flex gap-6 text-white/50 text-sm">
+        <a href="index.html" class="hover:text-white transition-colors">Home</a>
+        <a href="wedding-planner.html" class="hover:text-white transition-colors">Wedding Planner</a>
+        <a href="event-budget.html" class="hover:text-white transition-colors">Event Budget</a>
+      </div>
+      <p class="text-white/30 text-xs">© 2026 BudgetTools. All rights reserved.</p>
+    </div>
+  </footer>
+
+</div><!-- /landing-page -->
+
+
+<!-- ══════════════════════════════════════════════════════
+     SETUP MODAL
+══════════════════════════════════════════════════════ -->
+<div id="setup-overlay" class="modal-overlay hidden">
+  <div class="modal-box">
+    <div class="text-center mb-8">
+      <div class="w-14 h-14 grad-event rounded-2xl flex items-center justify-center mx-auto mb-4">
+        <span class="material-symbols-outlined text-white text-2xl filled">event</span>
+      </div>
+      <h2 class="font-headline text-2xl text-on-surface mb-2">Set Up Your Event</h2>
+      <p class="text-on-surface-variant text-sm">Enter your event details to get started. You can edit everything later.</p>
+    </div>
+    <div id="setup-error" class="hidden bg-error-container text-error text-sm rounded-lg px-4 py-3 mb-5"></div>
+    <div class="space-y-4">
+      <div>
+        <label class="field-label">Event Name <span class="text-error">*</span></label>
+        <input id="s-name" type="text" class="field" placeholder="e.g. Annual Tech Conference 2026"/>
+      </div>
+      <div>
+        <label class="field-label">Event Type</label>
+        <select id="s-type" class="field">
+          <option value="Corporate Event">Corporate Event</option>
+          <option value="Birthday Party">Birthday Party</option>
+          <option value="Workshop / Seminar">Workshop / Seminar</option>
+          <option value="Concert / Performance">Concert / Performance</option>
+          <option value="Charity / Fundraiser">Charity / Fundraiser</option>
+          <option value="Wedding Reception">Wedding Reception</option>
+          <option value="Product Launch">Product Launch</option>
+          <option value="Community Festival">Community Festival</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+      <div>
+        <label class="field-label">Event Date <span class="text-error">*</span></label>
+        <input id="s-date" type="date" class="field"/>
+      </div>
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label class="field-label">Expected Attendees</label>
+          <input id="s-attendees" type="number" class="field" placeholder="150" min="1"/>
+        </div>
+        <div>
+          <label class="field-label">Ticket Price ($)</label>
+          <input id="s-ticket" type="number" class="field" placeholder="0.00" min="0" step="0.01"/>
+        </div>
+      </div>
+      <div>
+        <label class="field-label">Currency</label>
+        <select id="s-currency" class="field">
+          <option value="$">USD ($)</option>
+          <option value="£">GBP (£)</option>
+          <option value="€">EUR (€)</option>
+          <option value="A$">AUD (A$)</option>
+          <option value="C$">CAD (C$)</option>
+          <option value="₹">INR (₹)</option>
+          <option value="S$">SGD (S$)</option>
+        </select>
+      </div>
+    </div>
+    <div class="flex gap-3 mt-8">
+      <button onclick="closeSetupModal()" class="flex-1 border border-outline-variant text-on-surface-variant font-semibold py-3 rounded-xl hover:bg-surface-container transition-colors text-sm">Cancel</button>
+      <button onclick="completeSetup()" class="flex-2 grad-event text-white font-bold px-8 py-3 rounded-xl hover:opacity-90 transition-opacity">Start Tracking →</button>
+    </div>
+  </div>
+</div>
+
+<!-- Settings Modal -->
+<div id="settings-overlay" class="modal-overlay hidden">
+  <div class="modal-box">
+    <h2 class="font-headline text-xl text-on-surface mb-6">Event Settings</h2>
+    <div class="space-y-4">
+      <div>
+        <label class="field-label">Event Name</label>
+        <input id="set-name" type="text" class="field"/>
+      </div>
+      <div>
+        <label class="field-label">Event Type</label>
+        <select id="set-type" class="field">
+          <option value="Corporate Event">Corporate Event</option>
+          <option value="Birthday Party">Birthday Party</option>
+          <option value="Workshop / Seminar">Workshop / Seminar</option>
+          <option value="Concert / Performance">Concert / Performance</option>
+          <option value="Charity / Fundraiser">Charity / Fundraiser</option>
+          <option value="Wedding Reception">Wedding Reception</option>
+          <option value="Product Launch">Product Launch</option>
+          <option value="Community Festival">Community Festival</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+      <div>
+        <label class="field-label">Event Date</label>
+        <input id="set-date" type="date" class="field"/>
+      </div>
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label class="field-label">Expected Attendees</label>
+          <input id="set-attendees" type="number" class="field" min="1"/>
+        </div>
+        <div>
+          <label class="field-label">Actual Attendees</label>
+          <input id="set-actual-att" type="number" class="field" min="0"/>
+        </div>
+      </div>
+      <div>
+        <label class="field-label">Currency Symbol</label>
+        <select id="set-currency" class="field">
+          <option value="$">USD ($)</option>
+          <option value="£">GBP (£)</option>
+          <option value="€">EUR (€)</option>
+          <option value="A$">AUD (A$)</option>
+          <option value="C$">CAD (C$)</option>
+          <option value="₹">INR (₹)</option>
+          <option value="S$">SGD (S$)</option>
+        </select>
+      </div>
+    </div>
+    <div class="flex gap-3 mt-6">
+      <button onclick="document.getElementById('settings-overlay').classList.add('hidden')" class="flex-1 border border-outline-variant text-on-surface-variant font-semibold py-3 rounded-xl hover:bg-surface-container transition-colors text-sm">Cancel</button>
+      <button onclick="saveSettings()" class="flex-1 grad-event text-white font-bold py-3 rounded-xl hover:opacity-90 transition-opacity">Save Changes</button>
+    </div>
+    <div class="mt-4 pt-4 border-t border-outline-variant/20">
+      <button onclick="resetApp()" class="w-full text-error text-sm font-semibold py-2 hover:bg-error-container rounded-lg transition-colors">Reset &amp; Start Over</button>
+    </div>
+  </div>
+</div>
+
+<!-- Add Cost Modal -->
+<div id="cost-modal" class="modal-overlay hidden">
+  <div class="modal-box">
+    <h2 class="font-headline text-xl text-on-surface mb-6" id="cost-modal-title">Add Cost Item</h2>
+    <input type="hidden" id="cost-edit-id"/>
+    <div class="space-y-4">
+      <div>
+        <label class="field-label">Description <span class="text-error">*</span></label>
+        <input id="c-desc" type="text" class="field" placeholder="e.g. Venue Hire — Grand Ballroom"/>
+      </div>
+      <div>
+        <label class="field-label">Category</label>
+        <select id="c-cat" class="field">
+          <option value="Venue">Venue</option>
+          <option value="Catering">Catering</option>
+          <option value="AV & Production">AV &amp; Production</option>
+          <option value="Marketing">Marketing</option>
+          <option value="Staffing">Staffing</option>
+          <option value="Entertainment">Entertainment</option>
+          <option value="Logistics & Transport">Logistics &amp; Transport</option>
+          <option value="Decor & Design">Decor &amp; Design</option>
+          <option value="Permits & Insurance">Permits &amp; Insurance</option>
+          <option value="Technology">Technology</option>
+          <option value="Speakers & Talent">Speakers &amp; Talent</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label class="field-label">Estimated ($)</label>
+          <input id="c-estimated" type="number" class="field" placeholder="0.00" min="0" step="0.01"/>
+        </div>
+        <div>
+          <label class="field-label">Actual ($)</label>
+          <input id="c-actual" type="number" class="field" placeholder="0.00" min="0" step="0.01"/>
+        </div>
+      </div>
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label class="field-label">Amount Paid ($)</label>
+          <input id="c-paid" type="number" class="field" placeholder="0.00" min="0" step="0.01"/>
+        </div>
+        <div>
+          <label class="field-label">Vendor / Supplier</label>
+          <input id="c-vendor" type="text" class="field" placeholder="Optional"/>
+        </div>
+      </div>
+      <div>
+        <label class="field-label">Notes</label>
+        <input id="c-notes" type="text" class="field" placeholder="Optional notes"/>
+      </div>
+    </div>
+    <div class="flex gap-3 mt-6">
+      <button onclick="closeCostModal()" class="flex-1 border border-outline-variant text-on-surface-variant font-semibold py-3 rounded-xl hover:bg-surface-container transition-colors text-sm">Cancel</button>
+      <button onclick="saveCost()" class="flex-1 grad-event text-white font-bold py-3 rounded-xl hover:opacity-90 transition-opacity">Save Cost</button>
+    </div>
+  </div>
+</div>
+
+<!-- Add Revenue Modal -->
+<div id="rev-modal" class="modal-overlay hidden">
+  <div class="modal-box">
+    <h2 class="font-headline text-xl text-on-surface mb-6" id="rev-modal-title">Add Revenue Item</h2>
+    <input type="hidden" id="rev-edit-id"/>
+    <div class="space-y-4">
+      <div>
+        <label class="field-label">Description <span class="text-error">*</span></label>
+        <input id="r-desc" type="text" class="field" placeholder="e.g. General Admission Tickets"/>
+      </div>
+      <div>
+        <label class="field-label">Revenue Type</label>
+        <select id="r-type" class="field">
+          <option value="Ticket Sales">Ticket Sales</option>
+          <option value="Sponsorship">Sponsorship</option>
+          <option value="Donation">Donation</option>
+          <option value="Merchandise">Merchandise</option>
+          <option value="Bar / Beverage">Bar / Beverage</option>
+          <option value="Food Sales">Food Sales</option>
+          <option value="Registration Fee">Registration Fee</option>
+          <option value="Grants">Grants</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label class="field-label">Projected ($)</label>
+          <input id="r-projected" type="number" class="field" placeholder="0.00" min="0" step="0.01"/>
+        </div>
+        <div>
+          <label class="field-label">Actual Received ($)</label>
+          <input id="r-actual" type="number" class="field" placeholder="0.00" min="0" step="0.01"/>
+        </div>
+      </div>
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label class="field-label">Unit Count (optional)</label>
+          <input id="r-units" type="number" class="field" placeholder="e.g. 200 tickets" min="0"/>
+        </div>
+        <div>
+          <label class="field-label">Unit Price ($)</label>
+          <input id="r-unit-price" type="number" class="field" placeholder="e.g. 99.00" min="0" step="0.01"/>
+        </div>
+      </div>
+      <div>
+        <label class="field-label">Notes</label>
+        <input id="r-notes" type="text" class="field" placeholder="Optional notes"/>
+      </div>
+    </div>
+    <div class="flex gap-3 mt-6">
+      <button onclick="closeRevModal()" class="flex-1 border border-outline-variant text-on-surface-variant font-semibold py-3 rounded-xl hover:bg-surface-container transition-colors text-sm">Cancel</button>
+      <button onclick="saveRevenue()" class="flex-1 grad-event text-white font-bold py-3 rounded-xl hover:opacity-90 transition-opacity">Save Revenue</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     MAIN APP
+══════════════════════════════════════════════════════ -->
+<div id="app" class="hidden flex min-h-screen">
+
+  <!-- Desktop Sidebar -->
+  <aside id="sidebar" class="hidden md:flex flex-col fixed left-0 top-0 h-full w-60 bg-white border-r border-outline-variant/20 z-30 overflow-y-auto">
+    <div class="p-6 pb-4">
+      <a href="index.html" class="text-xs text-primary font-semibold tracking-widest uppercase opacity-60 hover:opacity-100 transition-opacity block mb-5">← BudgetTools</a>
+      <p class="text-xs text-on-surface-variant uppercase tracking-widest mb-1 font-semibold" id="sb-event-type">Event</p>
+      <p class="font-headline text-lg text-on-surface leading-tight" id="sb-event-name">—</p>
+      <p class="text-xs text-outline mt-1" id="sb-event-date"></p>
+    </div>
+    <nav class="flex-1 px-3 pb-4 space-y-0.5">
+      <button class="nav-item active" data-nav="overview" onclick="switchTab('overview')"><span class="material-symbols-outlined text-xl">dashboard</span> Overview</button>
+      <button class="nav-item inactive" data-nav="costs" onclick="switchTab('costs')"><span class="material-symbols-outlined text-xl">receipt_long</span> Costs</button>
+      <button class="nav-item inactive" data-nav="revenue" onclick="switchTab('revenue')"><span class="material-symbols-outlined text-xl">attach_money</span> Revenue</button>
+      <button class="nav-item inactive" data-nav="summary" onclick="switchTab('summary')"><span class="material-symbols-outlined text-xl">summarize</span> P&amp;L Summary</button>
+    </nav>
+    <div class="p-4 border-t border-outline-variant/20 space-y-1">
+      <button onclick="prepareSettings()" class="nav-item inactive w-full"><span class="material-symbols-outlined text-xl">settings</span> Settings</button>
+      <button onclick="exitToLanding()" class="nav-item inactive w-full"><span class="material-symbols-outlined text-xl">home</span> Home</button>
+    </div>
+  </aside>
+
+  <!-- Mobile header -->
+  <header id="mob-header" class="md:hidden fixed top-0 left-0 right-0 z-40 bg-white/90 backdrop-blur-md border-b border-outline-variant/20 flex items-center justify-between px-4 py-3">
+    <div>
+      <p class="font-bold text-on-surface text-sm" id="mob-event-name">—</p>
+      <p class="text-xs text-primary font-semibold" id="mob-event-type"></p>
+    </div>
+    <button onclick="toggleDrawer()" class="p-2 text-on-surface-variant">
+      <span class="material-symbols-outlined text-2xl" id="drawer-icon">menu</span>
+    </button>
+  </header>
+
+  <div id="drawer-overlay" class="md:hidden fixed inset-0 bg-on-surface/30 z-40 hidden" onclick="toggleDrawer()"></div>
+  <div id="drawer" class="md:hidden fixed left-0 top-0 h-full w-64 bg-white z-50 -translate-x-full transition-transform duration-300 shadow-2xl overflow-y-auto">
+    <div class="p-6 border-b border-outline-variant/20">
+      <a href="index.html" class="text-xs text-primary font-semibold tracking-widest uppercase opacity-60 block mb-4">← BudgetTools</a>
+      <p class="font-headline text-lg text-on-surface" id="dr-event-name">—</p>
+      <p class="text-xs text-outline mt-1" id="dr-event-date"></p>
+    </div>
+    <nav class="p-3 space-y-0.5">
+      <button class="nav-item active" data-nav="overview" onclick="switchTab('overview');toggleDrawer()"><span class="material-symbols-outlined text-xl">dashboard</span> Overview</button>
+      <button class="nav-item inactive" data-nav="costs" onclick="switchTab('costs');toggleDrawer()"><span class="material-symbols-outlined text-xl">receipt_long</span> Costs</button>
+      <button class="nav-item inactive" data-nav="revenue" onclick="switchTab('revenue');toggleDrawer()"><span class="material-symbols-outlined text-xl">attach_money</span> Revenue</button>
+      <button class="nav-item inactive" data-nav="summary" onclick="switchTab('summary');toggleDrawer()"><span class="material-symbols-outlined text-xl">summarize</span> P&amp;L Summary</button>
+    </nav>
+    <div class="p-4 border-t border-outline-variant/20 space-y-1">
+      <button onclick="prepareSettings();toggleDrawer()" class="nav-item inactive w-full"><span class="material-symbols-outlined text-xl">settings</span> Settings</button>
+      <button onclick="exitToLanding();toggleDrawer()" class="nav-item inactive w-full"><span class="material-symbols-outlined text-xl">home</span> Home</button>
+    </div>
+  </div>
+
+  <!-- Main content area -->
+  <main class="flex-1 md:pl-60 pt-16 md:pt-0 min-h-screen">
+
+    <!-- ════ OVERVIEW TAB ════════════════════════════════ -->
+    <div id="panel-overview" class="tab-panel p-6 md:p-10 max-w-5xl mx-auto">
+      <div class="mb-8">
+        <span class="text-primary text-xs uppercase tracking-[0.2em] mb-2 block font-bold" id="ov-type-label">Event</span>
+        <h2 class="font-headline text-4xl text-on-surface" id="ov-event-name">—</h2>
+        <p class="text-on-surface-variant text-sm mt-1" id="ov-event-date"></p>
+      </div>
+
+      <!-- Key metrics -->
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+        <div class="bg-surface-container-lowest rounded-xl p-5 shadow-sm border border-outline-variant/10">
+          <p class="text-xs text-outline uppercase tracking-wide mb-2">Total Revenue</p>
+          <p id="ov-revenue" class="text-2xl font-bold text-profit">$0</p>
+          <p class="text-xs text-outline mt-1" id="ov-revenue-sub">Projected: $0</p>
+        </div>
+        <div class="bg-surface-container-lowest rounded-xl p-5 shadow-sm border border-outline-variant/10">
+          <p class="text-xs text-outline uppercase tracking-wide mb-2">Total Costs</p>
+          <p id="ov-costs" class="text-2xl font-bold text-on-surface">$0</p>
+          <p class="text-xs text-outline mt-1" id="ov-costs-sub">Estimated: $0</p>
+        </div>
+        <div class="bg-surface-container-lowest rounded-xl p-5 shadow-sm border border-outline-variant/10">
+          <p class="text-xs text-outline uppercase tracking-wide mb-2">Net Profit / Loss</p>
+          <p id="ov-profit" class="text-2xl font-bold">$0</p>
+          <p class="text-xs text-outline mt-1" id="ov-profit-sub">Margin: 0%</p>
+        </div>
+        <div class="bg-surface-container-lowest rounded-xl p-5 shadow-sm border border-outline-variant/10">
+          <p class="text-xs text-outline uppercase tracking-wide mb-2">Balance Due</p>
+          <p id="ov-balance" class="text-2xl font-bold text-on-surface">$0</p>
+          <p class="text-xs text-outline mt-1">Costs not yet paid</p>
+        </div>
+      </div>
+
+      <!-- Per-attendee + Break-even -->
+      <div class="grid md:grid-cols-2 gap-4 mb-6">
+        <div class="bg-primary-fixed rounded-xl p-5">
+          <div class="flex items-center gap-2 mb-3">
+            <span class="material-symbols-outlined text-primary text-xl filled">person</span>
+            <p class="font-semibold text-on-primary-fixed-variant text-sm">Per-Attendee Metrics</p>
+          </div>
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <p class="text-xs text-primary/60 mb-1">Cost / Head</p>
+              <p id="per-cost" class="font-bold text-on-primary-fixed-variant text-lg">$0</p>
+            </div>
+            <div>
+              <p class="text-xs text-primary/60 mb-1">Revenue / Head</p>
+              <p id="per-rev" class="font-bold text-on-primary-fixed-variant text-lg">$0</p>
+            </div>
+            <div>
+              <p class="text-xs text-primary/60 mb-1">Profit / Head</p>
+              <p id="per-profit" class="font-bold text-lg">$0</p>
+            </div>
+            <div>
+              <p class="text-xs text-primary/60 mb-1">Attendees</p>
+              <p id="per-att" class="font-bold text-on-primary-fixed-variant text-lg">0</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-surface-container-low rounded-xl p-5 border border-outline-variant/20">
+          <div class="flex items-center gap-2 mb-3">
+            <span class="material-symbols-outlined text-primary text-xl filled">trending_up</span>
+            <p class="font-semibold text-on-surface text-sm">Break-Even Calculator</p>
+          </div>
+          <div id="be-content">
+            <p class="text-xs text-on-surface-variant mb-3">Based on ticket revenue only. Add ticket sales to see break-even.</p>
+          </div>
+          <div id="be-calc" class="hidden">
+            <div class="grid grid-cols-2 gap-3 mb-3">
+              <div>
+                <p class="text-xs text-outline mb-1">Break-Even At</p>
+                <p id="be-count" class="font-bold text-on-surface text-xl">—</p>
+                <p class="text-xs text-outline">attendees</p>
+              </div>
+              <div>
+                <p class="text-xs text-outline mb-1">You Have</p>
+                <p id="be-registered" class="font-bold text-on-surface text-xl">0</p>
+                <p class="text-xs text-outline">expected</p>
+              </div>
+            </div>
+            <p id="be-status" class="text-xs font-semibold"></p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Budget progress by category -->
+      <div class="bg-surface-container-lowest rounded-xl p-5 shadow-sm border border-outline-variant/10 mb-6">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="font-headline text-lg text-on-surface">Cost Breakdown by Category</h3>
+          <button onclick="switchTab('costs')" class="text-primary text-xs font-semibold hover:underline">View All →</button>
+        </div>
+        <div id="cat-breakdown" class="space-y-3">
+          <p class="text-on-surface-variant text-sm text-center py-4">No costs added yet. <button onclick="switchTab('costs')" class="text-primary font-semibold hover:underline">Add your first cost →</button></p>
+        </div>
+      </div>
+
+      <!-- Recent activity -->
+      <div class="bg-surface-container-lowest rounded-xl p-5 shadow-sm border border-outline-variant/10">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="font-headline text-lg text-on-surface">Recent Items</h3>
+        </div>
+        <div id="ov-recent" class="space-y-2">
+          <p class="text-on-surface-variant text-sm text-center py-4">No items yet.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════ COSTS TAB ═══════════════════════════════════ -->
+    <div id="panel-costs" class="tab-panel hidden p-6 md:p-10 max-w-5xl mx-auto">
+      <div class="flex items-center justify-between mb-8">
+        <div>
+          <h2 class="font-headline text-3xl text-on-surface mb-1">Event Costs</h2>
+          <p class="text-on-surface-variant text-sm">Track all expenses — estimated vs actual vs paid.</p>
+        </div>
+        <button onclick="openCostModal()" class="grad-event text-white font-bold px-5 py-3 rounded-xl flex items-center gap-2 hover:opacity-90 transition-opacity text-sm">
+          <span class="material-symbols-outlined text-base">add</span> Add Cost
+        </button>
+      </div>
+
+      <!-- Cost summary bar -->
+      <div class="grid grid-cols-3 gap-4 mb-6">
+        <div class="bg-surface-container-low rounded-xl p-4 text-center">
+          <p class="text-xs text-outline uppercase tracking-wide mb-1">Estimated</p>
+          <p id="cost-est-total" class="text-xl font-bold text-on-surface">$0</p>
+        </div>
+        <div class="bg-surface-container-low rounded-xl p-4 text-center">
+          <p class="text-xs text-outline uppercase tracking-wide mb-1">Actual</p>
+          <p id="cost-act-total" class="text-xl font-bold text-on-surface">$0</p>
+        </div>
+        <div class="bg-surface-container-low rounded-xl p-4 text-center">
+          <p class="text-xs text-outline uppercase tracking-wide mb-1">Paid</p>
+          <p id="cost-paid-total" class="text-xl font-bold text-profit">$0</p>
+        </div>
+      </div>
+
+      <!-- Category filter -->
+      <div class="flex flex-wrap gap-2 mb-5" id="cat-filter">
+        <button class="cat-btn active text-xs font-semibold px-3 py-1.5 rounded-full border border-primary bg-primary text-white" onclick="filterCat('all',this)">All</button>
+      </div>
+
+      <!-- Cost table -->
+      <div class="bg-white rounded-xl shadow-sm border border-outline-variant/10 overflow-hidden">
+        <div class="grid grid-cols-[1fr_120px_100px_100px_100px_80px] gap-3 px-5 py-3 bg-surface-container text-xs font-bold text-on-surface-variant uppercase tracking-wide hidden md:grid">
+          <span>Description</span><span>Category</span><span class="text-right">Estimated</span><span class="text-right">Actual</span><span class="text-right">Paid</span><span></span>
+        </div>
+        <div id="costs-list" class="divide-y divide-outline-variant/10">
+          <p class="text-on-surface-variant text-sm text-center py-8">No costs yet. <button onclick="openCostModal()" class="text-primary font-semibold hover:underline">Add your first cost →</button></p>
+        </div>
+      </div>
+
+      <!-- Pro lock: AI suggestions -->
+      <div class="pro-lock mt-6 rounded-xl overflow-hidden">
+        <div class="pro-lock-overlay rounded-xl">
+          <div class="flex items-center gap-2 bg-white rounded-full px-4 py-2 shadow-md">
+            <span class="material-symbols-outlined text-sm text-primary filled">lock</span>
+            <span class="text-xs font-bold text-on-surface">Pro Feature</span>
+          </div>
+        </div>
+        <div class="bg-surface-container-low p-5 rounded-xl">
+          <div class="flex items-center gap-2 mb-3">
+            <span class="material-symbols-outlined text-primary text-xl filled">auto_awesome</span>
+            <p class="font-semibold text-on-surface text-sm">AI Cost Suggestions</p>
+          </div>
+          <p class="text-on-surface-variant text-xs mb-3">Based on your event type and attendee count, our AI suggests typical costs you may have missed — and flags items that are unusually high compared to benchmarks.</p>
+          <div class="flex flex-wrap gap-2">
+            <span class="bg-white border border-outline-variant/30 rounded-full px-3 py-1 text-xs text-on-surface-variant">Insurance — typically $800–$2,000</span>
+            <span class="bg-white border border-outline-variant/30 rounded-full px-3 py-1 text-xs text-on-surface-variant">Security staffing — typically $50/hr</span>
+            <span class="bg-white border border-outline-variant/30 rounded-full px-3 py-1 text-xs text-on-surface-variant">Wi-Fi infrastructure — often forgotten</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════ REVENUE TAB ══════════════════════════════════ -->
+    <div id="panel-revenue" class="tab-panel hidden p-6 md:p-10 max-w-5xl mx-auto">
+      <div class="flex items-center justify-between mb-8">
+        <div>
+          <h2 class="font-headline text-3xl text-on-surface mb-1">Revenue Streams</h2>
+          <p class="text-on-surface-variant text-sm">Tickets, sponsorships, donations, merchandise, and more.</p>
+        </div>
+        <button onclick="openRevModal()" class="grad-event text-white font-bold px-5 py-3 rounded-xl flex items-center gap-2 hover:opacity-90 transition-opacity text-sm">
+          <span class="material-symbols-outlined text-base">add</span> Add Revenue
+        </button>
+      </div>
+
+      <!-- Revenue summary -->
+      <div class="grid grid-cols-2 gap-4 mb-6">
+        <div class="bg-surface-container-low rounded-xl p-4 text-center">
+          <p class="text-xs text-outline uppercase tracking-wide mb-1">Projected Revenue</p>
+          <p id="rev-proj-total" class="text-xl font-bold text-on-surface">$0</p>
+        </div>
+        <div class="bg-profit-bg rounded-xl p-4 text-center">
+          <p class="text-xs text-outline uppercase tracking-wide mb-1">Actual Received</p>
+          <p id="rev-act-total" class="text-xl font-bold text-profit">$0</p>
+        </div>
+      </div>
+
+      <!-- Revenue list -->
+      <div class="bg-white rounded-xl shadow-sm border border-outline-variant/10 overflow-hidden">
+        <div class="grid grid-cols-[1fr_130px_110px_110px_80px] gap-3 px-5 py-3 bg-surface-container text-xs font-bold text-on-surface-variant uppercase tracking-wide hidden md:grid">
+          <span>Source</span><span>Type</span><span class="text-right">Projected</span><span class="text-right">Received</span><span></span>
+        </div>
+        <div id="revenue-list" class="divide-y divide-outline-variant/10">
+          <p class="text-on-surface-variant text-sm text-center py-8">No revenue items yet. <button onclick="openRevModal()" class="text-primary font-semibold hover:underline">Add your first revenue source →</button></p>
+        </div>
+      </div>
+
+      <!-- Revenue type breakdown -->
+      <div id="rev-type-breakdown" class="mt-6 bg-surface-container-lowest rounded-xl p-5 shadow-sm border border-outline-variant/10 hidden">
+        <h3 class="font-headline text-lg text-on-surface mb-4">Revenue by Type</h3>
+        <div id="rev-type-list" class="space-y-3"></div>
+      </div>
+
+      <!-- Pro lock -->
+      <div class="pro-lock mt-6 rounded-xl overflow-hidden">
+        <div class="pro-lock-overlay rounded-xl">
+          <div class="flex items-center gap-2 bg-white rounded-full px-4 py-2 shadow-md">
+            <span class="material-symbols-outlined text-sm text-primary filled">lock</span>
+            <span class="text-xs font-bold text-on-surface">Pro Feature</span>
+          </div>
+        </div>
+        <div class="bg-surface-container-low p-5 rounded-xl">
+          <div class="flex items-center gap-2 mb-3">
+            <span class="material-symbols-outlined text-primary text-xl filled">timeline</span>
+            <p class="font-semibold text-on-surface text-sm">Revenue Collection Timeline</p>
+          </div>
+          <p class="text-on-surface-variant text-xs">Track when each revenue item is expected vs when it was actually received. See cash-flow gaps before they become problems — critical for managing vendor deposits.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════ P&L SUMMARY TAB ══════════════════════════════ -->
+    <div id="panel-summary" class="tab-panel hidden p-6 md:p-10 max-w-3xl mx-auto">
+      <div class="mb-8">
+        <h2 class="font-headline text-3xl text-on-surface mb-1">P&amp;L Summary</h2>
+        <p class="text-on-surface-variant text-sm" id="sum-event-info">—</p>
+      </div>
+
+      <!-- Summary header card -->
+      <div class="grad-event rounded-2xl p-6 mb-6 text-white">
+        <div class="grid grid-cols-3 gap-4 text-center">
+          <div>
+            <p class="text-white/60 text-xs uppercase tracking-wide mb-1">Total Income</p>
+            <p id="sum-income" class="text-2xl font-bold">$0</p>
+          </div>
+          <div class="border-x border-white/20">
+            <p class="text-white/60 text-xs uppercase tracking-wide mb-1">Total Expenses</p>
+            <p id="sum-expenses" class="text-2xl font-bold">$0</p>
+          </div>
+          <div>
+            <p class="text-white/60 text-xs uppercase tracking-wide mb-1">Net Profit / Loss</p>
+            <p id="sum-net" class="text-2xl font-bold">$0</p>
+          </div>
+        </div>
+        <div class="mt-4 pt-4 border-t border-white/20 flex items-center justify-between">
+          <span class="text-white/60 text-xs">Profit Margin</span>
+          <span id="sum-margin" class="text-white font-bold">0%</span>
+        </div>
+      </div>
+
+      <!-- Income section -->
+      <div class="bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant/10 overflow-hidden mb-4">
+        <div class="bg-profit-bg px-5 py-3 flex items-center gap-2">
+          <span class="material-symbols-outlined text-profit text-base filled">arrow_upward</span>
+          <span class="font-bold text-profit text-sm uppercase tracking-wide">Income</span>
+        </div>
+        <div id="sum-income-list" class="divide-y divide-outline-variant/10 px-5">
+          <p class="text-on-surface-variant text-sm py-4">No revenue items yet.</p>
+        </div>
+        <div class="px-5 py-3 bg-surface-container flex justify-between items-center">
+          <span class="text-sm font-bold text-on-surface">Total Income</span>
+          <span id="sum-income-total" class="font-bold text-profit">$0</span>
+        </div>
+      </div>
+
+      <!-- Expenses section -->
+      <div class="bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant/10 overflow-hidden mb-6">
+        <div class="bg-error-container px-5 py-3 flex items-center gap-2">
+          <span class="material-symbols-outlined text-error text-base filled">arrow_downward</span>
+          <span class="font-bold text-error text-sm uppercase tracking-wide">Expenses</span>
+        </div>
+        <div id="sum-expense-list" class="divide-y divide-outline-variant/10 px-5">
+          <p class="text-on-surface-variant text-sm py-4">No cost items yet.</p>
+        </div>
+        <div class="px-5 py-3 bg-surface-container flex justify-between items-center">
+          <span class="text-sm font-bold text-on-surface">Total Expenses</span>
+          <span id="sum-expense-total" class="font-bold text-error">$0</span>
+        </div>
+      </div>
+
+      <!-- Bottom line -->
+      <div id="sum-bottom" class="rounded-2xl p-6 text-center">
+        <p class="text-sm font-semibold mb-1 text-on-surface">Bottom Line</p>
+        <p id="sum-verdict" class="font-headline text-3xl mb-2">$0</p>
+        <p id="sum-verdict-label" class="text-sm text-on-surface-variant"></p>
+      </div>
+
+      <!-- Pro lock: Export -->
+      <div class="pro-lock mt-6 rounded-xl overflow-hidden">
+        <div class="pro-lock-overlay rounded-xl">
+          <div class="flex items-center gap-2 bg-white rounded-full px-4 py-2 shadow-md">
+            <span class="material-symbols-outlined text-sm text-primary filled">lock</span>
+            <span class="text-xs font-bold text-on-surface">Pro Feature</span>
+          </div>
+        </div>
+        <div class="bg-surface-container-low p-5 rounded-xl flex items-center justify-between">
+          <div>
+            <div class="flex items-center gap-2 mb-1">
+              <span class="material-symbols-outlined text-primary text-xl filled">download</span>
+              <p class="font-semibold text-on-surface text-sm">Export P&amp;L Report</p>
+            </div>
+            <p class="text-on-surface-variant text-xs">Download a formatted PDF or CSV of your full P&amp;L — perfect for stakeholder presentations, board reports, or post-event analysis.</p>
+          </div>
+          <div class="flex gap-2 ml-4">
+            <span class="border border-outline-variant/30 bg-white rounded-lg px-3 py-2 text-xs font-bold text-on-surface-variant">PDF</span>
+            <span class="border border-outline-variant/30 bg-white rounded-lg px-3 py-2 text-xs font-bold text-on-surface-variant">CSV</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div><!-- /app -->
+
+
+<!-- ══════════════════════════════════════════════════════
+     JAVASCRIPT
+══════════════════════════════════════════════════════ -->
+<script>
+// ── STORAGE ───────────────────────────────────────────
+const Storage = {
+  KEY: 'bt_event_v2',
+  get()  { try { return JSON.parse(localStorage.getItem(this.KEY)) || null; } catch(e) { return null; } },
+  set(d) { try { localStorage.setItem(this.KEY, JSON.stringify(d)); } catch(e) {} },
+  clear(){ localStorage.removeItem(this.KEY); }
+};
+
+// ── DEMO DATA ─────────────────────────────────────────
+const DEMO = {
+  name: 'TechConnect Summit 2026',
+  type: 'Corporate Event',
+  date: '2026-09-18',
+  attendees: 390,
+  actualAttendees: 0,
+  ticketPrice: 150,
+  currency: '$',
+  costs: [
+    { id:'c1', desc:'Grand Ballroom — Hilton Convention Centre', cat:'Venue', estimated:18000, actual:18000, paid:9000, vendor:'Hilton Events', notes:'Deposit paid. Final due 2 weeks before event.' },
+    { id:'c2', desc:'Catering — 3-course dinner + canapes', cat:'Catering', estimated:14000, actual:12500, paid:3000, vendor:'Elite Catering Co.', notes:'$32/head estimate, actual $32.05' },
+    { id:'c3', desc:'AV, Stage & Production', cat:'AV & Production', estimated:9000, actual:8200, paid:4100, vendor:'SoundPro Events', notes:'Includes LED backdrops, PA, lighting rig' },
+    { id:'c4', desc:'Digital & Social Marketing', cat:'Marketing', estimated:4000, actual:3400, paid:3400, vendor:'InHouse', notes:'LinkedIn, Google Ads, email sequences' },
+    { id:'c5', desc:'Event Staff (8 people, 10 hrs)', cat:'Staffing', estimated:3200, actual:3200, paid:0, vendor:'ProStaff Agency', notes:'$40/hr × 8 staff' },
+    { id:'c6', desc:'Keynote Speaker — Dr. Marcus Liu', cat:'Speakers & Talent', estimated:5000, actual:5000, paid:5000, vendor:'Marcus Liu Speaker Bureau', notes:'Fully paid' },
+    { id:'c7', desc:'Event App & Registration Platform', cat:'Technology', estimated:1200, actual:1200, paid:1200, vendor:'Eventbrite', notes:'Annual plan' },
+    { id:'c8', desc:'Printed Materials & Signage', cat:'Decor & Design', estimated:800, actual:750, paid:750, vendor:'FastPrint', notes:'Banners, programs, directional signage' },
+    { id:'c9', desc:'Event Insurance & Public Liability', cat:'Permits & Insurance', estimated:650, actual:650, paid:650, vendor:'EventGuard Insurance', notes:'$5M public liability cover' },
+    { id:'c10', desc:'Venue Parking & Logistics', cat:'Logistics & Transport', estimated:500, actual:400, paid:400, vendor:'ParkingPro', notes:'3 reserved bays for speakers/sponsors' },
+  ],
+  revenue: [
+    { id:'r1', desc:'General Admission Tickets', type:'Ticket Sales', projected:40000, actual:38700, units:290, unitPrice:150, notes:'$5 booking fee per ticket (platform)' },
+    { id:'r2', desc:'VIP Tickets (front row + dinner)', type:'Ticket Sales', projected:10000, actual:10000, units:50, unitPrice:200, notes:'Sold out' },
+    { id:'r3', desc:'Platinum Sponsor — DataCorp', type:'Sponsorship', projected:5000, actual:5000, units:0, unitPrice:0, notes:'Logo on all materials + speaking slot' },
+    { id:'r4', desc:'Silver Sponsor — CloudWave', type:'Sponsorship', projected:2500, actual:2500, units:0, unitPrice:0, notes:'Exhibitor table + banner' },
+    { id:'r5', desc:'Exhibition Booths (8 booths)', type:'Registration Fee', projected:4000, actual:4000, units:8, unitPrice:500, notes:'All sold. Setup day before event.' },
+    { id:'r6', desc:'Workshop Add-On (afternoon session)', type:'Registration Fee', projected:2000, actual:1800, units:60, unitPrice:30, notes:'60 of 100 spots sold so far' },
+  ]
+};
+
+// ── STATE ─────────────────────────────────────────────
+let state = {
+  data: null,
+  tab: 'overview',
+  catFilter: 'all',
+  isDemo: false
+};
+
+// ── INIT ──────────────────────────────────────────────
+window.addEventListener('DOMContentLoaded', () => {
+  const saved = Storage.get();
+  if (saved) {
+    state.data = saved;
+    state.isDemo = false;
+    showApp();
+  } else {
+    showLanding();
+  }
+});
+
+// ── MODE SWITCHES ─────────────────────────────────────
+function showLanding() {
+  document.getElementById('landing-page').classList.remove('hidden');
+  document.getElementById('app').classList.add('hidden');
+  document.getElementById('demo-banner').classList.add('hidden');
+  document.body.classList.remove('demo-active');
+}
+
+function showApp() {
+  document.getElementById('landing-page').classList.add('hidden');
+  document.getElementById('app').classList.remove('hidden');
+  document.getElementById('app').classList.add('flex');
+  if (state.isDemo) {
+    document.getElementById('demo-banner').classList.remove('hidden');
+    document.body.classList.add('demo-active');
+  } else {
+    document.getElementById('demo-banner').classList.add('hidden');
+    document.body.classList.remove('demo-active');
+  }
+  render();
+  switchTab(state.tab);
+}
+
+function enterDemo() {
+  state.data = JSON.parse(JSON.stringify(DEMO));
+  state.isDemo = true;
+  state.tab = 'overview';
+  showApp();
+}
+
+function exitToLanding() {
+  state.isDemo = false;
+  showLanding();
+}
+
+function showSetupModal() {
+  document.getElementById('setup-overlay').classList.remove('hidden');
+  // Set date default
+  const d = new Date(); d.setMonth(d.getMonth()+3);
+  document.getElementById('s-date').value = d.toISOString().split('T')[0];
+  document.getElementById('s-name').value = '';
+  document.getElementById('setup-error').classList.add('hidden');
+}
+
+function closeSetupModal() {
+  document.getElementById('setup-overlay').classList.add('hidden');
+}
+
+function completeSetup() {
+  const name = document.getElementById('s-name').value.trim();
+  const date = document.getElementById('s-date').value;
+  const err  = document.getElementById('setup-error');
+  if (!name) { err.textContent='Event name is required.'; err.classList.remove('hidden'); return; }
+  if (!date) { err.textContent='Event date is required.'; err.classList.remove('hidden'); return; }
+  err.classList.add('hidden');
+
+  state.data = {
+    name,
+    type:     document.getElementById('s-type').value,
+    date,
+    attendees:     parseInt(document.getElementById('s-attendees').value)||100,
+    actualAttendees: 0,
+    ticketPrice:   parseFloat(document.getElementById('s-ticket').value)||0,
+    currency:      document.getElementById('s-currency').value,
+    costs:   [],
+    revenue: []
+  };
+  state.isDemo = false;
+  Storage.set(state.data);
+  document.getElementById('setup-overlay').classList.add('hidden');
+  showApp();
+}
+
+function resetApp() {
+  if (!confirm('Reset all event data? This cannot be undone.')) return;
+  Storage.clear();
+  state.data = null;
+  state.isDemo = false;
+  document.getElementById('settings-overlay').classList.add('hidden');
+  showLanding();
+}
+
+// ── SETTINGS ──────────────────────────────────────────
+function prepareSettings() {
+  const d = state.data;
+  document.getElementById('set-name').value = d.name;
+  document.getElementById('set-type').value = d.type;
+  document.getElementById('set-date').value = d.date;
+  document.getElementById('set-attendees').value = d.attendees;
+  document.getElementById('set-actual-att').value = d.actualAttendees||0;
+  document.getElementById('set-currency').value = d.currency||'$';
+  document.getElementById('settings-overlay').classList.remove('hidden');
+}
+
+function saveSettings() {
+  state.data.name = document.getElementById('set-name').value.trim() || state.data.name;
+  state.data.type = document.getElementById('set-type').value;
+  state.data.date = document.getElementById('set-date').value;
+  state.data.attendees = parseInt(document.getElementById('set-attendees').value)||state.data.attendees;
+  state.data.actualAttendees = parseInt(document.getElementById('set-actual-att').value)||0;
+  state.data.currency = document.getElementById('set-currency').value;
+  if (!state.isDemo) Storage.set(state.data);
+  document.getElementById('settings-overlay').classList.add('hidden');
+  render();
+}
+
+// ── TAB SWITCHING ─────────────────────────────────────
+function switchTab(tab) {
+  state.tab = tab;
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.add('hidden'));
+  document.getElementById('panel-'+tab).classList.remove('hidden');
+  document.querySelectorAll('[data-nav]').forEach(b => {
+    b.classList.toggle('active',   b.dataset.nav === tab);
+    b.classList.toggle('inactive', b.dataset.nav !== tab);
+  });
+  renderTab(tab);
+}
+
+function renderTab(tab) {
+  if (tab==='overview') renderOverview();
+  if (tab==='costs')    renderCosts();
+  if (tab==='revenue')  renderRevenue();
+  if (tab==='summary')  renderSummary();
+}
+
+// ── MOBILE DRAWER ─────────────────────────────────────
+function toggleDrawer() {
+  const d = document.getElementById('drawer');
+  const o = document.getElementById('drawer-overlay');
+  const ic = document.getElementById('drawer-icon');
+  const open = !d.classList.contains('-translate-x-full');
+  d.classList.toggle('-translate-x-full', open);
+  o.classList.toggle('hidden', open);
+  ic.textContent = open ? 'menu' : 'close';
+}
+
+// ── HELPERS ───────────────────────────────────────────
+function fmt(n,cur){ return (cur||state.data.currency||'$')+(Math.abs(n)||0).toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:0}); }
+function fmtSigned(n,cur){ return (n<0?'-':'+')+(cur||state.data.currency||'$')+(Math.abs(n)||0).toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:0}); }
+function fmtDate(d){ if(!d)return''; const p=d.split('-'); return new Date(p[0],p[1]-1,p[2]).toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'}); }
+function uid(){ return Date.now().toString(36)+Math.random().toString(36).slice(2); }
+
+function calcTotals() {
+  const d = state.data;
+  const costEst  = d.costs.reduce((s,c)=>s+(c.estimated||0),0);
+  const costAct  = d.costs.reduce((s,c)=>s+(c.actual||0),0);
+  const costPaid = d.costs.reduce((s,c)=>s+(c.paid||0),0);
+  const revProj  = d.revenue.reduce((s,r)=>s+(r.projected||0),0);
+  const revAct   = d.revenue.reduce((s,r)=>s+(r.actual||0),0);
+  const profit   = revAct - costAct;
+  const margin   = revAct>0 ? (profit/revAct*100) : 0;
+  const balance  = costAct - costPaid;
+  const att      = d.actualAttendees > 0 ? d.actualAttendees : d.attendees;
+  const perCost  = att>0 ? costAct/att : 0;
+  const perRev   = att>0 ? revAct/att  : 0;
+  const perProfit= perRev - perCost;
+
+  // Break-even: find ticket revenue per ticket
+  const ticketRevs = d.revenue.filter(r=>r.type==='Ticket Sales');
+  const ticketRev  = ticketRevs.reduce((s,r)=>s+(r.actual||r.projected||0),0);
+  const ticketUnits= ticketRevs.reduce((s,r)=>s+(r.units||0),0);
+  const avgTicket  = ticketUnits>0 ? ticketRev/ticketUnits : (d.ticketPrice||0);
+  const breakEven  = avgTicket>0 ? Math.ceil(costAct/avgTicket) : null;
+
+  return { costEst,costAct,costPaid,revProj,revAct,profit,margin,balance,att,perCost,perRev,perProfit,breakEven,avgTicket,ticketRevs };
+}
+
+// ── RENDER ────────────────────────────────────────────
+function render() {
+  const d = state.data;
+  if (!d) return;
+
+  // Sidebar / header labels
+  qs('#sb-event-name').textContent = d.name;
+  qs('#sb-event-type').textContent = d.type;
+  qs('#sb-event-date').textContent = fmtDate(d.date);
+  qs('#mob-event-name').textContent = d.name;
+  qs('#mob-event-type').textContent = d.type;
+  qs('#dr-event-name').textContent  = d.name;
+  qs('#dr-event-date').textContent  = fmtDate(d.date);
+}
+
+function qs(s){ return document.querySelector(s); }
+
+function renderOverview() {
+  const d = state.data;
+  const t = calcTotals();
+  const cur = d.currency||'$';
+
+  qs('#ov-type-label').textContent = d.type;
+  qs('#ov-event-name').textContent = d.name;
+  qs('#ov-event-date').textContent = fmtDate(d.date);
+
+  qs('#ov-revenue').textContent = fmt(t.revAct,cur);
+  qs('#ov-revenue').className = 'text-2xl font-bold '+(t.revAct>0?'text-profit':'text-on-surface');
+  qs('#ov-revenue-sub').textContent = 'Projected: '+fmt(t.revProj,cur);
+
+  qs('#ov-costs').textContent = fmt(t.costAct,cur);
+  qs('#ov-costs-sub').textContent = 'Estimated: '+fmt(t.costEst,cur);
+
+  const profEl = qs('#ov-profit');
+  profEl.textContent = fmtSigned(t.profit,cur);
+  profEl.className = 'text-2xl font-bold '+(t.profit>=0?'text-profit':'text-loss');
+  qs('#ov-profit-sub').textContent = 'Margin: '+t.margin.toFixed(1)+'%';
+
+  qs('#ov-balance').textContent = fmt(t.balance,cur);
+  qs('#ov-balance').className = 'text-2xl font-bold '+(t.balance>0?'text-loss':'text-profit');
+
+  // Per-attendee
+  qs('#per-cost').textContent   = fmt(t.perCost,cur);
+  qs('#per-rev').textContent    = fmt(t.perRev,cur);
+  const ppEl = qs('#per-profit');
+  ppEl.textContent = fmtSigned(t.perProfit,cur);
+  ppEl.className = 'font-bold text-lg '+(t.perProfit>=0?'text-profit':'text-loss');
+  qs('#per-att').textContent = t.att;
+
+  // Break-even
+  if (t.breakEven !== null && t.avgTicket>0) {
+    qs('#be-content').classList.add('hidden');
+    qs('#be-calc').classList.remove('hidden');
+    qs('#be-count').textContent = t.breakEven;
+    qs('#be-registered').textContent = d.attendees;
+    const beEl = qs('#be-status');
+    const gap = d.attendees - t.breakEven;
+    if (gap >= 0) {
+      beEl.innerHTML = `<span class="text-profit">✓ ${gap} attendees above break-even</span>`;
+    } else {
+      beEl.innerHTML = `<span class="text-loss">⚠ ${Math.abs(gap)} more attendees needed to break even</span>`;
+    }
+  } else {
+    qs('#be-content').classList.remove('hidden');
+    qs('#be-calc').classList.add('hidden');
+  }
+
+  // Category breakdown
+  const cats = {};
+  d.costs.forEach(c=>{
+    if (!cats[c.cat]) cats[c.cat]={actual:0,estimated:0};
+    cats[c.cat].actual    += c.actual||0;
+    cats[c.cat].estimated += c.estimated||0;
+  });
+  const totalCost = t.costAct;
+  const catBd = qs('#cat-breakdown');
+  const catEntries = Object.entries(cats).sort((a,b)=>b[1].actual-a[1].actual);
+  if (catEntries.length===0) {
+    catBd.innerHTML = `<p class="text-on-surface-variant text-sm text-center py-4">No costs added yet. <button onclick="switchTab('costs')" class="text-primary font-semibold hover:underline">Add your first cost →</button></p>`;
+  } else {
+    catBd.innerHTML = catEntries.map(([cat,v])=>{
+      const pct = totalCost>0 ? (v.actual/totalCost*100) : 0;
+      const over = v.actual > v.estimated;
+      return `<div>
+        <div class="flex justify-between text-sm mb-1">
+          <span class="text-on-surface font-medium">${cat}</span>
+          <span class="text-on-surface-variant">${fmt(v.actual,cur)} <span class="text-xs text-outline">(${pct.toFixed(0)}%)</span></span>
+        </div>
+        <div class="prog-bar"><div class="prog-fill ${over?'over':''}" style="width:${Math.min(pct,100)}%"></div></div>
+      </div>`;
+    }).join('');
+  }
+
+  // Recent items
+  const allItems = [
+    ...d.costs.map(c=>({...c,_kind:'cost',_sortVal:c.actual||c.estimated||0})),
+    ...d.revenue.map(r=>({...r,_kind:'rev', _sortVal:r.actual||r.projected||0}))
+  ].sort((a,b)=>b._sortVal-a._sortVal).slice(0,5);
+
+  const recentEl = qs('#ov-recent');
+  if (allItems.length===0) {
+    recentEl.innerHTML='<p class="text-on-surface-variant text-sm text-center py-4">No items yet.</p>';
+  } else {
+    recentEl.innerHTML = allItems.map(item=>{
+      const isCost = item._kind==='cost';
+      const amt = isCost ? (item.actual||item.estimated||0) : (item.actual||item.projected||0);
+      return `<div class="data-row flex items-center justify-between py-2.5 px-2 rounded-lg">
+        <div class="flex items-center gap-3">
+          <div class="w-7 h-7 rounded-lg flex items-center justify-center ${isCost?'bg-error-container':'bg-profit-bg'}">
+            <span class="material-symbols-outlined text-sm ${isCost?'text-error':'text-profit'} filled">${isCost?'arrow_downward':'arrow_upward'}</span>
+          </div>
+          <div>
+            <p class="text-sm font-medium text-on-surface">${item.desc}</p>
+            <p class="text-xs text-outline">${isCost?item.cat:item.type}</p>
+          </div>
+        </div>
+        <span class="font-bold text-sm ${isCost?'text-on-surface':'text-profit'}">${isCost?'-':'+'} ${fmt(amt,cur)}</span>
+      </div>`;
+    }).join('');
+  }
+}
+
+function renderCosts() {
+  const d = state.data;
+  const t = calcTotals();
+  const cur = d.currency||'$';
+
+  qs('#cost-est-total').textContent  = fmt(t.costEst,cur);
+  qs('#cost-act-total').textContent  = fmt(t.costAct,cur);
+  qs('#cost-paid-total').textContent = fmt(t.costPaid,cur);
+
+  // Category filter buttons
+  const cats = [...new Set(d.costs.map(c=>c.cat))];
+  const cf = qs('#cat-filter');
+  const existing = [...cf.querySelectorAll('.cat-btn')].map(b=>b.dataset.cat);
+  cats.forEach(cat=>{
+    if (!existing.includes(cat)) {
+      const btn = document.createElement('button');
+      btn.className='cat-btn text-xs font-semibold px-3 py-1.5 rounded-full border border-outline-variant text-on-surface-variant hover:border-primary hover:text-primary transition-colors';
+      btn.dataset.cat=cat; btn.textContent=cat;
+      btn.onclick=()=>filterCat(cat,btn);
+      cf.appendChild(btn);
+    }
+  });
+
+  const filtered = state.catFilter==='all' ? d.costs : d.costs.filter(c=>c.cat===state.catFilter);
+  const cl = qs('#costs-list');
+  if (filtered.length===0) {
+    cl.innerHTML=`<p class="text-on-surface-variant text-sm text-center py-8">${state.catFilter==='all'?'No costs yet. <button onclick="openCostModal()" class="text-primary font-semibold hover:underline">Add your first cost →</button>':'No costs in this category.'}</p>`;
+  } else {
+    cl.innerHTML = filtered.map(c=>{
+      const balance = (c.actual||0) - (c.paid||0);
+      return `<div class="data-row grid grid-cols-1 md:grid-cols-[1fr_120px_100px_100px_100px_80px] gap-3 px-5 py-4 items-center">
+        <div>
+          <p class="font-medium text-on-surface text-sm">${c.desc}</p>
+          ${c.vendor?`<p class="text-xs text-outline mt-0.5">${c.vendor}</p>`:''}
+          ${c.notes?`<p class="text-xs text-primary/70 mt-0.5 italic">${c.notes}</p>`:''}
+        </div>
+        <div>
+          <span class="inline-block text-xs font-semibold bg-primary-fixed text-on-primary-fixed-variant px-2 py-0.5 rounded-full">${c.cat}</span>
+        </div>
+        <div class="text-right md:text-right">
+          <span class="text-xs text-outline md:hidden">Est: </span>
+          <span class="font-medium text-on-surface text-sm">${fmt(c.estimated||0,cur)}</span>
+        </div>
+        <div class="text-right">
+          <span class="text-xs text-outline md:hidden">Actual: </span>
+          <span class="font-medium text-on-surface text-sm ${(c.actual||0)>(c.estimated||0)?'text-loss':''}">${fmt(c.actual||0,cur)}</span>
+        </div>
+        <div class="text-right">
+          <span class="text-xs text-outline md:hidden">Paid: </span>
+          <span class="font-medium text-profit text-sm">${fmt(c.paid||0,cur)}</span>
+          ${balance>0?`<p class="text-xs text-loss">Due: ${fmt(balance,cur)}</p>`:''}
+        </div>
+        <div class="flex gap-1 justify-end">
+          <button onclick="editCost('${c.id}')" class="p-1.5 text-outline hover:text-primary hover:bg-primary-fixed rounded-lg transition-colors"><span class="material-symbols-outlined text-base">edit</span></button>
+          <button onclick="deleteCost('${c.id}')" class="p-1.5 text-outline hover:text-error hover:bg-error-container rounded-lg transition-colors"><span class="material-symbols-outlined text-base">delete</span></button>
+        </div>
+      </div>`;
+    }).join('');
+  }
+}
+
+function filterCat(cat, btn) {
+  state.catFilter = cat;
+  document.querySelectorAll('.cat-btn').forEach(b=>{
+    const active = b.dataset.cat===cat || (cat==='all' && b.textContent==='All');
+    b.classList.toggle('bg-primary',active);
+    b.classList.toggle('text-white',active);
+    b.classList.toggle('border-primary',active);
+    b.classList.toggle('text-on-surface-variant',!active);
+    b.classList.toggle('border-outline-variant',!active);
+  });
+  renderCosts();
+}
+
+function renderRevenue() {
+  const d = state.data;
+  const t = calcTotals();
+  const cur = d.currency||'$';
+
+  qs('#rev-proj-total').textContent = fmt(t.revProj,cur);
+  qs('#rev-act-total').textContent  = fmt(t.revAct,cur);
+
+  const rl = qs('#revenue-list');
+  if (d.revenue.length===0) {
+    rl.innerHTML=`<p class="text-on-surface-variant text-sm text-center py-8">No revenue items yet. <button onclick="openRevModal()" class="text-primary font-semibold hover:underline">Add your first revenue source →</button></p>`;
+  } else {
+    rl.innerHTML = d.revenue.map(r=>{
+      const shortfall = (r.projected||0) - (r.actual||0);
+      return `<div class="data-row grid grid-cols-1 md:grid-cols-[1fr_130px_110px_110px_80px] gap-3 px-5 py-4 items-center">
+        <div>
+          <p class="font-medium text-on-surface text-sm">${r.desc}</p>
+          ${r.units?`<p class="text-xs text-outline mt-0.5">${r.units} × ${fmt(r.unitPrice||0,cur)}</p>`:''}
+          ${r.notes?`<p class="text-xs text-primary/70 mt-0.5 italic">${r.notes}</p>`:''}
+        </div>
+        <div>
+          <span class="inline-block text-xs font-semibold bg-profit-bg text-profit px-2 py-0.5 rounded-full">${r.type}</span>
+        </div>
+        <div class="text-right">
+          <span class="text-xs text-outline md:hidden">Projected: </span>
+          <span class="font-medium text-on-surface text-sm">${fmt(r.projected||0,cur)}</span>
+        </div>
+        <div class="text-right">
+          <span class="text-xs text-outline md:hidden">Received: </span>
+          <span class="font-bold text-profit text-sm">${fmt(r.actual||0,cur)}</span>
+          ${shortfall>0?`<p class="text-xs text-loss">Gap: ${fmt(shortfall,cur)}</p>`:''}
+        </div>
+        <div class="flex gap-1 justify-end">
+          <button onclick="editRevenue('${r.id}')" class="p-1.5 text-outline hover:text-primary hover:bg-primary-fixed rounded-lg transition-colors"><span class="material-symbols-outlined text-base">edit</span></button>
+          <button onclick="deleteRevenue('${r.id}')" class="p-1.5 text-outline hover:text-error hover:bg-error-container rounded-lg transition-colors"><span class="material-symbols-outlined text-base">delete</span></button>
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  // Revenue type breakdown
+  const typeTotals = {};
+  d.revenue.forEach(r=>{ typeTotals[r.type]=(typeTotals[r.type]||0)+(r.actual||r.projected||0); });
+  const typeEntries = Object.entries(typeTotals).sort((a,b)=>b[1]-a[1]);
+  const rtb = qs('#rev-type-breakdown');
+  if (typeEntries.length>0) {
+    rtb.classList.remove('hidden');
+    qs('#rev-type-list').innerHTML = typeEntries.map(([type,val])=>`
+      <div class="flex items-center justify-between py-2">
+        <span class="text-sm text-on-surface">${type}</span>
+        <span class="font-bold text-profit text-sm">${fmt(val,cur)}</span>
+      </div>`).join('');
+  } else {
+    rtb.classList.add('hidden');
+  }
+}
+
+function renderSummary() {
+  const d = state.data;
+  const t = calcTotals();
+  const cur = d.currency||'$';
+
+  qs('#sum-event-info').textContent = `${d.name} · ${fmtDate(d.date)} · ${d.attendees} attendees`;
+
+  qs('#sum-income').textContent   = fmt(t.revAct,cur);
+  qs('#sum-expenses').textContent = fmt(t.costAct,cur);
+  const netEl = qs('#sum-net');
+  netEl.textContent = fmtSigned(t.profit,cur);
+  netEl.className = 'text-2xl font-bold '+(t.profit>=0?'text-green-300':'text-red-300');
+  qs('#sum-margin').textContent = t.margin.toFixed(1)+'%';
+
+  // Income list
+  const il = qs('#sum-income-list');
+  if (d.revenue.length===0) {
+    il.innerHTML='<p class="text-on-surface-variant text-sm py-4">No revenue items.</p>';
+  } else {
+    il.innerHTML = d.revenue.map(r=>`
+      <div class="flex justify-between items-center py-3">
+        <div>
+          <p class="text-sm text-on-surface">${r.desc}</p>
+          <p class="text-xs text-outline">${r.type}</p>
+        </div>
+        <span class="font-semibold text-profit text-sm">${fmt(r.actual||r.projected||0,cur)}</span>
+      </div>`).join('');
+  }
+  qs('#sum-income-total').textContent = fmt(t.revAct,cur);
+
+  // Expense list — group by category
+  const catGroups = {};
+  d.costs.forEach(c=>{ if(!catGroups[c.cat]) catGroups[c.cat]=[]; catGroups[c.cat].push(c); });
+  const el = qs('#sum-expense-list');
+  if (d.costs.length===0) {
+    el.innerHTML='<p class="text-on-surface-variant text-sm py-4">No cost items.</p>';
+  } else {
+    el.innerHTML = Object.entries(catGroups).map(([cat,items])=>`
+      <div class="py-3">
+        <p class="text-xs font-bold text-on-surface-variant uppercase tracking-wide mb-2">${cat}</p>
+        ${items.map(c=>`
+          <div class="flex justify-between items-center py-1.5 pl-3">
+            <p class="text-sm text-on-surface">${c.desc}</p>
+            <span class="font-semibold text-on-surface text-sm">${fmt(c.actual||c.estimated||0,cur)}</span>
+          </div>`).join('')}
+      </div>`).join('');
+  }
+  qs('#sum-expense-total').textContent = fmt(t.costAct,cur);
+
+  // Bottom line
+  const bl = qs('#sum-bottom');
+  const vEl = qs('#sum-verdict');
+  const vlEl = qs('#sum-verdict-label');
+  if (t.profit>0) {
+    bl.className='rounded-2xl p-6 text-center bg-profit-bg';
+    vEl.textContent = fmt(t.profit,cur)+' profit';
+    vEl.className='font-headline text-3xl mb-2 text-profit';
+    vlEl.textContent = `${t.margin.toFixed(1)}% margin · ${fmt(t.perProfit,cur)} profit per attendee`;
+  } else if (t.profit<0) {
+    bl.className='rounded-2xl p-6 text-center bg-loss-bg';
+    vEl.textContent = fmt(Math.abs(t.profit),cur)+' loss';
+    vEl.className='font-headline text-3xl mb-2 text-loss';
+    vlEl.textContent = `Revenue needs to grow by ${fmt(Math.abs(t.profit),cur)} to break even`;
+  } else {
+    bl.className='rounded-2xl p-6 text-center bg-surface-container';
+    vEl.textContent = 'Break Even';
+    vEl.className='font-headline text-3xl mb-2 text-on-surface';
+    vlEl.textContent = 'Revenue exactly covers costs.';
+  }
+}
+
+// ── COST CRUD ─────────────────────────────────────────
+function openCostModal(id) {
+  document.getElementById('cost-modal-title').textContent = id ? 'Edit Cost Item' : 'Add Cost Item';
+  document.getElementById('cost-edit-id').value = id||'';
+  if (id) {
+    const c = state.data.costs.find(x=>x.id===id);
+    document.getElementById('c-desc').value = c.desc;
+    document.getElementById('c-cat').value  = c.cat;
+    document.getElementById('c-estimated').value = c.estimated||'';
+    document.getElementById('c-actual').value    = c.actual||'';
+    document.getElementById('c-paid').value      = c.paid||'';
+    document.getElementById('c-vendor').value    = c.vendor||'';
+    document.getElementById('c-notes').value     = c.notes||'';
+  } else {
+    ['c-desc','c-estimated','c-actual','c-paid','c-vendor','c-notes'].forEach(i=>document.getElementById(i).value='');
+    document.getElementById('c-cat').value='Venue';
+  }
+  document.getElementById('cost-modal').classList.remove('hidden');
+}
+
+function closeCostModal(){ document.getElementById('cost-modal').classList.add('hidden'); }
+
+function saveCost() {
+  const desc = document.getElementById('c-desc').value.trim();
+  if (!desc) { alert('Description is required.'); return; }
+  const id = document.getElementById('cost-edit-id').value;
+  const item = {
+    id: id||uid(),
+    desc,
+    cat:       document.getElementById('c-cat').value,
+    estimated: parseFloat(document.getElementById('c-estimated').value)||0,
+    actual:    parseFloat(document.getElementById('c-actual').value)||0,
+    paid:      parseFloat(document.getElementById('c-paid').value)||0,
+    vendor:    document.getElementById('c-vendor').value.trim(),
+    notes:     document.getElementById('c-notes').value.trim(),
+  };
+  if (id) {
+    const idx = state.data.costs.findIndex(c=>c.id===id);
+    if (idx>-1) state.data.costs[idx]=item;
+  } else {
+    state.data.costs.push(item);
+  }
+  if (!state.isDemo) Storage.set(state.data);
+  closeCostModal();
+  renderCosts();
+  renderOverview();
+}
+
+function editCost(id){ openCostModal(id); }
+
+function deleteCost(id) {
+  if (!confirm('Delete this cost item?')) return;
+  state.data.costs = state.data.costs.filter(c=>c.id!==id);
+  if (!state.isDemo) Storage.set(state.data);
+  renderCosts();
+  renderOverview();
+}
+
+// ── REVENUE CRUD ──────────────────────────────────────
+function openRevModal(id) {
+  document.getElementById('rev-modal-title').textContent = id ? 'Edit Revenue Item' : 'Add Revenue Item';
+  document.getElementById('rev-edit-id').value = id||'';
+  if (id) {
+    const r = state.data.revenue.find(x=>x.id===id);
+    document.getElementById('r-desc').value      = r.desc;
+    document.getElementById('r-type').value      = r.type;
+    document.getElementById('r-projected').value = r.projected||'';
+    document.getElementById('r-actual').value    = r.actual||'';
+    document.getElementById('r-units').value     = r.units||'';
+    document.getElementById('r-unit-price').value= r.unitPrice||'';
+    document.getElementById('r-notes').value     = r.notes||'';
+  } else {
+    ['r-desc','r-projected','r-actual','r-units','r-unit-price','r-notes'].forEach(i=>document.getElementById(i).value='');
+    document.getElementById('r-type').value='Ticket Sales';
+  }
+  document.getElementById('rev-modal').classList.remove('hidden');
+}
+
+function closeRevModal(){ document.getElementById('rev-modal').classList.add('hidden'); }
+
+function saveRevenue() {
+  const desc = document.getElementById('r-desc').value.trim();
+  if (!desc) { alert('Description is required.'); return; }
+  const id = document.getElementById('rev-edit-id').value;
+  const item = {
+    id: id||uid(),
+    desc,
+    type:      document.getElementById('r-type').value,
+    projected: parseFloat(document.getElementById('r-projected').value)||0,
+    actual:    parseFloat(document.getElementById('r-actual').value)||0,
+    units:     parseInt(document.getElementById('r-units').value)||0,
+    unitPrice: parseFloat(document.getElementById('r-unit-price').value)||0,
+    notes:     document.getElementById('r-notes').value.trim(),
+  };
+  if (id) {
+    const idx = state.data.revenue.findIndex(r=>r.id===id);
+    if (idx>-1) state.data.revenue[idx]=item;
+  } else {
+    state.data.revenue.push(item);
+  }
+  if (!state.isDemo) Storage.set(state.data);
+  closeRevModal();
+  renderRevenue();
+  renderOverview();
+}
+
+function editRevenue(id){ openRevModal(id); }
+
+function deleteRevenue(id) {
+  if (!confirm('Delete this revenue item?')) return;
+  state.data.revenue = state.data.revenue.filter(r=>r.id!==id);
+  if (!state.isDemo) Storage.set(state.data);
+  renderRevenue();
+  renderOverview();
+}
+
+// ── FAQ ───────────────────────────────────────────────
+function toggleFaq(btn) {
+  const ans = btn.nextElementSibling;
+  const icon = btn.querySelector('.faq-icon');
+  const open = ans.classList.toggle('open');
+  icon.textContent = open ? 'remove' : 'add';
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,1970 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Cafe &amp; Restaurant Menu Costing | BudgetTools — Free Recipe Cost Calculator</title>
+  <meta name="description" content="Calculate food cost percentage, gross profit margin, and recipe costs for every menu item. Know exactly which dishes make money and which lose it. Free for cafes, restaurants, and food businesses."/>
+  <meta name="keywords" content="cafe food cost calculator, restaurant menu costing, recipe cost calculator, food cost percentage, gross profit margin food, break-even covers calculator, menu engineering"/>
+  <meta property="og:title" content="Cafe &amp; Restaurant Menu Costing | BudgetTools"/>
+  <meta property="og:description" content="Know your margin on every dish before you price it. Free food cost % and GP calculator for cafes and restaurants."/>
+  <meta property="og:type" content="website"/>
+  <meta property="og:url" content="https://profound-biscuit-1631a5.netlify.app/cafe-costing.html"/>
+  <link rel="canonical" href="https://profound-biscuit-1631a5.netlify.app/cafe-costing.html"/>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+  <script src="https://cdn.tailwindcss.com?plugins=forms"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            "primary":                  "#5d1a0a",
+            "primary-container":        "#9c4a2a",
+            "primary-fixed":            "#fde8df",
+            "on-primary":               "#ffffff",
+            "on-primary-container":     "#fff0eb",
+            "on-primary-fixed-variant": "#3b0e02",
+            "secondary":                "#7b5800",
+            "secondary-container":      "#ffd77a",
+            "on-secondary":             "#ffffff",
+            "on-secondary-container":   "#261900",
+            "tertiary":                 "#006874",
+            "surface":                  "#fff8f6",
+            "surface-container-lowest": "#ffffff",
+            "surface-container-low":    "#fff0eb",
+            "surface-container":        "#fce8e0",
+            "surface-container-high":   "#f5e0d7",
+            "surface-container-highest":"#eeddd4",
+            "on-surface":               "#231917",
+            "on-surface-variant":       "#52443d",
+            "outline":                  "#857068",
+            "outline-variant":          "#d8c2bb",
+            "error":                    "#ba1a1a",
+            "error-container":          "#ffdad6",
+            "profit":                   "#166534",
+            "profit-bg":                "#dcfce7",
+            "loss":                     "#991b1b",
+            "loss-bg":                  "#fee2e2",
+          },
+          fontFamily: {
+            "headline": ["Noto Serif","serif"],
+            "body":     ["Plus Jakarta Sans","sans-serif"],
+          }
+        }
+      }
+    }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Cafe & Restaurant Menu Costing",
+    "description": "Free recipe cost calculator and food cost percentage tracker for cafes and restaurants. Calculate gross profit per menu item, break-even covers, and identify your best and worst earners.",
+    "url": "https://profound-biscuit-1631a5.netlify.app/cafe-costing.html",
+    "applicationCategory": "FinanceApplication",
+    "operatingSystem": "Any",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD",
+      "description": "Free forever — no credit card required"
+    },
+    "featureList": [
+      "Food cost % per menu item",
+      "Gross profit margin calculator",
+      "Recipe ingredient builder",
+      "Break-even covers calculator",
+      "Menu category analysis",
+      "Item performance flags"
+    ]
+  }
+  </script>
+
+  <style>
+    * { box-sizing: border-box; }
+    body { font-family: 'Plus Jakarta Sans', sans-serif; background: #fff8f6; }
+    h1,h2,h3,h4 { font-family: 'Noto Serif', serif; }
+    .material-symbols-outlined { font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24; vertical-align:middle; line-height:1; }
+    .filled { font-variation-settings:'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 24; }
+    .grad-cafe { background: linear-gradient(135deg, #3b0e02 0%, #5d1a0a 50%, #9c4a2a 100%); }
+    .grad-cafe-subtle { background: linear-gradient(135deg, #fff0eb 0%, #fde8df 100%); }
+
+    /* ── NAV ─────────────────── */
+    .nav-item { display:flex; align-items:center; gap:10px; padding:10px 14px; border-radius:8px; cursor:pointer; font-size:13px; font-weight:500; transition:all 0.15s; width:100%; text-align:left; }
+    .nav-item.active  { background:rgba(93,26,10,0.12); color:#5d1a0a; font-weight:700; }
+    .nav-item.inactive{ color:#857068; }
+    .nav-item.inactive:hover { background:rgba(93,26,10,0.06); color:#5d1a0a; }
+
+    /* ── FIELDS ──────────────── */
+    .field { width:100%; background:#fce8e0; border:none; border-radius:8px; padding:10px 14px; font-size:14px; color:#231917; outline:none; transition:box-shadow 0.15s; font-family:'Plus Jakarta Sans',sans-serif; }
+    .field:focus { box-shadow:0 0 0 2px rgba(93,26,10,0.35); }
+    .field-label { display:block; font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.08em; color:#52443d; margin-bottom:6px; }
+
+    /* ── MODALS ──────────────── */
+    .modal-overlay { position:fixed; inset:0; background:rgba(35,25,23,0.45); backdrop-filter:blur(4px); z-index:60; display:flex; align-items:center; justify-content:center; padding:16px; }
+    .modal-box { background:#fff; border-radius:20px; padding:32px; width:100%; max-width:540px; box-shadow:0 24px 60px rgba(35,25,23,0.15); max-height:90vh; overflow-y:auto; }
+
+    /* ── TABLE ROWS ──────────── */
+    .data-row:hover { background:rgba(93,26,10,0.03); }
+    ::-webkit-scrollbar { width:4px; } ::-webkit-scrollbar-thumb { background:#d8c2bb; border-radius:4px; }
+
+    /* ── PRO LOCK ────────────── */
+    .pro-lock { position:relative; }
+    .pro-lock-overlay { position:absolute; inset:0; background:rgba(255,255,255,0.75); backdrop-filter:blur(3px); border-radius:inherit; z-index:10; display:flex; align-items:center; justify-content:center; }
+
+    /* ── LANDING PAGE ────────── */
+    .lp-hero { background: linear-gradient(160deg, #2d0902 0%, #5d1a0a 40%, #9c4a2a 100%); }
+    .lp-mockup-wrapper { perspective: 1200px; }
+    .lp-mockup { transform: rotateY(-12deg) rotateX(4deg) scale(0.92); transform-origin: center; border-radius: 16px; overflow: hidden; box-shadow: 0 40px 80px rgba(0,0,0,0.45), 0 0 0 1px rgba(255,255,255,0.12); transition: transform 0.4s ease; }
+    .lp-mockup:hover { transform: rotateY(-6deg) rotateX(2deg) scale(0.94); }
+    .lp-stat-card { background: rgba(255,255,255,0.1); backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.15); border-radius: 12px; padding: 20px 24px; }
+    .lp-feature-card { transition: transform 0.2s, box-shadow 0.2s; }
+    .lp-feature-card:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(93,26,10,0.12); }
+    .lp-step-connector { width: 2px; height: 40px; background: linear-gradient(to bottom, #9c4a2a, #fde8df); margin: 0 auto; }
+    .faq-answer { max-height: 0; overflow: hidden; transition: max-height 0.35s ease; }
+    .faq-answer.open { max-height: 320px; }
+
+    /* ── FC% BADGES ──────────── */
+    .fc-green  { background:#dcfce7; color:#166534; }
+    .fc-amber  { background:#fef9c3; color:#854d0e; }
+    .fc-red    { background:#fee2e2; color:#991b1b; }
+
+    /* ── PROGRESS BAR ────────── */
+    .prog-bar { height:6px; border-radius:99px; background:#eeddd4; overflow:hidden; }
+    .prog-fill { height:100%; border-radius:99px; background:linear-gradient(90deg,#5d1a0a,#9c4a2a); transition:width 0.5s ease; }
+    .prog-fill.over { background:linear-gradient(90deg,#ba1a1a,#ef4444); }
+    .prog-fill.good { background:linear-gradient(90deg,#166534,#16a34a); }
+
+    /* ── DEMO BANNER ─────────── */
+    #demo-banner { position:fixed; top:0; left:0; right:0; z-index:100; background:linear-gradient(90deg,#3b0e02,#9c4a2a); color:#fff; padding:10px 20px; display:flex; align-items:center; justify-content:space-between; font-size:13px; font-weight:500; }
+    #demo-banner.hidden { display:none; }
+
+    .demo-active #app { padding-top: 44px; }
+    .demo-active aside { top: 44px !important; }
+    .demo-active header { top: 44px !important; }
+
+    /* ── INGREDIENT ROW ──────── */
+    .ing-row { display:grid; grid-template-columns:1fr 70px 60px 80px 70px 32px; gap:6px; align-items:center; }
+    @media(max-width:640px){ .ing-row { grid-template-columns:1fr 60px 50px 70px 60px 28px; } }
+  </style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════════════
+     DEMO BANNER
+══════════════════════════════════════════════════════ -->
+<div id="demo-banner" class="hidden">
+  <div class="flex items-center gap-2">
+    <span class="material-symbols-outlined text-base filled">info</span>
+    <span>You're exploring a <strong>demo cafe</strong> — The Corner Cafe. No data is saved.</span>
+  </div>
+  <button onclick="showSetupModal()" class="ml-auto bg-white/20 hover:bg-white/30 transition-colors px-4 py-1.5 rounded-full text-xs font-bold">Use My Own Data →</button>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     LANDING PAGE
+══════════════════════════════════════════════════════ -->
+<div id="landing-page">
+
+  <!-- ── HERO ─────────────────────────────────────────── -->
+  <section class="lp-hero min-h-screen flex flex-col">
+    <nav class="flex items-center justify-between px-6 md:px-12 py-5">
+      <a href="index.html" class="flex items-center gap-2 text-white/80 hover:text-white transition-colors text-sm font-semibold">
+        <span class="material-symbols-outlined text-base">arrow_back</span>
+        BudgetTools
+      </a>
+      <div class="flex items-center gap-3">
+        <button onclick="enterDemo()" class="text-white/70 hover:text-white text-sm font-medium transition-colors hidden md:block">View Demo</button>
+        <button onclick="showSetupModal()" class="bg-white text-primary text-sm font-bold px-5 py-2.5 rounded-full hover:bg-primary-fixed transition-colors">Get Started Free</button>
+      </div>
+    </nav>
+
+    <div class="flex-1 grid md:grid-cols-2 gap-12 items-center px-6 md:px-12 py-16 max-w-7xl mx-auto w-full">
+      <!-- Left copy -->
+      <div>
+        <div class="inline-flex items-center gap-2 bg-white/10 border border-white/20 rounded-full px-4 py-1.5 text-white/80 text-xs font-semibold mb-8">
+          <span class="material-symbols-outlined text-sm filled text-yellow-300">star</span>
+          Free Forever — No credit card required
+        </div>
+        <h1 class="font-headline text-5xl md:text-6xl text-white leading-tight mb-6">
+          Know Your Margin<br/>on Every Dish<br/><em>Before You Price It.</em>
+        </h1>
+        <p class="text-white/75 text-lg mb-4 leading-relaxed">
+          Most cafe owners price by gut feel — then wonder why margins shrink. BudgetTools calculates food cost %, gross profit per item, and your break-even covers — so you price with <strong class="text-white">confidence</strong>.
+        </p>
+        <ul class="space-y-2 mb-8">
+          <li class="flex items-center gap-2 text-white/80 text-sm"><span class="material-symbols-outlined text-base text-green-300 filled">check_circle</span>Food cost % per menu item (ideal: 28–32%)</li>
+          <li class="flex items-center gap-2 text-white/80 text-sm"><span class="material-symbols-outlined text-base text-green-300 filled">check_circle</span>Gross profit margin per item and category</li>
+          <li class="flex items-center gap-2 text-white/80 text-sm"><span class="material-symbols-outlined text-base text-green-300 filled">check_circle</span>Recipe costing with ingredient-level breakdown</li>
+          <li class="flex items-center gap-2 text-white/80 text-sm"><span class="material-symbols-outlined text-base text-green-300 filled">check_circle</span>Daily break-even covers calculator</li>
+        </ul>
+        <div class="flex flex-wrap gap-3">
+          <button onclick="showSetupModal()" class="bg-white text-primary font-bold px-8 py-4 rounded-xl hover:bg-primary-fixed transition-colors text-base shadow-lg">
+            Start Tracking Free
+          </button>
+          <button onclick="enterDemo()" class="border-2 border-white/40 text-white font-semibold px-8 py-4 rounded-xl hover:border-white hover:bg-white/10 transition-colors text-base">
+            Try the Demo →
+          </button>
+        </div>
+      </div>
+
+      <!-- Right: CSS app mockup -->
+      <div class="lp-mockup-wrapper hidden md:block">
+        <div class="lp-mockup bg-white" style="min-height:440px;">
+          <!-- Mockup header -->
+          <div class="grad-cafe px-5 py-4">
+            <div class="flex items-center justify-between">
+              <div>
+                <p class="text-white/60 text-xs font-semibold uppercase tracking-widest mb-0.5">Specialty Coffee &amp; Brunch</p>
+                <p class="text-white font-headline text-lg font-semibold">The Corner Cafe</p>
+              </div>
+              <div class="text-right">
+                <p class="text-green-300 font-bold text-base">Avg FC: 26.4%</p>
+                <p class="text-white/60 text-xs">10 menu items</p>
+              </div>
+            </div>
+          </div>
+          <!-- Mockup item grid -->
+          <div class="p-4 space-y-2">
+            <p class="text-xs text-outline uppercase tracking-widest font-semibold mb-2">Menu Items</p>
+            <div class="flex items-center justify-between py-2 border-b border-outline-variant/20">
+              <div class="flex items-center gap-2">
+                <span class="text-yellow-500 text-sm">★</span>
+                <div>
+                  <p class="text-xs font-semibold text-on-surface">Flat White</p>
+                  <p class="text-xs text-outline">Coffee</p>
+                </div>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="text-xs px-2 py-0.5 rounded-full font-bold fc-green">FC: 22%</span>
+                <span class="text-xs font-bold text-profit">GP $3.90</span>
+              </div>
+            </div>
+            <div class="flex items-center justify-between py-2 border-b border-outline-variant/20">
+              <div class="flex items-center gap-2">
+                <span class="text-yellow-500 text-sm">★</span>
+                <div>
+                  <p class="text-xs font-semibold text-on-surface">Avocado Toast</p>
+                  <p class="text-xs text-outline">Food</p>
+                </div>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="text-xs px-2 py-0.5 rounded-full font-bold fc-green">FC: 28%</span>
+                <span class="text-xs font-bold text-profit">GP $11.20</span>
+              </div>
+            </div>
+            <div class="flex items-center justify-between py-2 border-b border-outline-variant/20">
+              <div class="flex items-center gap-2">
+                <span class="text-amber-600 text-sm">⚠</span>
+                <div>
+                  <p class="text-xs font-semibold text-on-surface">Eggs Benedict</p>
+                  <p class="text-xs text-outline">Food</p>
+                </div>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="text-xs px-2 py-0.5 rounded-full font-bold fc-amber">FC: 35%</span>
+                <span class="text-xs font-bold text-on-surface">GP $9.10</span>
+              </div>
+            </div>
+            <div class="flex items-center justify-between py-2">
+              <div class="flex items-center gap-2">
+                <span class="text-yellow-500 text-sm">★</span>
+                <div>
+                  <p class="text-xs font-semibold text-on-surface">Banana Bread</p>
+                  <p class="text-xs text-outline">Desserts</p>
+                </div>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="text-xs px-2 py-0.5 rounded-full font-bold fc-green">FC: 9%</span>
+                <span class="text-xs font-bold text-profit">GP $6.34</span>
+              </div>
+            </div>
+          </div>
+          <!-- Break-even indicator -->
+          <div class="mx-4 mb-4 bg-primary-fixed rounded-lg p-3 flex items-center gap-3">
+            <span class="material-symbols-outlined text-primary text-lg filled">trending_up</span>
+            <div>
+              <p class="text-xs font-bold text-on-primary-fixed-variant">Break-even: 67 covers/day</p>
+              <p class="text-xs text-primary/70">You serve ~95 covers/day — <span class="font-bold text-profit">28 above break-even</span></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Stats bar -->
+    <div class="border-t border-white/10 px-6 md:px-12 py-8">
+      <div class="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-6">
+        <div class="lp-stat-card text-center">
+          <p class="text-3xl font-headline font-bold text-white mb-1">3–5%</p>
+          <p class="text-white/60 text-xs">average restaurant profit margin</p>
+        </div>
+        <div class="lp-stat-card text-center">
+          <p class="text-3xl font-headline font-bold text-white mb-1">35%</p>
+          <p class="text-white/60 text-xs">restaurants fail because food costs spiral unnoticed</p>
+        </div>
+        <div class="lp-stat-card text-center">
+          <p class="text-3xl font-headline font-bold text-white mb-1">28–32%</p>
+          <p class="text-white/60 text-xs">ideal food cost % (most cafes don't know theirs)</p>
+        </div>
+        <div class="lp-stat-card text-center">
+          <p class="text-3xl font-headline font-bold text-white mb-1">42%</p>
+          <p class="text-white/60 text-xs">of cafe owners NOT profitable in 2025</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── PAIN POINTS ───────────────────────────────────── -->
+  <section class="py-20 px-6 md:px-12 bg-white">
+    <div class="max-w-5xl mx-auto">
+      <div class="text-center mb-14">
+        <span class="text-primary text-xs uppercase tracking-[0.25em] font-bold block mb-3">The Problem</span>
+        <h2 class="font-headline text-4xl text-on-surface mb-4">Why Cafe Margins Silently Disappear</h2>
+        <p class="text-on-surface-variant text-lg max-w-2xl mx-auto">Industry data from the National Restaurant Association and hospitality research firms shows three patterns that repeat across every failing food business.</p>
+      </div>
+      <div class="grid md:grid-cols-3 gap-6">
+        <div class="bg-loss-bg border border-red-200 rounded-2xl p-6">
+          <div class="w-10 h-10 bg-error/10 rounded-full flex items-center justify-center mb-4">
+            <span class="material-symbols-outlined text-error text-xl filled">calculate</span>
+          </div>
+          <h3 class="font-headline text-lg text-on-surface mb-2">You're Pricing by Feel, Not Maths</h3>
+          <p class="text-on-surface-variant text-sm leading-relaxed">Without recipe costing, you set a price that "seems right." But when ingredient costs rise 10%, that price might now lose you money on every sale.</p>
+        </div>
+        <div class="bg-loss-bg border border-red-200 rounded-2xl p-6">
+          <div class="w-10 h-10 bg-error/10 rounded-full flex items-center justify-center mb-4">
+            <span class="material-symbols-outlined text-error text-xl filled">show_chart</span>
+          </div>
+          <h3 class="font-headline text-lg text-on-surface mb-2">Your Best Sellers Might Be Your Worst Earners</h3>
+          <p class="text-on-surface-variant text-sm leading-relaxed">A busy brunch item with $18 ticket price and 38% food cost earns less GP than a $12 item at 22% food cost. Most owners never know.</p>
+        </div>
+        <div class="bg-loss-bg border border-red-200 rounded-2xl p-6">
+          <div class="w-10 h-10 bg-error/10 rounded-full flex items-center justify-center mb-4">
+            <span class="material-symbols-outlined text-error text-xl filled">price_change</span>
+          </div>
+          <h3 class="font-headline text-lg text-on-surface mb-2">Ingredient Costs Change. Your Menu Doesn't.</h3>
+          <p class="text-on-surface-variant text-sm leading-relaxed">Suppliers raise prices. Your recipe cost quietly increases. Your margin quietly disappears. Without a living cost calculator, you're the last to find out.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── FEATURES ──────────────────────────────────────── -->
+  <section class="py-20 px-6 md:px-12 bg-surface-container-low">
+    <div class="max-w-5xl mx-auto">
+      <div class="text-center mb-14">
+        <span class="text-primary text-xs uppercase tracking-[0.25em] font-bold block mb-3">Features</span>
+        <h2 class="font-headline text-4xl text-on-surface mb-4">Everything You Need to Cost Your Menu Properly</h2>
+        <p class="text-on-surface-variant text-lg max-w-2xl mx-auto">Built for specialty coffee shops, brunch cafes, bistros, bakeries, and any food business that wants to stop guessing at margins.</p>
+      </div>
+      <div class="grid md:grid-cols-3 gap-5">
+        <div class="lp-feature-card bg-white rounded-2xl p-6 shadow-sm">
+          <div class="w-10 h-10 grad-cafe rounded-xl flex items-center justify-center mb-4">
+            <span class="material-symbols-outlined text-white text-xl filled">percent</span>
+          </div>
+          <h3 class="font-headline text-lg text-on-surface mb-2">Food Cost % Per Item</h3>
+          <p class="text-on-surface-variant text-sm leading-relaxed">Enter ingredients and selling price. Instantly see food cost % and whether it's in the ideal 28–32% range.</p>
+        </div>
+        <div class="lp-feature-card bg-white rounded-2xl p-6 shadow-sm">
+          <div class="w-10 h-10 grad-cafe rounded-xl flex items-center justify-center mb-4">
+            <span class="material-symbols-outlined text-white text-xl filled">trending_up</span>
+          </div>
+          <h3 class="font-headline text-lg text-on-surface mb-2">Gross Profit Margin</h3>
+          <p class="text-on-surface-variant text-sm leading-relaxed">See GP in dollars and % per item. Know your best and worst earners at a glance.</p>
+        </div>
+        <div class="lp-feature-card bg-white rounded-2xl p-6 shadow-sm">
+          <div class="w-10 h-10 grad-cafe rounded-xl flex items-center justify-center mb-4">
+            <span class="material-symbols-outlined text-white text-xl filled">restaurant_menu</span>
+          </div>
+          <h3 class="font-headline text-lg text-on-surface mb-2">Recipe Ingredient Builder</h3>
+          <p class="text-on-surface-variant text-sm leading-relaxed">Add ingredients with quantity and unit cost. Auto-calculate recipe cost with yield adjustments.</p>
+        </div>
+        <div class="lp-feature-card bg-white rounded-2xl p-6 shadow-sm">
+          <div class="w-10 h-10 grad-cafe rounded-xl flex items-center justify-center mb-4">
+            <span class="material-symbols-outlined text-white text-xl filled">category</span>
+          </div>
+          <h3 class="font-headline text-lg text-on-surface mb-2">Menu Category View</h3>
+          <p class="text-on-surface-variant text-sm leading-relaxed">Organise items by Coffee, Food, Drinks, Desserts. See average FC% and GP per category.</p>
+        </div>
+        <div class="lp-feature-card bg-white rounded-2xl p-6 shadow-sm">
+          <div class="w-10 h-10 grad-cafe rounded-xl flex items-center justify-center mb-4">
+            <span class="material-symbols-outlined text-white text-xl filled">person</span>
+          </div>
+          <h3 class="font-headline text-lg text-on-surface mb-2">Break-Even Calculator</h3>
+          <p class="text-on-surface-variant text-sm leading-relaxed">Set your fixed costs and see how many covers you need per day to break even.</p>
+        </div>
+        <div class="lp-feature-card bg-white rounded-2xl p-6 shadow-sm">
+          <div class="w-10 h-10 grad-cafe rounded-xl flex items-center justify-center mb-4">
+            <span class="material-symbols-outlined text-white text-xl filled">flag</span>
+          </div>
+          <h3 class="font-headline text-lg text-on-surface mb-2">Item Performance Flags</h3>
+          <p class="text-on-surface-variant text-sm leading-relaxed">Items are automatically flagged: ★ Star (low FC, popular), ⚠ Watch (high FC), 🔒 Dog (high FC + low GP).</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── HOW IT WORKS ──────────────────────────────────── -->
+  <section class="py-20 px-6 md:px-12 bg-white">
+    <div class="max-w-3xl mx-auto">
+      <div class="text-center mb-14">
+        <span class="text-primary text-xs uppercase tracking-[0.25em] font-bold block mb-3">How It Works</span>
+        <h2 class="font-headline text-4xl text-on-surface mb-4">Your Full Menu Costed in Minutes</h2>
+      </div>
+      <div class="space-y-0">
+        <div class="flex gap-6 items-start">
+          <div class="flex flex-col items-center">
+            <div class="w-10 h-10 grad-cafe rounded-full flex items-center justify-center text-white font-bold text-sm shrink-0">1</div>
+            <div class="lp-step-connector mt-2"></div>
+          </div>
+          <div class="pb-10">
+            <h3 class="font-headline text-xl text-on-surface mb-2">Add Your Menu Items</h3>
+            <p class="text-on-surface-variant text-sm leading-relaxed">Enter name, category, selling price, and ingredients with costs. Each item gets its food cost % and GP calculated instantly.</p>
+          </div>
+        </div>
+        <div class="flex gap-6 items-start">
+          <div class="flex flex-col items-center">
+            <div class="w-10 h-10 grad-cafe rounded-full flex items-center justify-center text-white font-bold text-sm shrink-0">2</div>
+            <div class="lp-step-connector mt-2"></div>
+          </div>
+          <div class="pb-10">
+            <h3 class="font-headline text-xl text-on-surface mb-2">See Your Food Cost % and GP</h3>
+            <p class="text-on-surface-variant text-sm leading-relaxed">Instantly know if each item is profitable and how it compares to industry benchmarks. Items above 35% FC are flagged automatically.</p>
+          </div>
+        </div>
+        <div class="flex gap-6 items-start">
+          <div class="flex flex-col items-center">
+            <div class="w-10 h-10 grad-cafe rounded-full flex items-center justify-center text-white font-bold text-sm shrink-0">3</div>
+          </div>
+          <div class="pb-4">
+            <h3 class="font-headline text-xl text-on-surface mb-2">Set the Right Price</h3>
+            <p class="text-on-surface-variant text-sm leading-relaxed">Use the pricing calculator to find the optimal price for your target food cost %. Stop guessing — start pricing with confidence.</p>
+          </div>
+        </div>
+      </div>
+      <div class="text-center mt-8">
+        <button onclick="showSetupModal()" class="grad-cafe text-white font-bold px-10 py-4 rounded-xl hover:opacity-90 transition-opacity text-base shadow-lg">
+          Start Tracking Free →
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── PRICING ────────────────────────────────────────── -->
+  <section class="py-20 px-6 md:px-12 bg-surface-container-low">
+    <div class="max-w-4xl mx-auto">
+      <div class="text-center mb-14">
+        <span class="text-primary text-xs uppercase tracking-[0.25em] font-bold block mb-3">Pricing</span>
+        <h2 class="font-headline text-4xl text-on-surface mb-4">Free for Your Cafe. Pro for Multiple Venues.</h2>
+        <p class="text-on-surface-variant text-lg max-w-xl mx-auto">Start free and stay free for a single venue. Upgrade when you need multi-site dashboards, exports, and scenario planning.</p>
+      </div>
+      <div class="grid md:grid-cols-2 gap-6 max-w-3xl mx-auto">
+        <div class="bg-white rounded-2xl p-8 shadow-sm border-2 border-outline-variant/30">
+          <p class="text-xs text-outline uppercase tracking-widest font-bold mb-4">Free</p>
+          <div class="mb-6">
+            <span class="text-4xl font-headline font-bold text-on-surface">$0</span>
+            <span class="text-on-surface-variant text-sm"> / forever</span>
+          </div>
+          <ul class="space-y-3 mb-8 text-sm text-on-surface-variant">
+            <li class="flex items-center gap-2"><span class="material-symbols-outlined text-base text-profit filled">check</span>1 venue, unlimited menu items</li>
+            <li class="flex items-center gap-2"><span class="material-symbols-outlined text-base text-profit filled">check</span>Food cost % and GP per item</li>
+            <li class="flex items-center gap-2"><span class="material-symbols-outlined text-base text-profit filled">check</span>Recipe costing with ingredients</li>
+            <li class="flex items-center gap-2"><span class="material-symbols-outlined text-base text-profit filled">check</span>Break-even covers calculator</li>
+            <li class="flex items-center gap-2"><span class="material-symbols-outlined text-base text-profit filled">check</span>Category averages and performance flags</li>
+            <li class="flex items-center gap-2"><span class="material-symbols-outlined text-base text-profit filled">check</span>Saved locally in your browser</li>
+          </ul>
+          <button onclick="showSetupModal()" class="w-full border-2 border-primary text-primary font-bold py-3 rounded-xl hover:bg-primary-fixed transition-colors">Get Started Free</button>
+        </div>
+        <div class="grad-cafe rounded-2xl p-8 shadow-lg relative overflow-hidden">
+          <div class="absolute top-4 right-4 bg-yellow-300 text-on-surface text-xs font-bold px-3 py-1 rounded-full">Coming Soon</div>
+          <p class="text-xs text-white/60 uppercase tracking-widest font-bold mb-4">Pro</p>
+          <div class="mb-6">
+            <span class="text-4xl font-headline font-bold text-white">$15</span>
+            <span class="text-white/60 text-sm"> / month</span>
+          </div>
+          <ul class="space-y-3 mb-8 text-sm text-white/80">
+            <li class="flex items-center gap-2"><span class="material-symbols-outlined text-base text-green-300 filled">check</span>Multiple venues</li>
+            <li class="flex items-center gap-2"><span class="material-symbols-outlined text-base text-green-300 filled">check</span>Ingredient price update sync</li>
+            <li class="flex items-center gap-2"><span class="material-symbols-outlined text-base text-green-300 filled">check</span>Menu engineering matrix (Stars/Dogs/Ploughs/Puzzles)</li>
+            <li class="flex items-center gap-2"><span class="material-symbols-outlined text-base text-green-300 filled">check</span>Waste &amp; shrinkage tracker</li>
+            <li class="flex items-center gap-2"><span class="material-symbols-outlined text-base text-green-300 filled">check</span>Daily P&amp;L</li>
+            <li class="flex items-center gap-2"><span class="material-symbols-outlined text-base text-green-300 filled">check</span>PDF export</li>
+          </ul>
+          <button class="w-full bg-white/20 text-white font-bold py-3 rounded-xl cursor-not-allowed opacity-70">Join Waitlist</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── FAQ ───────────────────────────────────────────── -->
+  <section class="py-20 px-6 md:px-12 bg-white">
+    <div class="max-w-3xl mx-auto">
+      <div class="text-center mb-14">
+        <span class="text-primary text-xs uppercase tracking-[0.25em] font-bold block mb-3">FAQ</span>
+        <h2 class="font-headline text-4xl text-on-surface mb-4">Common Questions</h2>
+      </div>
+      <div class="space-y-3">
+        <div class="border border-outline-variant/30 rounded-xl overflow-hidden">
+          <button class="faq-toggle w-full text-left px-6 py-4 flex justify-between items-center" onclick="toggleFaq(this)">
+            <span class="font-semibold text-on-surface text-sm">What is a good food cost percentage?</span>
+            <span class="material-symbols-outlined text-outline text-xl faq-icon">add</span>
+          </button>
+          <div class="faq-answer px-6 pb-4 text-on-surface-variant text-sm leading-relaxed">
+            <p>Industry benchmark is 28–32% for food, and 20–25% for beverages. Coffee typically has the lowest food cost (15–22%), making it the highest GP item in most cafes. If you're above 35%, you likely need to re-price or find cheaper suppliers.</p>
+          </div>
+        </div>
+        <div class="border border-outline-variant/30 rounded-xl overflow-hidden">
+          <button class="faq-toggle w-full text-left px-6 py-4 flex justify-between items-center" onclick="toggleFaq(this)">
+            <span class="font-semibold text-on-surface text-sm">Does this include labor costs?</span>
+            <span class="material-symbols-outlined text-outline text-xl faq-icon">add</span>
+          </button>
+          <div class="faq-answer px-6 pb-4 text-on-surface-variant text-sm leading-relaxed">
+            <p>Food cost % only covers ingredient costs. Labor (typically 28–35% of revenue) is tracked separately. Your "prime cost" (food + labor) should ideally be under 60–65% of revenue. We show this in the break-even tab alongside your fixed costs.</p>
+          </div>
+        </div>
+        <div class="border border-outline-variant/30 rounded-xl overflow-hidden">
+          <button class="faq-toggle w-full text-left px-6 py-4 flex justify-between items-center" onclick="toggleFaq(this)">
+            <span class="font-semibold text-on-surface text-sm">Can I track ingredient price changes?</span>
+            <span class="material-symbols-outlined text-outline text-xl faq-icon">add</span>
+          </button>
+          <div class="faq-answer px-6 pb-4 text-on-surface-variant text-sm leading-relaxed">
+            <p>In the free version, update ingredient costs manually and see item costs recalculate instantly. The Pro version (coming soon) includes supplier price sync and change alerts.</p>
+          </div>
+        </div>
+        <div class="border border-outline-variant/30 rounded-xl overflow-hidden">
+          <button class="faq-toggle w-full text-left px-6 py-4 flex justify-between items-center" onclick="toggleFaq(this)">
+            <span class="font-semibold text-on-surface text-sm">How is break-even calculated?</span>
+            <span class="material-symbols-outlined text-outline text-xl faq-icon">add</span>
+          </button>
+          <div class="faq-answer px-6 pb-4 text-on-surface-variant text-sm leading-relaxed">
+            <p>Enter your fixed costs (rent, utilities, subscriptions) and variable costs. We calculate the minimum covers (customers served) per day needed to cover all costs at your average spend per cover.</p>
+          </div>
+        </div>
+        <div class="border border-outline-variant/30 rounded-xl overflow-hidden">
+          <button class="faq-toggle w-full text-left px-6 py-4 flex justify-between items-center" onclick="toggleFaq(this)">
+            <span class="font-semibold text-on-surface text-sm">What's a "Star" item vs a "Dog"?</span>
+            <span class="material-symbols-outlined text-outline text-xl faq-icon">add</span>
+          </button>
+          <div class="faq-answer px-6 pb-4 text-on-surface-variant text-sm leading-relaxed">
+            <p>Menu engineering classifies items as: Stars (high margin, popular — promote these), Plough Horses (popular but low margin — re-price or find cheaper ingredients), Puzzles (high margin, low popularity — promote more), Dogs (low margin, low popularity — consider removing).</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── CTA FOOTER ─────────────────────────────────────── -->
+  <section class="lp-hero py-20 px-6 md:px-12 text-center">
+    <div class="max-w-2xl mx-auto">
+      <h2 class="font-headline text-4xl text-white mb-4">Ready to Know Your Margins?</h2>
+      <p class="text-white/70 text-lg mb-8">Join cafe and restaurant owners who cost their menu properly — not after the supplier invoice arrives.</p>
+      <div class="flex flex-wrap gap-3 justify-center">
+        <button onclick="showSetupModal()" class="bg-white text-primary font-bold px-10 py-4 rounded-xl hover:bg-primary-fixed transition-colors text-base shadow-lg">
+          Start Free — No Sign-Up
+        </button>
+        <button onclick="enterDemo()" class="border-2 border-white/40 text-white font-semibold px-10 py-4 rounded-xl hover:border-white hover:bg-white/10 transition-colors text-base">
+          See Demo First
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <footer class="bg-on-surface py-10 px-6 md:px-12">
+    <div class="max-w-5xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+      <div>
+        <p class="font-headline text-white text-lg mb-1">BudgetTools</p>
+        <p class="text-white/40 text-xs">Free financial planning tools for every life event.</p>
+      </div>
+      <div class="flex gap-6 text-white/50 text-sm">
+        <a href="index.html" class="hover:text-white transition-colors">Home</a>
+        <a href="event-budget.html" class="hover:text-white transition-colors">Event Budget</a>
+        <a href="cafe-costing.html" class="hover:text-white transition-colors">Cafe Costing</a>
+      </div>
+      <p class="text-white/30 text-xs">© 2026 BudgetTools. All rights reserved.</p>
+    </div>
+  </footer>
+
+</div><!-- /landing-page -->
+
+
+<!-- ══════════════════════════════════════════════════════
+     SETUP MODAL
+══════════════════════════════════════════════════════ -->
+<div id="setup-overlay" class="modal-overlay hidden">
+  <div class="modal-box">
+    <div class="text-center mb-8">
+      <div class="w-14 h-14 grad-cafe rounded-2xl flex items-center justify-center mx-auto mb-4">
+        <span class="material-symbols-outlined text-white text-2xl filled">restaurant</span>
+      </div>
+      <h2 class="font-headline text-2xl text-on-surface mb-2">Set Up Your Cafe</h2>
+      <p class="text-on-surface-variant text-sm">Enter your details to get started. You can edit everything later.</p>
+    </div>
+    <div id="setup-error" class="hidden bg-error-container text-error text-sm rounded-lg px-4 py-3 mb-5"></div>
+    <div class="space-y-4">
+      <div>
+        <label class="field-label">Cafe / Restaurant Name <span class="text-error">*</span></label>
+        <input id="s-name" type="text" class="field" placeholder="e.g. The Corner Cafe"/>
+      </div>
+      <div>
+        <label class="field-label">Business Type</label>
+        <select id="s-type" class="field">
+          <option value="Specialty Coffee">Specialty Coffee</option>
+          <option value="Casual Cafe">Casual Cafe</option>
+          <option value="Brunch Cafe">Brunch Cafe</option>
+          <option value="Bistro">Bistro</option>
+          <option value="Restaurant">Restaurant</option>
+          <option value="Bakery">Bakery</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+      <div>
+        <label class="field-label">Currency</label>
+        <select id="s-currency" class="field">
+          <option value="$">USD ($)</option>
+          <option value="£">GBP (£)</option>
+          <option value="€">EUR (€)</option>
+          <option value="A$">AUD (A$)</option>
+          <option value="C$">CAD (C$)</option>
+          <option value="₹">INR (₹)</option>
+          <option value="S$">SGD (S$)</option>
+        </select>
+      </div>
+      <div>
+        <label class="field-label">Monthly Fixed Costs ($)</label>
+        <input id="s-fixed" type="number" class="field" placeholder="e.g. 8200" min="0" step="1"/>
+      </div>
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label class="field-label">Avg Covers / Day</label>
+          <input id="s-covers" type="number" class="field" placeholder="e.g. 95" min="1"/>
+        </div>
+        <div>
+          <label class="field-label">Avg Spend / Cover ($)</label>
+          <input id="s-spend" type="number" class="field" placeholder="e.g. 18.50" min="0" step="0.01"/>
+        </div>
+      </div>
+    </div>
+    <div class="flex gap-3 mt-8">
+      <button onclick="closeSetupModal()" class="flex-1 border border-outline-variant text-on-surface-variant font-semibold py-3 rounded-xl hover:bg-surface-container transition-colors text-sm">Cancel</button>
+      <button onclick="completeSetup()" class="flex-2 grad-cafe text-white font-bold px-8 py-3 rounded-xl hover:opacity-90 transition-opacity">Start Tracking →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     SETTINGS MODAL
+══════════════════════════════════════════════════════ -->
+<div id="settings-overlay" class="modal-overlay hidden">
+  <div class="modal-box">
+    <h2 class="font-headline text-xl text-on-surface mb-6">Cafe Settings</h2>
+    <div class="space-y-4">
+      <div>
+        <label class="field-label">Cafe / Restaurant Name</label>
+        <input id="set-name" type="text" class="field"/>
+      </div>
+      <div>
+        <label class="field-label">Business Type</label>
+        <select id="set-type" class="field">
+          <option value="Specialty Coffee">Specialty Coffee</option>
+          <option value="Casual Cafe">Casual Cafe</option>
+          <option value="Brunch Cafe">Brunch Cafe</option>
+          <option value="Bistro">Bistro</option>
+          <option value="Restaurant">Restaurant</option>
+          <option value="Bakery">Bakery</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+      <div>
+        <label class="field-label">Currency</label>
+        <select id="set-currency" class="field">
+          <option value="$">USD ($)</option>
+          <option value="£">GBP (£)</option>
+          <option value="€">EUR (€)</option>
+          <option value="A$">AUD (A$)</option>
+          <option value="C$">CAD (C$)</option>
+          <option value="₹">INR (₹)</option>
+          <option value="S$">SGD (S$)</option>
+        </select>
+      </div>
+      <div>
+        <label class="field-label">Monthly Fixed Costs</label>
+        <input id="set-fixed" type="number" class="field" min="0" step="1"/>
+      </div>
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label class="field-label">Avg Covers / Day</label>
+          <input id="set-covers" type="number" class="field" min="1"/>
+        </div>
+        <div>
+          <label class="field-label">Avg Spend / Cover</label>
+          <input id="set-spend" type="number" class="field" min="0" step="0.01"/>
+        </div>
+      </div>
+    </div>
+    <div class="flex gap-3 mt-6">
+      <button onclick="document.getElementById('settings-overlay').classList.add('hidden')" class="flex-1 border border-outline-variant text-on-surface-variant font-semibold py-3 rounded-xl hover:bg-surface-container transition-colors text-sm">Cancel</button>
+      <button onclick="saveSettings()" class="flex-1 grad-cafe text-white font-bold py-3 rounded-xl hover:opacity-90 transition-opacity">Save Changes</button>
+    </div>
+    <div class="mt-4 pt-4 border-t border-outline-variant/20">
+      <button onclick="resetApp()" class="w-full text-error text-sm font-semibold py-2 hover:bg-error-container rounded-lg transition-colors">Reset &amp; Start Over</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     ADD / EDIT ITEM MODAL
+══════════════════════════════════════════════════════ -->
+<div id="item-modal" class="modal-overlay hidden">
+  <div class="modal-box" style="max-width:620px;">
+    <h2 class="font-headline text-xl text-on-surface mb-6" id="item-modal-title">Add Menu Item</h2>
+    <input type="hidden" id="item-edit-id"/>
+    <div class="space-y-4 mb-6">
+      <div class="grid grid-cols-2 gap-4">
+        <div class="col-span-2">
+          <label class="field-label">Item Name <span class="text-error">*</span></label>
+          <input id="i-name" type="text" class="field" placeholder="e.g. Flat White"/>
+        </div>
+        <div>
+          <label class="field-label">Category</label>
+          <select id="i-cat" class="field">
+            <option value="Coffee">Coffee</option>
+            <option value="Food">Food</option>
+            <option value="Drinks">Drinks</option>
+            <option value="Desserts">Desserts</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+        <div>
+          <label class="field-label">Selling Price <span class="text-error">*</span></label>
+          <input id="i-price" type="number" class="field" placeholder="0.00" min="0" step="0.01"/>
+        </div>
+        <div class="col-span-2">
+          <label class="field-label">Notes</label>
+          <input id="i-notes" type="text" class="field" placeholder="Optional notes about this item"/>
+        </div>
+      </div>
+    </div>
+
+    <!-- Ingredient section -->
+    <div class="mb-6">
+      <div class="flex items-center justify-between mb-3">
+        <h3 class="font-headline text-base text-on-surface">Ingredients</h3>
+        <button onclick="addIngredientRow()" class="flex items-center gap-1 text-primary text-xs font-bold hover:bg-primary-fixed px-3 py-1.5 rounded-lg transition-colors">
+          <span class="material-symbols-outlined text-sm">add</span> Add Ingredient
+        </button>
+      </div>
+      <!-- Header row -->
+      <div class="ing-row text-xs font-bold text-on-surface-variant uppercase tracking-wide mb-1 px-1">
+        <span>Ingredient</span><span>Qty</span><span>Unit</span><span>Unit Cost</span><span>Line Cost</span><span></span>
+      </div>
+      <div id="ing-rows" class="space-y-2"></div>
+      <div class="mt-3 pt-3 border-t border-outline-variant/20 flex justify-between items-center">
+        <span class="text-sm font-semibold text-on-surface">Total Recipe Cost</span>
+        <span id="modal-recipe-cost" class="font-bold text-primary text-sm">$0.00</span>
+      </div>
+    </div>
+
+    <div class="flex gap-3">
+      <button onclick="closeItemModal()" class="flex-1 border border-outline-variant text-on-surface-variant font-semibold py-3 rounded-xl hover:bg-surface-container transition-colors text-sm">Cancel</button>
+      <button onclick="saveItem()" class="flex-1 grad-cafe text-white font-bold py-3 rounded-xl hover:opacity-90 transition-opacity">Save Item</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════
+     MAIN APP
+══════════════════════════════════════════════════════ -->
+<div id="app" class="hidden flex min-h-screen">
+
+  <!-- Desktop Sidebar -->
+  <aside id="sidebar" class="hidden md:flex flex-col fixed left-0 top-0 h-full w-60 bg-white border-r border-outline-variant/20 z-30 overflow-y-auto">
+    <div class="p-6 pb-4">
+      <a href="index.html" class="text-xs text-primary font-semibold tracking-widest uppercase opacity-60 hover:opacity-100 transition-opacity block mb-5">← BudgetTools</a>
+      <p class="text-xs text-on-surface-variant uppercase tracking-widest mb-1 font-semibold" id="sb-cafe-type">Cafe</p>
+      <p class="font-headline text-lg text-on-surface leading-tight" id="sb-cafe-name">—</p>
+    </div>
+    <nav class="flex-1 px-3 pb-4 space-y-0.5">
+      <button class="nav-item active" data-nav="overview" onclick="switchTab('overview')"><span class="material-symbols-outlined text-xl">dashboard</span> Overview</button>
+      <button class="nav-item inactive" data-nav="menu" onclick="switchTab('menu')"><span class="material-symbols-outlined text-xl">restaurant_menu</span> Menu Items</button>
+      <button class="nav-item inactive" data-nav="recipe" onclick="switchTab('recipe')"><span class="material-symbols-outlined text-xl">kitchen</span> Recipe Costing</button>
+      <button class="nav-item inactive" data-nav="breakeven" onclick="switchTab('breakeven')"><span class="material-symbols-outlined text-xl">trending_up</span> Break-Even</button>
+    </nav>
+    <div class="p-4 border-t border-outline-variant/20 space-y-1">
+      <button onclick="prepareSettings()" class="nav-item inactive w-full"><span class="material-symbols-outlined text-xl">settings</span> Settings</button>
+      <button onclick="exitToLanding()" class="nav-item inactive w-full"><span class="material-symbols-outlined text-xl">home</span> Home</button>
+    </div>
+  </aside>
+
+  <!-- Mobile header -->
+  <header id="mob-header" class="md:hidden fixed top-0 left-0 right-0 z-40 bg-white/90 backdrop-blur-md border-b border-outline-variant/20 flex items-center justify-between px-4 py-3">
+    <div>
+      <p class="font-bold text-on-surface text-sm" id="mob-cafe-name">—</p>
+      <p class="text-xs text-primary font-semibold" id="mob-cafe-type"></p>
+    </div>
+    <button onclick="toggleDrawer()" class="p-2 text-on-surface-variant">
+      <span class="material-symbols-outlined text-2xl" id="drawer-icon">menu</span>
+    </button>
+  </header>
+
+  <div id="drawer-overlay" class="md:hidden fixed inset-0 bg-on-surface/30 z-40 hidden" onclick="toggleDrawer()"></div>
+  <div id="drawer" class="md:hidden fixed left-0 top-0 h-full w-64 bg-white z-50 -translate-x-full transition-transform duration-300 shadow-2xl overflow-y-auto">
+    <div class="p-6 border-b border-outline-variant/20">
+      <a href="index.html" class="text-xs text-primary font-semibold tracking-widest uppercase opacity-60 block mb-4">← BudgetTools</a>
+      <p class="font-headline text-lg text-on-surface" id="dr-cafe-name">—</p>
+      <p class="text-xs text-outline mt-1" id="dr-cafe-type"></p>
+    </div>
+    <nav class="p-3 space-y-0.5">
+      <button class="nav-item active" data-nav="overview" onclick="switchTab('overview');toggleDrawer()"><span class="material-symbols-outlined text-xl">dashboard</span> Overview</button>
+      <button class="nav-item inactive" data-nav="menu" onclick="switchTab('menu');toggleDrawer()"><span class="material-symbols-outlined text-xl">restaurant_menu</span> Menu Items</button>
+      <button class="nav-item inactive" data-nav="recipe" onclick="switchTab('recipe');toggleDrawer()"><span class="material-symbols-outlined text-xl">kitchen</span> Recipe Costing</button>
+      <button class="nav-item inactive" data-nav="breakeven" onclick="switchTab('breakeven');toggleDrawer()"><span class="material-symbols-outlined text-xl">trending_up</span> Break-Even</button>
+    </nav>
+    <div class="p-4 border-t border-outline-variant/20 space-y-1">
+      <button onclick="prepareSettings();toggleDrawer()" class="nav-item inactive w-full"><span class="material-symbols-outlined text-xl">settings</span> Settings</button>
+      <button onclick="exitToLanding();toggleDrawer()" class="nav-item inactive w-full"><span class="material-symbols-outlined text-xl">home</span> Home</button>
+    </div>
+  </div>
+
+  <!-- Main content area -->
+  <main class="flex-1 md:pl-60 pt-16 md:pt-0 min-h-screen">
+
+    <!-- ════ OVERVIEW TAB ════════════════════════════════ -->
+    <div id="panel-overview" class="tab-panel p-6 md:p-10 max-w-5xl mx-auto">
+      <div class="mb-8">
+        <span class="text-primary text-xs uppercase tracking-[0.2em] mb-2 block font-bold" id="ov-type-label">Cafe</span>
+        <h2 class="font-headline text-4xl text-on-surface" id="ov-cafe-name">—</h2>
+      </div>
+
+      <!-- Alert for high FC items -->
+      <div id="ov-fc-alert" class="hidden bg-yellow-50 border border-yellow-300 rounded-xl px-5 py-3 mb-5 flex items-center gap-3">
+        <span class="material-symbols-outlined text-amber-600 text-xl filled">warning</span>
+        <p class="text-sm font-semibold text-amber-800" id="ov-fc-alert-text"></p>
+      </div>
+
+      <!-- Key metrics -->
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+        <div class="bg-surface-container-lowest rounded-xl p-5 shadow-sm border border-outline-variant/10">
+          <p class="text-xs text-outline uppercase tracking-wide mb-2">Menu Items</p>
+          <p id="ov-item-count" class="text-2xl font-bold text-on-surface">0</p>
+          <p class="text-xs text-outline mt-1">across all categories</p>
+        </div>
+        <div class="bg-surface-container-lowest rounded-xl p-5 shadow-sm border border-outline-variant/10">
+          <p class="text-xs text-outline uppercase tracking-wide mb-2">Avg Food Cost %</p>
+          <p id="ov-avg-fc" class="text-2xl font-bold">—</p>
+          <p class="text-xs text-outline mt-1" id="ov-avg-fc-bench">Ideal: 28–32%</p>
+        </div>
+        <div class="bg-surface-container-lowest rounded-xl p-5 shadow-sm border border-outline-variant/10">
+          <p class="text-xs text-outline uppercase tracking-wide mb-2">Avg GP Margin</p>
+          <p id="ov-avg-gp" class="text-2xl font-bold text-profit">—</p>
+          <p class="text-xs text-outline mt-1">gross profit %</p>
+        </div>
+        <div class="bg-surface-container-lowest rounded-xl p-5 shadow-sm border border-outline-variant/10">
+          <p class="text-xs text-outline uppercase tracking-wide mb-2">Best Earner</p>
+          <p id="ov-best-earner" class="text-lg font-bold text-on-surface leading-tight">—</p>
+          <p class="text-xs text-profit mt-1" id="ov-best-gp"></p>
+        </div>
+      </div>
+
+      <!-- Category summary table -->
+      <div class="bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant/10 overflow-hidden mb-6">
+        <div class="px-5 py-4 border-b border-outline-variant/10 flex items-center justify-between">
+          <h3 class="font-headline text-lg text-on-surface">Category Summary</h3>
+          <button onclick="switchTab('menu')" class="text-primary text-xs font-semibold hover:underline">View All Items →</button>
+        </div>
+        <div id="ov-cat-table" class="divide-y divide-outline-variant/10">
+          <p class="text-on-surface-variant text-sm text-center py-6">No menu items yet. <button onclick="switchTab('menu')" class="text-primary font-semibold hover:underline">Add your first item →</button></p>
+        </div>
+      </div>
+
+      <!-- Top performers -->
+      <div class="grid md:grid-cols-2 gap-5 mb-6">
+        <div class="bg-profit-bg rounded-xl p-5 border border-green-200">
+          <div class="flex items-center gap-2 mb-4">
+            <span class="material-symbols-outlined text-profit text-xl filled">star</span>
+            <h3 class="font-headline text-base text-profit">Top Performers (by GP)</h3>
+          </div>
+          <div id="ov-top-performers" class="space-y-2">
+            <p class="text-sm text-on-surface-variant">No items yet.</p>
+          </div>
+        </div>
+        <div class="bg-yellow-50 rounded-xl p-5 border border-yellow-200">
+          <div class="flex items-center gap-2 mb-4">
+            <span class="material-symbols-outlined text-amber-600 text-xl filled">warning</span>
+            <h3 class="font-headline text-base text-amber-800">Items to Review (FC% &gt; 34%)</h3>
+          </div>
+          <div id="ov-watch-items" class="space-y-2">
+            <p class="text-sm text-on-surface-variant">No items above 34% FC.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- CTA -->
+      <div id="ov-cta" class="hidden bg-primary-fixed rounded-xl p-5 text-center">
+        <p class="text-on-primary-fixed-variant font-semibold mb-3 text-sm">Add menu items to start tracking your food costs and margins.</p>
+        <button onclick="openItemModal()" class="grad-cafe text-white font-bold px-6 py-3 rounded-xl hover:opacity-90 transition-opacity text-sm">
+          Add First Menu Item
+        </button>
+      </div>
+    </div>
+
+    <!-- ════ MENU ITEMS TAB ══════════════════════════════ -->
+    <div id="panel-menu" class="tab-panel hidden p-6 md:p-10 max-w-5xl mx-auto">
+      <div class="flex items-center justify-between mb-8">
+        <div>
+          <h2 class="font-headline text-3xl text-on-surface mb-1">Menu Items</h2>
+          <p class="text-on-surface-variant text-sm">All items with food cost % and gross profit per item.</p>
+        </div>
+        <button onclick="openItemModal()" class="grad-cafe text-white font-bold px-5 py-3 rounded-xl flex items-center gap-2 hover:opacity-90 transition-opacity text-sm">
+          <span class="material-symbols-outlined text-base">add</span> Add Item
+        </button>
+      </div>
+
+      <!-- Summary bar -->
+      <div class="grid grid-cols-3 gap-4 mb-5">
+        <div class="bg-surface-container-low rounded-xl p-4 text-center">
+          <p class="text-xs text-outline uppercase tracking-wide mb-1">Items</p>
+          <p id="menu-item-count" class="text-xl font-bold text-on-surface">0</p>
+        </div>
+        <div class="bg-surface-container-low rounded-xl p-4 text-center">
+          <p class="text-xs text-outline uppercase tracking-wide mb-1">Avg FC%</p>
+          <p id="menu-avg-fc" class="text-xl font-bold text-on-surface">—</p>
+        </div>
+        <div class="bg-surface-container-low rounded-xl p-4 text-center">
+          <p class="text-xs text-outline uppercase tracking-wide mb-1">Avg GP%</p>
+          <p id="menu-avg-gp" class="text-xl font-bold text-profit">—</p>
+        </div>
+      </div>
+
+      <!-- Category filter pills -->
+      <div class="flex flex-wrap gap-2 mb-5" id="menu-cat-filter">
+        <button class="menu-cat-btn active text-xs font-semibold px-3 py-1.5 rounded-full border border-primary bg-primary text-white" data-cat="all" onclick="filterMenuCat('all',this)">All</button>
+        <button class="menu-cat-btn text-xs font-semibold px-3 py-1.5 rounded-full border border-outline-variant text-on-surface-variant hover:border-primary hover:text-primary transition-colors" data-cat="Coffee" onclick="filterMenuCat('Coffee',this)">Coffee</button>
+        <button class="menu-cat-btn text-xs font-semibold px-3 py-1.5 rounded-full border border-outline-variant text-on-surface-variant hover:border-primary hover:text-primary transition-colors" data-cat="Food" onclick="filterMenuCat('Food',this)">Food</button>
+        <button class="menu-cat-btn text-xs font-semibold px-3 py-1.5 rounded-full border border-outline-variant text-on-surface-variant hover:border-primary hover:text-primary transition-colors" data-cat="Drinks" onclick="filterMenuCat('Drinks',this)">Drinks</button>
+        <button class="menu-cat-btn text-xs font-semibold px-3 py-1.5 rounded-full border border-outline-variant text-on-surface-variant hover:border-primary hover:text-primary transition-colors" data-cat="Desserts" onclick="filterMenuCat('Desserts',this)">Desserts</button>
+      </div>
+
+      <!-- Item cards grid -->
+      <div id="menu-grid" class="grid md:grid-cols-2 gap-4">
+        <p class="text-on-surface-variant text-sm text-center py-8 col-span-2">No menu items yet. <button onclick="openItemModal()" class="text-primary font-semibold hover:underline">Add your first item →</button></p>
+      </div>
+    </div>
+
+    <!-- ════ RECIPE COSTING TAB ══════════════════════════ -->
+    <div id="panel-recipe" class="tab-panel hidden p-6 md:p-10 max-w-4xl mx-auto">
+      <div class="mb-8">
+        <h2 class="font-headline text-3xl text-on-surface mb-1">Recipe Costing</h2>
+        <p class="text-on-surface-variant text-sm">Select a menu item to view its full ingredient breakdown and pricing calculator.</p>
+      </div>
+
+      <!-- Item selector -->
+      <div class="mb-6">
+        <label class="field-label">Select Menu Item</label>
+        <select id="recipe-select" class="field" onchange="renderRecipe(this.value)" style="max-width:360px;">
+          <option value="">— Choose an item —</option>
+        </select>
+      </div>
+
+      <div id="recipe-panel" class="hidden">
+        <!-- Ingredient breakdown -->
+        <div class="bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant/10 overflow-hidden mb-6">
+          <div class="bg-surface-container px-5 py-3 flex items-center justify-between">
+            <h3 class="font-headline text-base text-on-surface" id="recipe-item-name">—</h3>
+            <button onclick="editRecipeItem()" class="text-primary text-xs font-semibold flex items-center gap-1 hover:underline">
+              <span class="material-symbols-outlined text-sm">edit</span> Edit Ingredients
+            </button>
+          </div>
+          <div class="px-5 py-2">
+            <div class="grid grid-cols-[1fr_70px_60px_80px_80px] gap-3 text-xs font-bold text-on-surface-variant uppercase tracking-wide py-2 border-b border-outline-variant/20">
+              <span>Ingredient</span><span>Qty</span><span>Unit</span><span>Unit Cost</span><span class="text-right">Line Cost</span>
+            </div>
+            <div id="recipe-ing-list" class="divide-y divide-outline-variant/10"></div>
+          </div>
+          <div class="px-5 py-3 bg-surface-container border-t border-outline-variant/10">
+            <div class="flex justify-between items-center">
+              <span class="text-sm font-bold text-on-surface">Total Recipe Cost</span>
+              <span id="recipe-total-cost" class="font-bold text-primary">—</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Cost summary card -->
+        <div class="grid md:grid-cols-4 gap-4 mb-6">
+          <div class="bg-surface-container-low rounded-xl p-4 text-center">
+            <p class="text-xs text-outline uppercase tracking-wide mb-1">Recipe Cost</p>
+            <p id="recipe-cost-val" class="text-xl font-bold text-on-surface">—</p>
+          </div>
+          <div class="bg-surface-container-low rounded-xl p-4 text-center">
+            <p class="text-xs text-outline uppercase tracking-wide mb-1">Selling Price</p>
+            <p id="recipe-price-val" class="text-xl font-bold text-on-surface">—</p>
+          </div>
+          <div class="rounded-xl p-4 text-center" id="recipe-fc-card">
+            <p class="text-xs text-outline uppercase tracking-wide mb-1">Food Cost %</p>
+            <p id="recipe-fc-val" class="text-xl font-bold">—</p>
+          </div>
+          <div class="bg-profit-bg rounded-xl p-4 text-center">
+            <p class="text-xs text-outline uppercase tracking-wide mb-1">Gross Profit</p>
+            <p id="recipe-gp-val" class="text-xl font-bold text-profit">—</p>
+            <p id="recipe-gppct-val" class="text-xs text-profit mt-0.5">—</p>
+          </div>
+        </div>
+
+        <!-- Target price calculator -->
+        <div class="bg-primary-fixed rounded-xl p-6 mb-6">
+          <h3 class="font-headline text-base text-on-primary-fixed-variant mb-4">Target Price Calculator</h3>
+          <p class="text-xs text-primary/70 mb-4">Enter your desired food cost % to see the recommended selling price.</p>
+          <div class="flex items-center gap-4 flex-wrap">
+            <div>
+              <label class="field-label">Target FC%</label>
+              <div class="flex items-center gap-2">
+                <input id="target-fc-pct" type="range" min="10" max="50" value="30" class="w-32" oninput="updateTargetPrice()"/>
+                <span id="target-fc-label" class="font-bold text-primary text-sm w-10">30%</span>
+              </div>
+            </div>
+            <div>
+              <label class="field-label">Recommended Price</label>
+              <p id="target-price-val" class="text-2xl font-bold text-on-primary-fixed-variant">—</p>
+            </div>
+            <div>
+              <label class="field-label">vs Current Price</label>
+              <p id="target-price-diff" class="text-sm font-semibold">—</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Pro lock: Yield & Waste -->
+        <div class="pro-lock rounded-xl overflow-hidden">
+          <div class="pro-lock-overlay rounded-xl">
+            <div class="flex items-center gap-2 bg-white rounded-full px-4 py-2 shadow-md">
+              <span class="material-symbols-outlined text-sm text-primary filled">lock</span>
+              <span class="text-xs font-bold text-on-surface">Pro Feature</span>
+            </div>
+          </div>
+          <div class="bg-surface-container-low p-5 rounded-xl">
+            <div class="flex items-center gap-2 mb-3">
+              <span class="material-symbols-outlined text-primary text-xl filled">science</span>
+              <p class="font-semibold text-on-surface text-sm">Yield &amp; Waste Adjustment</p>
+            </div>
+            <p class="text-on-surface-variant text-xs mb-3">Apply a waste % per ingredient (e.g. 15% lettuce trim loss) to get your true recipe cost. Essential for accurate food cost in kitchens with high prep waste.</p>
+            <div class="flex flex-wrap gap-2">
+              <span class="bg-white border border-outline-variant/30 rounded-full px-3 py-1 text-xs text-on-surface-variant">Avocado — 20% waste</span>
+              <span class="bg-white border border-outline-variant/30 rounded-full px-3 py-1 text-xs text-on-surface-variant">Lettuce — 15% trim loss</span>
+              <span class="bg-white border border-outline-variant/30 rounded-full px-3 py-1 text-xs text-on-surface-variant">Citrus — 30% juice yield</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="recipe-empty" class="text-center py-16">
+        <span class="material-symbols-outlined text-4xl text-outline mb-4 block">kitchen</span>
+        <p class="text-on-surface-variant text-sm">Select a menu item above to see its recipe breakdown, or <button onclick="openItemModal()" class="text-primary font-semibold hover:underline">add a new item</button>.</p>
+      </div>
+    </div>
+
+    <!-- ════ BREAK-EVEN TAB ══════════════════════════════ -->
+    <div id="panel-breakeven" class="tab-panel hidden p-6 md:p-10 max-w-4xl mx-auto">
+      <div class="mb-8">
+        <h2 class="font-headline text-3xl text-on-surface mb-1">Break-Even Calculator</h2>
+        <p class="text-on-surface-variant text-sm">How many covers do you need each day to cover all your costs?</p>
+      </div>
+
+      <!-- Inputs -->
+      <div class="bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant/10 p-6 mb-6">
+        <h3 class="font-headline text-base text-on-surface mb-4">Your Numbers</h3>
+        <div class="grid md:grid-cols-3 gap-4">
+          <div>
+            <label class="field-label">Monthly Fixed Costs</label>
+            <input id="be-fixed" type="number" class="field" min="0" step="1" oninput="recalcBreakEven()"/>
+          </div>
+          <div>
+            <label class="field-label">Avg Covers / Day</label>
+            <input id="be-covers" type="number" class="field" min="1" oninput="recalcBreakEven()"/>
+          </div>
+          <div>
+            <label class="field-label">Avg Spend / Cover</label>
+            <input id="be-spend" type="number" class="field" min="0" step="0.01" oninput="recalcBreakEven()"/>
+          </div>
+        </div>
+        <p class="text-xs text-on-surface-variant mt-3">Changes here also update your venue settings. Fixed costs include rent, utilities, equipment lease, base staffing, insurance.</p>
+      </div>
+
+      <!-- Calculated outputs -->
+      <div class="grid md:grid-cols-2 gap-4 mb-6">
+        <div class="bg-surface-container-low rounded-xl p-5">
+          <p class="text-xs text-outline uppercase tracking-wide mb-1">Monthly Revenue Needed</p>
+          <p id="be-monthly-rev-needed" class="text-2xl font-bold text-on-surface">—</p>
+          <p class="text-xs text-outline mt-1">to break even on fixed costs</p>
+        </div>
+        <div class="rounded-xl p-5" id="be-covers-card">
+          <p class="text-xs text-outline uppercase tracking-wide mb-1">Daily Covers Needed</p>
+          <p id="be-daily-covers" class="text-2xl font-bold">—</p>
+          <p class="text-xs text-outline mt-1">at current avg spend</p>
+        </div>
+        <div class="bg-surface-container-low rounded-xl p-5">
+          <p class="text-xs text-outline uppercase tracking-wide mb-1">Monthly Revenue (Current)</p>
+          <p id="be-monthly-rev-current" class="text-2xl font-bold text-profit">—</p>
+          <p class="text-xs text-outline mt-1" id="be-covers-label">at current covers</p>
+        </div>
+        <div class="rounded-xl p-5" id="be-profit-card">
+          <p class="text-xs text-outline uppercase tracking-wide mb-1">Monthly Profit / Loss</p>
+          <p id="be-monthly-profit" class="text-2xl font-bold">—</p>
+          <p class="text-xs text-outline mt-1">revenue minus fixed costs</p>
+        </div>
+      </div>
+
+      <!-- Progress bar -->
+      <div class="bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant/10 p-6 mb-6">
+        <div class="flex items-center justify-between mb-3">
+          <h3 class="font-headline text-base text-on-surface">Current Covers vs Break-Even</h3>
+          <span id="be-status-badge" class="text-xs font-bold px-3 py-1 rounded-full"></span>
+        </div>
+        <div class="prog-bar mb-2">
+          <div id="be-prog-fill" class="prog-fill" style="width:0%"></div>
+        </div>
+        <div class="flex justify-between text-xs text-outline">
+          <span>0</span>
+          <span id="be-prog-label">—</span>
+        </div>
+      </div>
+
+      <!-- Contribution margin -->
+      <div class="bg-primary-fixed rounded-xl p-6 mb-6">
+        <h3 class="font-headline text-base text-on-primary-fixed-variant mb-4">Contribution Margin Analysis</h3>
+        <div class="grid md:grid-cols-3 gap-4">
+          <div>
+            <p class="text-xs text-primary/60 mb-1">Avg Sell Price / Cover</p>
+            <p id="cm-avg-price" class="font-bold text-on-primary-fixed-variant text-lg">—</p>
+          </div>
+          <div>
+            <p class="text-xs text-primary/60 mb-1">Avg Food Cost / Cover</p>
+            <p id="cm-avg-food-cost" class="font-bold text-on-primary-fixed-variant text-lg">—</p>
+          </div>
+          <div>
+            <p class="text-xs text-primary/60 mb-1">Contribution Margin / Cover</p>
+            <p id="cm-contribution" class="font-bold text-on-primary-fixed-variant text-lg">—</p>
+          </div>
+        </div>
+        <p class="text-xs text-primary/60 mt-4">Contribution margin = avg price × (1 – avg food cost%). This is what each cover contributes toward covering fixed costs after paying for ingredients.</p>
+      </div>
+
+      <!-- Pro lock: Scenario Planner -->
+      <div class="pro-lock rounded-xl overflow-hidden">
+        <div class="pro-lock-overlay rounded-xl">
+          <div class="flex items-center gap-2 bg-white rounded-full px-4 py-2 shadow-md">
+            <span class="material-symbols-outlined text-sm text-primary filled">lock</span>
+            <span class="text-xs font-bold text-on-surface">Pro Feature</span>
+          </div>
+        </div>
+        <div class="bg-surface-container-low p-5 rounded-xl">
+          <div class="flex items-center gap-2 mb-3">
+            <span class="material-symbols-outlined text-primary text-xl filled">tune</span>
+            <p class="font-semibold text-on-surface text-sm">Scenario Planner</p>
+          </div>
+          <p class="text-on-surface-variant text-xs mb-3">What if avg spend increases by $2? What if you add 15 covers/day? What if fixed costs drop 10%? See the profit impact of each scenario instantly.</p>
+          <div class="grid grid-cols-3 gap-3">
+            <div class="bg-white rounded-lg p-3 text-center">
+              <p class="text-xs text-outline mb-1">+$2 avg spend</p>
+              <p class="font-bold text-profit text-sm">+$4,180/mo</p>
+            </div>
+            <div class="bg-white rounded-lg p-3 text-center">
+              <p class="text-xs text-outline mb-1">+15 covers/day</p>
+              <p class="font-bold text-profit text-sm">+$8,325/mo</p>
+            </div>
+            <div class="bg-white rounded-lg p-3 text-center">
+              <p class="text-xs text-outline mb-1">–10% fixed costs</p>
+              <p class="font-bold text-profit text-sm">+$820/mo</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div><!-- /app -->
+
+
+<!-- ══════════════════════════════════════════════════════
+     JAVASCRIPT
+══════════════════════════════════════════════════════ -->
+<script>
+// ── STORAGE ───────────────────────────────────────────
+const Storage = {
+  KEY: 'bt_cafe_v1',
+  get()  { try { return JSON.parse(localStorage.getItem(this.KEY)) || null; } catch(e) { return null; } },
+  set(d) { try { localStorage.setItem(this.KEY, JSON.stringify(d)); } catch(e) {} },
+  clear(){ localStorage.removeItem(this.KEY); }
+};
+
+// ── DEMO DATA ─────────────────────────────────────────
+const DEMO = {
+  name: 'The Corner Cafe',
+  type: 'Specialty Coffee',
+  currency: '$',
+  fixedCosts: 8200,
+  coversPerDay: 95,
+  avgSpendPerCover: 18.50,
+  menuItems: [
+    { id:'m1', name:'Flat White', cat:'Coffee', price:5.50, ingredients:[
+      {name:'Espresso (double shot)', qty:18, unit:'g', unitCost:0.045},
+      {name:'Whole milk', qty:160, unit:'ml', unitCost:0.0014},
+      {name:'Takeaway cup + lid', qty:1, unit:'pc', unitCost:0.22},
+    ], notes:'Most ordered item. ~90/day.' },
+    { id:'m2', name:'Cappuccino', cat:'Coffee', price:5.00, ingredients:[
+      {name:'Espresso (double shot)', qty:18, unit:'g', unitCost:0.045},
+      {name:'Whole milk', qty:120, unit:'ml', unitCost:0.0014},
+      {name:'Takeaway cup + lid', qty:1, unit:'pc', unitCost:0.22},
+    ], notes:'' },
+    { id:'m3', name:'Iced Oat Latte', cat:'Coffee', price:6.50, ingredients:[
+      {name:'Espresso (double shot)', qty:18, unit:'g', unitCost:0.045},
+      {name:'Oat milk', qty:200, unit:'ml', unitCost:0.0035},
+      {name:'Ice', qty:80, unit:'g', unitCost:0.002},
+      {name:'Takeaway cup + lid', qty:1, unit:'pc', unitCost:0.22},
+    ], notes:'Summer bestseller' },
+    { id:'m4', name:'Avocado Toast', cat:'Food', price:18.00, ingredients:[
+      {name:'Sourdough bread (2 slices)', qty:2, unit:'pc', unitCost:0.65},
+      {name:'Avocado (half)', qty:0.5, unit:'pc', unitCost:1.20},
+      {name:'Feta cheese', qty:30, unit:'g', unitCost:0.04},
+      {name:'Cherry tomatoes', qty:50, unit:'g', unitCost:0.012},
+      {name:'Microgreens', qty:10, unit:'g', unitCost:0.08},
+      {name:'Lemon + seasoning', qty:1, unit:'pc', unitCost:0.18},
+    ], notes:'High popularity. Good margin.' },
+    { id:'m5', name:'Eggs Benedict', cat:'Food', price:22.00, ingredients:[
+      {name:'English muffins (2)', qty:2, unit:'pc', unitCost:0.55},
+      {name:'Free range eggs (2)', qty:2, unit:'pc', unitCost:0.70},
+      {name:'Ham (75g)', qty:75, unit:'g', unitCost:0.028},
+      {name:'Hollandaise sauce (60ml)', qty:60, unit:'ml', unitCost:0.038},
+      {name:'Spinach (30g)', qty:30, unit:'g', unitCost:0.018},
+    ], notes:'Labor-intensive. Watch food cost.' },
+    { id:'m6', name:'Granola Bowl', cat:'Food', price:14.00, ingredients:[
+      {name:'House granola (150g)', qty:150, unit:'g', unitCost:0.018},
+      {name:'Greek yoghurt (200ml)', qty:200, unit:'ml', unitCost:0.006},
+      {name:'Seasonal berries (80g)', qty:80, unit:'g', unitCost:0.028},
+      {name:'Honey (20g)', qty:20, unit:'g', unitCost:0.014},
+    ], notes:'High margin. Easy to prepare.' },
+    { id:'m7', name:'Ham & Cheese Croissant', cat:'Food', price:9.50, ingredients:[
+      {name:'Croissant (bought in)', qty:1, unit:'pc', unitCost:1.40},
+      {name:'Leg ham (50g)', qty:50, unit:'g', unitCost:0.032},
+      {name:'Gruyere cheese (30g)', qty:30, unit:'g', unitCost:0.058},
+      {name:'Butter (10g)', qty:10, unit:'g', unitCost:0.012},
+    ], notes:'' },
+    { id:'m8', name:'Banana Bread (slice)', cat:'Desserts', price:7.00, ingredients:[
+      {name:'House banana bread (1/8 loaf)', qty:1, unit:'pc', unitCost:0.65},
+      {name:'Butter (15g)', qty:15, unit:'g', unitCost:0.012},
+    ], notes:'Batch baked. Excellent margin.' },
+    { id:'m9', name:'Chocolate Brownie', cat:'Desserts', price:6.50, ingredients:[
+      {name:'House brownie (1 portion)', qty:1, unit:'pc', unitCost:0.72},
+    ], notes:'Buy-in option under review.' },
+    { id:'m10', name:'Berry Smoothie', cat:'Drinks', price:9.00, ingredients:[
+      {name:'Frozen mixed berries (150g)', qty:150, unit:'g', unitCost:0.018},
+      {name:'Banana (1 small)', qty:1, unit:'pc', unitCost:0.22},
+      {name:'Almond milk (200ml)', qty:200, unit:'ml', unitCost:0.003},
+      {name:'Protein powder (20g)', qty:20, unit:'g', unitCost:0.055},
+      {name:'Takeaway cup + lid', qty:1, unit:'pc', unitCost:0.22},
+    ], notes:'' },
+  ]
+};
+
+// ── STATE ─────────────────────────────────────────────
+let state = {
+  data: null,
+  tab: 'overview',
+  menuCatFilter: 'all',
+  isDemo: false
+};
+
+// ── INIT ──────────────────────────────────────────────
+window.addEventListener('DOMContentLoaded', () => {
+  const saved = Storage.get();
+  if (saved) {
+    state.data = saved;
+    state.isDemo = false;
+    showApp();
+  } else {
+    showLanding();
+  }
+});
+
+// ── MODE SWITCHES ─────────────────────────────────────
+function showLanding() {
+  document.getElementById('landing-page').classList.remove('hidden');
+  document.getElementById('app').classList.add('hidden');
+  document.getElementById('demo-banner').classList.add('hidden');
+  document.body.classList.remove('demo-active');
+}
+
+function showApp() {
+  document.getElementById('landing-page').classList.add('hidden');
+  document.getElementById('app').classList.remove('hidden');
+  document.getElementById('app').classList.add('flex');
+  if (state.isDemo) {
+    document.getElementById('demo-banner').classList.remove('hidden');
+    document.body.classList.add('demo-active');
+  } else {
+    document.getElementById('demo-banner').classList.add('hidden');
+    document.body.classList.remove('demo-active');
+  }
+  render();
+  switchTab(state.tab);
+}
+
+function enterDemo() {
+  state.data = JSON.parse(JSON.stringify(DEMO));
+  state.isDemo = true;
+  state.tab = 'overview';
+  showApp();
+}
+
+function exitToLanding() {
+  state.isDemo = false;
+  showLanding();
+}
+
+function showSetupModal() {
+  document.getElementById('setup-overlay').classList.remove('hidden');
+  document.getElementById('s-name').value = '';
+  document.getElementById('s-type').value = 'Specialty Coffee';
+  document.getElementById('s-currency').value = '$';
+  document.getElementById('s-fixed').value = '';
+  document.getElementById('s-covers').value = '';
+  document.getElementById('s-spend').value = '';
+  document.getElementById('setup-error').classList.add('hidden');
+}
+
+function closeSetupModal() {
+  document.getElementById('setup-overlay').classList.add('hidden');
+}
+
+function completeSetup() {
+  const name = document.getElementById('s-name').value.trim();
+  const err  = document.getElementById('setup-error');
+  if (!name) { err.textContent='Cafe name is required.'; err.classList.remove('hidden'); return; }
+  err.classList.add('hidden');
+  state.data = {
+    name,
+    type:            document.getElementById('s-type').value,
+    currency:        document.getElementById('s-currency').value,
+    fixedCosts:      parseFloat(document.getElementById('s-fixed').value)||0,
+    coversPerDay:    parseInt(document.getElementById('s-covers').value)||0,
+    avgSpendPerCover:parseFloat(document.getElementById('s-spend').value)||0,
+    menuItems: []
+  };
+  state.isDemo = false;
+  Storage.set(state.data);
+  document.getElementById('setup-overlay').classList.add('hidden');
+  showApp();
+}
+
+function resetApp() {
+  if (!confirm('Reset all data? This cannot be undone.')) return;
+  Storage.clear();
+  state.data = null;
+  state.isDemo = false;
+  document.getElementById('settings-overlay').classList.add('hidden');
+  showLanding();
+}
+
+// ── SETTINGS ──────────────────────────────────────────
+function prepareSettings() {
+  const d = state.data;
+  document.getElementById('set-name').value    = d.name;
+  document.getElementById('set-type').value    = d.type;
+  document.getElementById('set-currency').value= d.currency||'$';
+  document.getElementById('set-fixed').value   = d.fixedCosts||0;
+  document.getElementById('set-covers').value  = d.coversPerDay||0;
+  document.getElementById('set-spend').value   = d.avgSpendPerCover||0;
+  document.getElementById('settings-overlay').classList.remove('hidden');
+}
+
+function saveSettings() {
+  const d = state.data;
+  d.name            = document.getElementById('set-name').value.trim()    || d.name;
+  d.type            = document.getElementById('set-type').value;
+  d.currency        = document.getElementById('set-currency').value;
+  d.fixedCosts      = parseFloat(document.getElementById('set-fixed').value)||0;
+  d.coversPerDay    = parseInt(document.getElementById('set-covers').value)||0;
+  d.avgSpendPerCover= parseFloat(document.getElementById('set-spend').value)||0;
+  if (!state.isDemo) Storage.set(d);
+  document.getElementById('settings-overlay').classList.add('hidden');
+  render();
+}
+
+// ── TAB SWITCHING ─────────────────────────────────────
+function switchTab(tab) {
+  state.tab = tab;
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.add('hidden'));
+  document.getElementById('panel-'+tab).classList.remove('hidden');
+  document.querySelectorAll('[data-nav]').forEach(b => {
+    b.classList.toggle('active',   b.dataset.nav === tab);
+    b.classList.toggle('inactive', b.dataset.nav !== tab);
+  });
+  renderTab(tab);
+}
+
+function renderTab(tab) {
+  if (tab==='overview')  renderOverview();
+  if (tab==='menu')      renderMenuItems();
+  if (tab==='recipe')    renderRecipeTab();
+  if (tab==='breakeven') renderBreakEven();
+}
+
+// ── MOBILE DRAWER ─────────────────────────────────────
+function toggleDrawer() {
+  const d  = document.getElementById('drawer');
+  const o  = document.getElementById('drawer-overlay');
+  const ic = document.getElementById('drawer-icon');
+  const open = !d.classList.contains('-translate-x-full');
+  d.classList.toggle('-translate-x-full', open);
+  o.classList.toggle('hidden', open);
+  ic.textContent = open ? 'menu' : 'close';
+}
+
+// ── HELPERS ───────────────────────────────────────────
+function qs(s){ return document.querySelector(s); }
+function fmt(n, cur){ const c = cur||state.data.currency||'$'; return c+(Math.abs(n)||0).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}); }
+function fmtInt(n, cur){ const c = cur||state.data.currency||'$'; return c+(Math.abs(n)||0).toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:0}); }
+function uid(){ return Date.now().toString(36)+Math.random().toString(36).slice(2); }
+
+// ── CALC FUNCTIONS ────────────────────────────────────
+function calcItemCost(item){
+  if (!item.ingredients || item.ingredients.length===0) return 0;
+  return item.ingredients.reduce((s,i)=>s+(parseFloat(i.qty)||0)*(parseFloat(i.unitCost)||0),0);
+}
+function calcItemFC(item){
+  const cost = calcItemCost(item);
+  const price = parseFloat(item.price)||0;
+  return price>0 ? (cost/price*100) : 0;
+}
+function calcItemGP(item){
+  return (parseFloat(item.price)||0) - calcItemCost(item);
+}
+function calcItemGPpct(item){
+  const price = parseFloat(item.price)||0;
+  return price>0 ? (calcItemGP(item)/price*100) : 0;
+}
+
+function fcBadgeClass(fc){
+  if (fc < 28) return 'fc-green';
+  if (fc <= 32) return 'fc-amber';
+  return 'fc-red';
+}
+function fcColorClass(fc){
+  if (fc < 28) return 'text-profit';
+  if (fc <= 32) return 'text-yellow-700';
+  return 'text-loss';
+}
+function itemFlag(item){
+  const fc = calcItemFC(item);
+  const gp = calcItemGP(item);
+  if (fc <= 28) return '★';
+  if (fc > 34 && gp < 5) return '🔒';
+  if (fc > 32) return '⚠';
+  return '★';
+}
+
+function calcBreakEven(d){
+  const monthly   = d.fixedCosts||0;
+  const covers    = d.coversPerDay||0;
+  const spend     = d.avgSpendPerCover||0;
+  const monthlyRev = covers * spend * 30;
+  const monthlyProfit = monthlyRev - monthly;
+  const dailyCoversNeeded = spend>0 ? Math.ceil(monthly / (spend * 30)) : 0;
+  return { monthlyRevNeeded: monthly, dailyCoversNeeded, monthlyRev, monthlyProfit };
+}
+
+// ── RENDER (global labels) ────────────────────────────
+function render() {
+  const d = state.data;
+  if (!d) return;
+  qs('#sb-cafe-name').textContent  = d.name;
+  qs('#sb-cafe-type').textContent  = d.type;
+  qs('#mob-cafe-name').textContent = d.name;
+  qs('#mob-cafe-type').textContent = d.type;
+  qs('#dr-cafe-name').textContent  = d.name;
+  qs('#dr-cafe-type').textContent  = d.type;
+}
+
+// ── OVERVIEW ──────────────────────────────────────────
+function renderOverview(){
+  const d   = state.data;
+  const cur = d.currency||'$';
+  const items = d.menuItems||[];
+
+  qs('#ov-type-label').textContent = d.type;
+  qs('#ov-cafe-name').textContent  = d.name;
+  qs('#ov-item-count').textContent = items.length;
+
+  if (items.length===0){
+    qs('#ov-avg-fc').textContent  = '—';
+    qs('#ov-avg-gp').textContent  = '—';
+    qs('#ov-best-earner').textContent = '—';
+    qs('#ov-best-gp').textContent = '';
+    qs('#ov-fc-alert').classList.add('hidden');
+    qs('#ov-cta').classList.remove('hidden');
+    qs('#ov-cat-table').innerHTML = '<p class="text-on-surface-variant text-sm text-center py-6">No menu items yet. <button onclick="switchTab(\'menu\')" class="text-primary font-semibold hover:underline">Add your first item →</button></p>';
+    qs('#ov-top-performers').innerHTML = '<p class="text-sm text-on-surface-variant">No items yet.</p>';
+    qs('#ov-watch-items').innerHTML    = '<p class="text-sm text-on-surface-variant">No items above 34% FC.</p>';
+    return;
+  }
+  qs('#ov-cta').classList.add('hidden');
+
+  const avgFC  = items.reduce((s,i)=>s+calcItemFC(i),0)/items.length;
+  const avgGP  = items.reduce((s,i)=>s+calcItemGPpct(i),0)/items.length;
+  const bestItem = [...items].sort((a,b)=>calcItemGP(b)-calcItemGP(a))[0];
+
+  const fcEl = qs('#ov-avg-fc');
+  fcEl.textContent = avgFC.toFixed(1)+'%';
+  fcEl.className = 'text-2xl font-bold ' + fcColorClass(avgFC);
+
+  qs('#ov-avg-gp').textContent = avgGP.toFixed(1)+'%';
+  qs('#ov-best-earner').textContent = bestItem.name;
+  qs('#ov-best-gp').textContent = fmt(calcItemGP(bestItem),cur)+' GP';
+
+  // FC alert
+  const highFC = items.filter(i=>calcItemFC(i)>35);
+  if (highFC.length>0){
+    qs('#ov-fc-alert').classList.remove('hidden');
+    qs('#ov-fc-alert-text').textContent = `⚠ ${highFC.length} item${highFC.length>1?'s':''} above 35% food cost — ${highFC.map(i=>i.name).join(', ')}`;
+  } else {
+    qs('#ov-fc-alert').classList.add('hidden');
+  }
+
+  // Category table
+  const cats = {};
+  items.forEach(item=>{
+    if (!cats[item.cat]) cats[item.cat]={items:[],totalFC:0,totalGP:0};
+    cats[item.cat].items.push(item);
+    cats[item.cat].totalFC += calcItemFC(item);
+    cats[item.cat].totalGP += calcItemGP(item);
+  });
+  qs('#ov-cat-table').innerHTML = `
+    <div class="grid grid-cols-4 gap-3 px-5 py-2 bg-surface-container text-xs font-bold text-on-surface-variant uppercase tracking-wide">
+      <span>Category</span><span class="text-center">Items</span><span class="text-center">Avg FC%</span><span class="text-right">Avg GP</span>
+    </div>
+    ${Object.entries(cats).map(([cat,v])=>{
+      const avgFC2 = v.totalFC/v.items.length;
+      const avgGP2 = v.totalGP/v.items.length;
+      return `<div class="data-row grid grid-cols-4 gap-3 px-5 py-3 items-center border-t border-outline-variant/10">
+        <span class="font-semibold text-sm text-on-surface">${cat}</span>
+        <span class="text-center text-sm text-on-surface-variant">${v.items.length}</span>
+        <span class="text-center"><span class="text-xs font-bold px-2 py-0.5 rounded-full ${fcBadgeClass(avgFC2)}">${avgFC2.toFixed(1)}%</span></span>
+        <span class="text-right font-semibold text-sm text-profit">${fmt(avgGP2,cur)}</span>
+      </div>`;
+    }).join('')}`;
+
+  // Top performers
+  const top3 = [...items].sort((a,b)=>calcItemGP(b)-calcItemGP(a)).slice(0,3);
+  qs('#ov-top-performers').innerHTML = top3.map((item,idx)=>`
+    <div class="flex items-center justify-between py-2 border-b border-green-200 last:border-0">
+      <div class="flex items-center gap-2">
+        <span class="w-5 h-5 rounded-full bg-profit text-white text-xs font-bold flex items-center justify-center">${idx+1}</span>
+        <div>
+          <p class="text-sm font-semibold text-on-surface">${item.name}</p>
+          <p class="text-xs text-outline">${item.cat}</p>
+        </div>
+      </div>
+      <div class="text-right">
+        <p class="text-sm font-bold text-profit">${fmt(calcItemGP(item),cur)}</p>
+        <p class="text-xs text-outline">${calcItemGPpct(item).toFixed(1)}% GP</p>
+      </div>
+    </div>`).join('');
+
+  // Watch items
+  const watchItems = items.filter(i=>calcItemFC(i)>34);
+  if (watchItems.length===0){
+    qs('#ov-watch-items').innerHTML = '<p class="text-sm text-on-surface-variant">No items above 34% FC. Good work!</p>';
+  } else {
+    qs('#ov-watch-items').innerHTML = watchItems.map(item=>`
+      <div class="flex items-center justify-between py-2 border-b border-yellow-200 last:border-0">
+        <div>
+          <p class="text-sm font-semibold text-on-surface">${item.name}</p>
+          <p class="text-xs text-outline">${item.cat}</p>
+        </div>
+        <div class="text-right">
+          <span class="text-xs font-bold px-2 py-0.5 rounded-full fc-red">${calcItemFC(item).toFixed(1)}%</span>
+          <p class="text-xs text-outline mt-0.5">${fmt(calcItemGP(item),cur)} GP</p>
+        </div>
+      </div>`).join('');
+  }
+}
+
+// ── MENU ITEMS ────────────────────────────────────────
+function renderMenuItems(){
+  const d   = state.data;
+  const cur = d.currency||'$';
+  const items = (d.menuItems||[]);
+  const filtered = state.menuCatFilter==='all' ? items : items.filter(i=>i.cat===state.menuCatFilter);
+
+  qs('#menu-item-count').textContent = items.length;
+  if (items.length>0){
+    const avgFC = items.reduce((s,i)=>s+calcItemFC(i),0)/items.length;
+    const avgGP = items.reduce((s,i)=>s+calcItemGPpct(i),0)/items.length;
+    const fcEl = qs('#menu-avg-fc');
+    fcEl.textContent = avgFC.toFixed(1)+'%';
+    fcEl.className = 'text-xl font-bold ' + fcColorClass(avgFC);
+    qs('#menu-avg-gp').textContent = avgGP.toFixed(1)+'%';
+  } else {
+    qs('#menu-avg-fc').textContent = '—';
+    qs('#menu-avg-gp').textContent = '—';
+  }
+
+  const grid = qs('#menu-grid');
+  if (filtered.length===0){
+    grid.innerHTML = `<p class="text-on-surface-variant text-sm text-center py-8 col-span-2">${state.menuCatFilter==='all'?'No items yet. <button onclick="openItemModal()" class="text-primary font-semibold hover:underline">Add your first item →</button>':'No items in this category.'}</p>`;
+    return;
+  }
+
+  grid.innerHTML = filtered.map(item=>{
+    const cost   = calcItemCost(item);
+    const fc     = calcItemFC(item);
+    const gp     = calcItemGP(item);
+    const gppct  = calcItemGPpct(item);
+    const flag   = itemFlag(item);
+    const ingCnt = (item.ingredients||[]).length;
+    return `<div class="bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant/10 p-5">
+      <div class="flex items-start justify-between mb-3">
+        <div class="flex items-center gap-2">
+          <span class="text-lg">${flag}</span>
+          <div>
+            <p class="font-headline text-base text-on-surface">${item.name}</p>
+            <span class="text-xs font-semibold bg-primary-fixed text-on-primary-fixed-variant px-2 py-0.5 rounded-full">${item.cat}</span>
+          </div>
+        </div>
+        <div class="flex gap-1">
+          <button onclick="openItemModal('${item.id}')" class="p-1.5 text-outline hover:text-primary hover:bg-primary-fixed rounded-lg transition-colors"><span class="material-symbols-outlined text-base">edit</span></button>
+          <button onclick="deleteItem('${item.id}')" class="p-1.5 text-outline hover:text-error hover:bg-error-container rounded-lg transition-colors"><span class="material-symbols-outlined text-base">delete</span></button>
+        </div>
+      </div>
+      <div class="grid grid-cols-3 gap-3 mb-3">
+        <div>
+          <p class="text-xs text-outline mb-0.5">Selling Price</p>
+          <p class="font-bold text-on-surface text-sm">${fmt(item.price,cur)}</p>
+        </div>
+        <div>
+          <p class="text-xs text-outline mb-0.5">Recipe Cost</p>
+          <p class="font-semibold text-on-surface text-sm">${fmt(cost,cur)}</p>
+        </div>
+        <div>
+          <p class="text-xs text-outline mb-0.5">Food Cost %</p>
+          <span class="text-xs font-bold px-2 py-0.5 rounded-full inline-block ${fcBadgeClass(fc)}">${fc.toFixed(1)}%</span>
+        </div>
+      </div>
+      <div class="grid grid-cols-2 gap-3 pt-3 border-t border-outline-variant/10">
+        <div>
+          <p class="text-xs text-outline mb-0.5">Gross Profit</p>
+          <p class="font-bold text-profit text-sm">${fmt(gp,cur)}</p>
+        </div>
+        <div>
+          <p class="text-xs text-outline mb-0.5">GP Margin</p>
+          <p class="font-bold text-profit text-sm">${gppct.toFixed(1)}%</p>
+        </div>
+      </div>
+      <div class="mt-3 flex items-center justify-between">
+        <span class="text-xs text-outline">${ingCnt} ingredient${ingCnt!==1?'s':''}</span>
+        ${item.notes?`<span class="text-xs text-primary/70 italic truncate ml-2 max-w-[160px]">${item.notes}</span>`:''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function filterMenuCat(cat, btn){
+  state.menuCatFilter = cat;
+  document.querySelectorAll('.menu-cat-btn').forEach(b=>{
+    const active = b.dataset.cat===cat;
+    b.classList.toggle('bg-primary', active);
+    b.classList.toggle('text-white', active);
+    b.classList.toggle('border-primary', active);
+    b.classList.toggle('text-on-surface-variant', !active);
+    b.classList.toggle('border-outline-variant', !active);
+  });
+  renderMenuItems();
+}
+
+// ── RECIPE COSTING TAB ────────────────────────────────
+function renderRecipeTab(){
+  const d = state.data;
+  const items = d.menuItems||[];
+  const sel = qs('#recipe-select');
+  const currentVal = sel.value;
+  sel.innerHTML = '<option value="">— Choose an item —</option>' +
+    items.map(i=>`<option value="${i.id}"${i.id===currentVal?' selected':''}>${i.name} (${i.cat})</option>`).join('');
+  if (currentVal && items.find(i=>i.id===currentVal)){
+    renderRecipe(currentVal);
+  } else {
+    qs('#recipe-panel').classList.add('hidden');
+    qs('#recipe-empty').classList.remove('hidden');
+  }
+}
+
+function renderRecipe(itemId){
+  if (!itemId){ qs('#recipe-panel').classList.add('hidden'); qs('#recipe-empty').classList.remove('hidden'); return; }
+  const d    = state.data;
+  const cur  = d.currency||'$';
+  const item = (d.menuItems||[]).find(i=>i.id===itemId);
+  if (!item){ return; }
+
+  qs('#recipe-panel').classList.remove('hidden');
+  qs('#recipe-empty').classList.add('hidden');
+  qs('#recipe-select').value = itemId;
+
+  const cost   = calcItemCost(item);
+  const fc     = calcItemFC(item);
+  const gp     = calcItemGP(item);
+  const gppct  = calcItemGPpct(item);
+
+  qs('#recipe-item-name').textContent = item.name;
+
+  // Ingredient list
+  const ings = item.ingredients||[];
+  qs('#recipe-ing-list').innerHTML = ings.length===0
+    ? '<p class="text-sm text-on-surface-variant py-4">No ingredients added. Click Edit Ingredients to add them.</p>'
+    : ings.map(ing=>{
+        const lineCost = (parseFloat(ing.qty)||0)*(parseFloat(ing.unitCost)||0);
+        return `<div class="grid grid-cols-[1fr_70px_60px_80px_80px] gap-3 py-2.5 items-center text-sm">
+          <span class="text-on-surface">${ing.name}</span>
+          <span class="text-on-surface-variant">${ing.qty}</span>
+          <span class="text-on-surface-variant">${ing.unit}</span>
+          <span class="text-on-surface-variant">${cur}${parseFloat(ing.unitCost).toFixed(4)}</span>
+          <span class="text-right font-semibold text-on-surface">${fmt(lineCost,cur)}</span>
+        </div>`;
+      }).join('');
+
+  qs('#recipe-total-cost').textContent = fmt(cost,cur);
+  qs('#recipe-cost-val').textContent   = fmt(cost,cur);
+  qs('#recipe-price-val').textContent  = fmt(item.price,cur);
+
+  const fcCard = qs('#recipe-fc-card');
+  const fcVal  = qs('#recipe-fc-val');
+  fcVal.textContent = fc.toFixed(1)+'%';
+  if (fc<28){ fcCard.className='bg-profit-bg rounded-xl p-4 text-center'; fcVal.className='text-xl font-bold text-profit'; }
+  else if (fc<=32){ fcCard.className='bg-yellow-50 rounded-xl p-4 text-center'; fcVal.className='text-xl font-bold text-yellow-700'; }
+  else { fcCard.className='bg-loss-bg rounded-xl p-4 text-center'; fcVal.className='text-xl font-bold text-loss'; }
+
+  qs('#recipe-gp-val').textContent    = fmt(gp,cur);
+  qs('#recipe-gppct-val').textContent = gppct.toFixed(1)+'% GP margin';
+
+  // Target price calc
+  updateTargetPrice();
+}
+
+function editRecipeItem(){
+  const id = qs('#recipe-select').value;
+  if (id) openItemModal(id);
+}
+
+function updateTargetPrice(){
+  const itemId = qs('#recipe-select').value;
+  if (!itemId) return;
+  const item = (state.data.menuItems||[]).find(i=>i.id===itemId);
+  if (!item) return;
+  const targetPct = parseInt(qs('#target-fc-pct').value)||30;
+  const cur       = state.data.currency||'$';
+  qs('#target-fc-label').textContent = targetPct+'%';
+  const cost = calcItemCost(item);
+  if (cost<=0 || targetPct<=0){ qs('#target-price-val').textContent='—'; qs('#target-price-diff').textContent='—'; return; }
+  const recommended = cost / (targetPct/100);
+  const diff = recommended - (parseFloat(item.price)||0);
+  qs('#target-price-val').textContent = fmt(recommended,cur);
+  const diffEl = qs('#target-price-diff');
+  if (Math.abs(diff)<0.01){ diffEl.textContent='= Current price'; diffEl.className='text-sm font-semibold text-outline'; }
+  else if (diff>0){ diffEl.textContent='+'+fmt(diff,cur)+' above current'; diffEl.className='text-sm font-semibold text-loss'; }
+  else { diffEl.textContent=fmt(Math.abs(diff),cur)+' below current'; diffEl.className='text-sm font-semibold text-profit'; }
+}
+
+// ── BREAK-EVEN ────────────────────────────────────────
+function renderBreakEven(){
+  const d   = state.data;
+  const cur = d.currency||'$';
+  qs('#be-fixed').value  = d.fixedCosts||0;
+  qs('#be-covers').value = d.coversPerDay||0;
+  qs('#be-spend').value  = d.avgSpendPerCover||0;
+  recalcBreakEven();
+}
+
+function recalcBreakEven(){
+  const d = state.data;
+  if (!d) return;
+  const fixed  = parseFloat(qs('#be-fixed').value)||0;
+  const covers = parseFloat(qs('#be-covers').value)||0;
+  const spend  = parseFloat(qs('#be-spend').value)||0;
+  const cur    = d.currency||'$';
+
+  // persist changes
+  d.fixedCosts       = fixed;
+  d.coversPerDay     = covers;
+  d.avgSpendPerCover = spend;
+  if (!state.isDemo) Storage.set(d);
+
+  const monthlyRev    = covers * spend * 30;
+  const dailyNeeded   = spend>0 ? Math.ceil(fixed / (spend * 30)) : 0;
+  const monthlyProfit = monthlyRev - fixed;
+
+  qs('#be-monthly-rev-needed').textContent  = fmtInt(fixed,cur);
+  qs('#be-daily-covers').textContent        = dailyNeeded || '—';
+  qs('#be-monthly-rev-current').textContent = fmtInt(monthlyRev,cur);
+  qs('#be-covers-label').textContent        = `at ${covers} covers/day × 30 days`;
+
+  const profEl = qs('#be-monthly-profit');
+  profEl.textContent = (monthlyProfit>=0?'+':'-')+fmtInt(Math.abs(monthlyProfit),cur);
+  profEl.className = 'text-2xl font-bold '+(monthlyProfit>=0?'text-profit':'text-loss');
+  const profCard = qs('#be-profit-card');
+  profCard.className = 'rounded-xl p-5 '+(monthlyProfit>=0?'bg-profit-bg':'bg-loss-bg');
+
+  // covers needed card
+  const coversCard = qs('#be-covers-card');
+  const above = covers>=dailyNeeded;
+  coversCard.className = 'rounded-xl p-5 '+(above?'bg-profit-bg':'bg-loss-bg');
+  qs('#be-daily-covers').className = 'text-2xl font-bold '+(above?'text-profit':'text-loss');
+
+  // Progress bar
+  const pct = dailyNeeded>0 ? Math.min((covers/dailyNeeded)*100,100) : (covers>0?100:0);
+  const fill = qs('#be-prog-fill');
+  fill.style.width = pct+'%';
+  fill.className = 'prog-fill '+(above?'good':'');
+  qs('#be-prog-label').textContent = `${covers} current / ${dailyNeeded} needed (break-even)`;
+
+  const badge = qs('#be-status-badge');
+  if (covers>=dailyNeeded && dailyNeeded>0){
+    badge.textContent = `✓ ${covers-dailyNeeded} above break-even`;
+    badge.className = 'text-xs font-bold px-3 py-1 rounded-full bg-profit-bg text-profit';
+  } else if (dailyNeeded>0){
+    badge.textContent = `⚠ ${dailyNeeded-covers} more covers needed`;
+    badge.className = 'text-xs font-bold px-3 py-1 rounded-full bg-loss-bg text-loss';
+  } else {
+    badge.textContent = 'Enter fixed costs above';
+    badge.className = 'text-xs font-bold px-3 py-1 rounded-full bg-surface-container text-outline';
+  }
+
+  // Contribution margin
+  const items = d.menuItems||[];
+  const avgFCpct = items.length>0 ? items.reduce((s,i)=>s+calcItemFC(i),0)/items.length/100 : 0;
+  const contribution = spend * (1 - avgFCpct);
+  qs('#cm-avg-price').textContent     = fmt(spend,cur);
+  qs('#cm-avg-food-cost').textContent = fmt(spend*avgFCpct,cur);
+  qs('#cm-contribution').textContent  = fmt(contribution,cur);
+}
+
+// ── ITEM CRUD ─────────────────────────────────────────
+let _ingRows = [];
+
+function openItemModal(id){
+  _ingRows = [];
+  document.getElementById('item-edit-id').value = id||'';
+  document.getElementById('item-modal-title').textContent = id ? 'Edit Menu Item' : 'Add Menu Item';
+  if (id){
+    const item = (state.data.menuItems||[]).find(x=>x.id===id);
+    if (!item) return;
+    document.getElementById('i-name').value  = item.name;
+    document.getElementById('i-cat').value   = item.cat;
+    document.getElementById('i-price').value = item.price;
+    document.getElementById('i-notes').value = item.notes||'';
+    _ingRows = JSON.parse(JSON.stringify(item.ingredients||[]));
+  } else {
+    document.getElementById('i-name').value  = '';
+    document.getElementById('i-cat').value   = 'Coffee';
+    document.getElementById('i-price').value = '';
+    document.getElementById('i-notes').value = '';
+    _ingRows = [];
+  }
+  renderIngRows();
+  document.getElementById('item-modal').classList.remove('hidden');
+}
+
+function closeItemModal(){
+  document.getElementById('item-modal').classList.add('hidden');
+}
+
+function addIngredientRow(){
+  _ingRows.push({name:'', qty:1, unit:'g', unitCost:0});
+  renderIngRows();
+}
+
+function removeIngredientRow(idx){
+  _ingRows.splice(idx,1);
+  renderIngRows();
+}
+
+function renderIngRows(){
+  const container = qs('#ing-rows');
+  if (_ingRows.length===0){
+    container.innerHTML = '<p class="text-xs text-on-surface-variant italic py-2">No ingredients added yet.</p>';
+    qs('#modal-recipe-cost').textContent = fmt(0);
+    return;
+  }
+  container.innerHTML = _ingRows.map((ing,idx)=>`
+    <div class="ing-row" id="ing-row-${idx}">
+      <input type="text" class="field text-xs py-1.5 px-2" placeholder="Ingredient name" value="${escHtml(ing.name||'')}" oninput="_ingRows[${idx}].name=this.value"/>
+      <input type="number" class="field text-xs py-1.5 px-2" placeholder="Qty" value="${ing.qty||''}" min="0" step="any" oninput="_ingRows[${idx}].qty=parseFloat(this.value)||0;updateModalCost()"/>
+      <input type="text" class="field text-xs py-1.5 px-2" placeholder="Unit" value="${escHtml(ing.unit||'')}" oninput="_ingRows[${idx}].unit=this.value"/>
+      <input type="number" class="field text-xs py-1.5 px-2" placeholder="0.00" value="${ing.unitCost||''}" min="0" step="any" oninput="_ingRows[${idx}].unitCost=parseFloat(this.value)||0;updateModalCost()"/>
+      <span class="text-xs font-semibold text-primary text-right" id="ing-line-${idx}">${fmt((parseFloat(ing.qty)||0)*(parseFloat(ing.unitCost)||0))}</span>
+      <button onclick="removeIngredientRow(${idx})" class="text-error hover:bg-error-container rounded p-0.5 transition-colors"><span class="material-symbols-outlined text-base">remove_circle</span></button>
+    </div>`).join('');
+  updateModalCost();
+}
+
+function updateModalCost(){
+  const total = _ingRows.reduce((s,i)=>s+(parseFloat(i.qty)||0)*(parseFloat(i.unitCost)||0),0);
+  qs('#modal-recipe-cost').textContent = fmt(total);
+  _ingRows.forEach((ing,idx)=>{
+    const lineEl = document.getElementById('ing-line-'+idx);
+    if (lineEl) lineEl.textContent = fmt((parseFloat(ing.qty)||0)*(parseFloat(ing.unitCost)||0));
+  });
+}
+
+function saveItem(){
+  const name  = document.getElementById('i-name').value.trim();
+  const price = parseFloat(document.getElementById('i-price').value)||0;
+  if (!name)  { alert('Item name is required.'); return; }
+  if (!price) { alert('Selling price is required.'); return; }
+  const id = document.getElementById('item-edit-id').value;
+  const item = {
+    id: id||uid(),
+    name,
+    cat:         document.getElementById('i-cat').value,
+    price,
+    notes:       document.getElementById('i-notes').value.trim(),
+    ingredients: _ingRows.filter(r=>r.name).map(r=>({
+      name:r.name.trim(), qty:parseFloat(r.qty)||0, unit:r.unit||'', unitCost:parseFloat(r.unitCost)||0
+    }))
+  };
+  if (!state.data.menuItems) state.data.menuItems=[];
+  if (id){
+    const idx = state.data.menuItems.findIndex(x=>x.id===id);
+    if (idx>-1) state.data.menuItems[idx]=item; else state.data.menuItems.push(item);
+  } else {
+    state.data.menuItems.push(item);
+  }
+  if (!state.isDemo) Storage.set(state.data);
+  closeItemModal();
+  renderMenuItems();
+  renderOverview();
+  if (state.tab==='recipe') renderRecipeTab();
+}
+
+function deleteItem(id){
+  if (!confirm('Delete this menu item?')) return;
+  state.data.menuItems = (state.data.menuItems||[]).filter(i=>i.id!==id);
+  if (!state.isDemo) Storage.set(state.data);
+  renderMenuItems();
+  renderOverview();
+  if (state.tab==='recipe') renderRecipeTab();
+}
+
+// ── FAQ ───────────────────────────────────────────────
+function toggleFaq(btn){
+  const ans  = btn.nextElementSibling;
+  const icon = btn.querySelector('.faq-icon');
+  const open = ans.classList.toggle('open');
+  icon.textContent = open ? 'remove' : 'add';
+}
+
+// ── UTIL ──────────────────────────────────────────────
+function escHtml(str){
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+</script>
+</body>
+</html>
