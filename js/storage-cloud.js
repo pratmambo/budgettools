@@ -157,15 +157,11 @@
     },
 
     async startCheckout(templateId) {
-      if (!window.BT_AUTH?.requireAuth()) return;
-      try {
-        const data = await window.BT_AUTH.apiFetch('/api/create-checkout-session', {
-          method: 'POST',
-          body: JSON.stringify({ template: templateId })
-        });
-        if (data.url) window.location.href = data.url;
-      } catch(e) {
-        alert('Could not start checkout. Please try again.');
+      // Delegate to subscription.js which handles the Razorpay modal
+      if (window.BT_SUB?.startCheckout) {
+        await window.BT_SUB.startCheckout(templateId);
+      } else {
+        window.location.href = '/auth.html?mode=signup';
       }
     }
   };

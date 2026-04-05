@@ -1107,12 +1107,7 @@
 ══════════════════════════════════════════════════════ -->
 <script>
 // ── STORAGE ───────────────────────────────────────────
-const Storage = {
-  KEY: 'bt_inventory_v1',
-  get()  { try { return JSON.parse(localStorage.getItem(this.KEY)) || null; } catch(e) { return null; } },
-  set(d) { try { localStorage.setItem(this.KEY, JSON.stringify(d)); } catch(e) {} },
-  clear(){ localStorage.removeItem(this.KEY); }
-};
+// Storage + cloud sync provided by /js/storage-cloud.js (loaded before </body>)
 
 // ── DEMO DATA ─────────────────────────────────────────
 const DEMO = {
@@ -1160,8 +1155,8 @@ let state = {
 };
 
 // ── INIT ──────────────────────────────────────────────
-window.addEventListener('DOMContentLoaded', () => {
-  const saved = Storage.get();
+window.addEventListener('DOMContentLoaded', async () => {
+  const saved = await Storage.get();
   if (saved) {
     state.data = saved;
     state.isDemo = false;
@@ -1200,6 +1195,7 @@ function enterDemo() {
   state.tab = 'overview';
   state.orderedFlags = {};
   showApp();
+  setTimeout(() => window.BT_SUB?.injectSaveBanner('inventory'), 8000);
 }
 
 function exitToLanding() {
@@ -1862,5 +1858,11 @@ function toggleFaq(btn) {
   icon.textContent = open ? 'remove' : 'add';
 }
 </script>
+<!-- ── AUTH + CLOUD STORAGE ─────────────────────────────── -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="/js/auth.js"></script>
+<script>window.TEMPLATE_KEY = 'bt_inventory_v1';</script>
+<script src="/js/storage-cloud.js"></script>
+<script src="/js/subscription.js"></script>
 </body>
 </html>
