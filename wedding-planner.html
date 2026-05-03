@@ -6,7 +6,7 @@
   <title>Free Wedding Planner Online — Budget, Guest List & Vendor Tracker | BudgetTools</title>
   <meta name="description" content="Plan your entire wedding for free. Track your budget vs actual spend, manage your guest list with RSVP and meal tracking, organise vendors, and never miss a payment — all beautifully designed and ready in 60 seconds."/>
   <meta name="keywords" content="free wedding planner, wedding budget tracker, wedding guest list, wedding vendor tracker, wedding checklist, online wedding planner, wedding planning app"/>
-  <link rel="canonical" href="https://budgettools.app/wedding-planner"/>
+  <link rel="canonical" href="https://budgettemplates.shop/wedding-planner"/>
   <meta property="og:title" content="Free Wedding Planner — Budget, Guests & Vendors | BudgetTools"/>
   <meta property="og:description" content="65% of couples go over budget. BudgetTools helps you stay on track — free, beautiful, and ready in 60 seconds."/>
   <meta property="og:type" content="website"/>
@@ -83,7 +83,7 @@
   <script type="application/ld+json">
   {"@context":"https://schema.org","@type":"WebApplication","name":"BudgetTools Wedding Planner",
    "description":"Free online wedding planner with budget tracker, guest list manager, vendor hub, and wedding checklist",
-   "url":"https://budgettools.app/wedding-planner","applicationCategory":"LifestyleApplication",
+   "url":"https://budgettemplates.shop/wedding-planner","applicationCategory":"LifestyleApplication",
    "offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},
    "featureList":["Wedding Budget Tracker","Guest List & RSVP Manager","Vendor Contract Hub","Wedding Checklist","Payment Scheduler","Hidden Cost Calculator"]}
   </script>
@@ -94,10 +94,10 @@
      DEMO BANNER (shown in demo mode)
 ═══════════════════════════════════════════ -->
 <div id="demo-banner" class="hidden fixed top-0 left-0 right-0 z-50 grad-sage text-white text-center py-2.5 px-4 text-sm font-semibold flex items-center justify-center gap-3">
-  <span class="material-symbols-outlined text-base filled">visibility</span>
-  You're exploring a demo with sample data.
-  <button onclick="showSetupModal()" class="bg-white/20 hover:bg-white/30 px-4 py-1 rounded-full text-xs font-bold transition-colors ml-2">
-    Use My Own Data →
+  <span class="material-symbols-outlined text-base filled">timer</span>
+  Trial mode — <span id="trial-countdown">10:00</span> remaining.
+  <button onclick="window.BT_SUB?.showUpgradeModal('wedding')" class="bg-white/20 hover:bg-white/30 px-4 py-1 rounded-full text-xs font-bold transition-colors ml-2">
+    Unlock Full Access →
   </button>
 </div>
 
@@ -116,6 +116,12 @@
       <a href="#faq" class="text-on-surface-variant hover:text-primary transition-colors font-medium">FAQ</a>
     </div>
     <div class="flex items-center gap-3">
+      <a href="/auth.html" data-bt-login class="text-primary text-sm font-medium hover:underline hidden sm:block">Sign In</a>
+      <div data-bt-account style="display:none" class="flex items-center gap-2">
+        <span data-bt-avatar class="flex items-center justify-center w-7 h-7 rounded-full bg-primary text-white text-xs font-bold flex-shrink-0 cursor-default">?</span>
+        <span data-bt-user-email class="text-xs text-on-surface-variant hidden md:block max-w-[120px] truncate"></span>
+        <button data-bt-signout class="text-xs text-on-surface-variant hover:text-error font-medium hidden sm:block">Sign out</button>
+      </div>
       <button onclick="enterDemo()" class="text-primary font-semibold text-sm hover:underline hidden sm:block">Try Demo</button>
       <button onclick="showSetupModal()" class="grad-sage text-white px-5 py-2.5 rounded-lg font-bold text-sm hover:opacity-90 transition-opacity">
         Start Free
@@ -172,7 +178,7 @@
               <div class="w-2.5 h-2.5 rounded-full bg-yellow-400/70"></div>
               <div class="w-2.5 h-2.5 rounded-full bg-green-400/70"></div>
             </div>
-            <div class="flex-1 mx-3 h-4 bg-surface-container rounded text-[9px] text-outline flex items-center justify-center">budgettools.app/wedding-planner</div>
+            <div class="flex-1 mx-3 h-4 bg-surface-container rounded text-[9px] text-outline flex items-center justify-center">budgettemplates.shop/wedding-planner</div>
           </div>
           <div class="flex" style="height:340px">
             <div class="w-44 bg-white border-r border-slate-100 p-3 flex flex-col gap-1 flex-shrink-0">
@@ -489,7 +495,7 @@
     </div>
     <div class="flex flex-wrap gap-8">
       <div><p class="font-semibold text-on-surface mb-2">Templates</p><ul class="space-y-1.5 text-on-surface-variant text-xs"><li><a href="wedding-planner.html" class="hover:text-primary">Wedding Planner</a></li><li><a href="event-budget.html" class="hover:text-primary">Event Budget</a></li></ul></div>
-      <div><p class="font-semibold text-on-surface mb-2">Company</p><ul class="space-y-1.5 text-on-surface-variant text-xs"><li><a href="index.html" class="hover:text-primary">Home</a></li><li><a href="#" class="hover:text-primary">Contact</a></li></ul></div>
+      <div><p class="font-semibold text-on-surface mb-2">Company</p><ul class="space-y-1.5 text-on-surface-variant text-xs"><li><a href="index.html" class="hover:text-primary">Home</a></li><li><a href="/contact.html" class="hover:text-primary">Contact</a></li><li><a href="/privacy.html" class="hover:text-primary">Privacy</a></li><li><a href="/terms.html" class="hover:text-primary">Terms</a></li></ul></div>
     </div>
   </div>
   <div class="border-t border-outline-variant/10 py-5 px-6 max-w-7xl mx-auto text-xs text-on-surface-variant flex justify-between">
@@ -525,6 +531,14 @@
     </nav>
     <div class="p-4 border-t border-outline-variant/20 space-y-0.5">
       <button onclick="prepareSettings()" class="nav-item inactive w-full"><span class="material-symbols-outlined text-xl">settings</span> Settings</button>
+      <a href="/auth.html" data-bt-login class="nav-item inactive w-full"><span class="material-symbols-outlined text-xl">login</span> Sign In</a>
+      <div data-bt-account style="display:none">
+        <div class="flex items-center gap-2 px-3 py-2">
+          <span data-bt-avatar class="flex items-center justify-center w-7 h-7 rounded-full bg-primary text-white text-xs font-bold flex-shrink-0 cursor-default">?</span>
+          <span data-bt-user-email class="text-xs text-on-surface-variant truncate"></span>
+        </div>
+        <button data-bt-signout class="nav-item inactive w-full"><span class="material-symbols-outlined text-xl">logout</span> Sign Out</button>
+      </div>
     </div>
   </aside>
 
@@ -1073,7 +1087,7 @@ function enterDemo(){
   const mh=$('mobile-header');
   if(mh)mh.style.paddingTop='40px';
   updateGlobalUI(); switchTab('dashboard');
-  setTimeout(() => window.BT_SUB?.injectSaveBanner('wedding'), 8000);
+  if (window.BT_TRIAL) window.BT_TRIAL.start('wedding');
 }
 
 function exitToLanding(){
@@ -1369,5 +1383,6 @@ document.addEventListener('DOMContentLoaded', () => init().catch(console.error))
 <script>window.TEMPLATE_KEY = 'bt_wedding_v2';</script>
 <script src="/js/storage-cloud.js"></script>
 <script src="/js/subscription.js"></script>
+<script src="/js/trial.js"></script>
 </body>
 </html>

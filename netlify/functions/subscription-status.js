@@ -28,6 +28,16 @@ exports.handler = async (event) => {
     };
   }
 
+  // Admin accounts get full access to every template without a subscription
+  const ADMIN_EMAILS = ['preetam.juturu@gmail.com'];
+  if (ADMIN_EMAILS.includes(user.email)) {
+    return {
+      statusCode: 200,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ hasAccess: true, status: 'admin', templateKey: event.queryStringParameters?.template })
+    };
+  }
+
   const templateKey = event.queryStringParameters?.template;
   if (!templateKey) {
     return { statusCode: 400, body: JSON.stringify({ error: 'template param required' }) };

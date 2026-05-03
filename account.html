@@ -337,11 +337,11 @@
 <!-- ── FOOTER ─────────────────────────────────────────────── -->
 <footer class="border-t border-outline-variant/20 py-6 mt-auto">
   <div class="max-w-4xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-2">
-    <p class="text-xs text-outline">© 2025 BudgetTools</p>
+    <p class="text-xs text-outline">© 2026 BudgetTools</p>
     <div class="flex gap-5 text-xs text-outline">
       <a href="/index.html" class="hover:text-on-surface transition-colors">Home</a>
-      <a href="#" class="hover:text-on-surface transition-colors">Privacy</a>
-      <a href="#" class="hover:text-on-surface transition-colors">Terms</a>
+      <a href="/privacy.html" class="hover:text-on-surface transition-colors">Privacy</a>
+      <a href="/terms.html" class="hover:text-on-surface transition-colors">Terms</a>
     </div>
   </div>
 </footer>
@@ -350,7 +350,9 @@
   // ── CONFIG ──────────────────────────────────────────────────
   const SUPABASE_URL = 'https://sidrjbvjkbfmzrsojtkp.supabase.co';
   const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNpZHJqYnZqa2JmbXpyc29qdGtwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU0MDk0MzcsImV4cCI6MjA5MDk4NTQzN30.IiFfDhDAomrfZk-msDTdC-w1bbcF71DtEDfIrIoN3NQ';
-  const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+    auth: { persistSession: true, autoRefreshToken: true, flowType: 'pkce' }
+  });
 
   // ── AUTH GUARD ──────────────────────────────────────────────
   supabase.auth.getSession().then(({ data: { session } }) => {
@@ -495,6 +497,11 @@
         </div>
       `;
     }).join('');
+  }
+
+  // ── MANAGE BILLING ──────────────────────────────────────────
+  function handleManageBilling() {
+    document.getElementById('billing-section').scrollIntoView({ behavior: 'smooth' });
   }
 
   // ── SIGN OUT ────────────────────────────────────────────────

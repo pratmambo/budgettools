@@ -9,8 +9,8 @@
   <meta property="og:title" content="Inventory Management Tracker | BudgetTools"/>
   <meta property="og:description" content="Never run out of stock — or drown in it. Track levels, get low-stock alerts, and see your total stock value in real time. Free forever."/>
   <meta property="og:type" content="website"/>
-  <meta property="og:url" content="https://profound-biscuit-1631a5.netlify.app/inventory.html"/>
-  <link rel="canonical" href="https://profound-biscuit-1631a5.netlify.app/inventory.html"/>
+  <meta property="og:url" content="https://budgettemplates.shop/inventory.html"/>
+  <link rel="canonical" href="https://budgettemplates.shop/inventory.html"/>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
   <script src="https://cdn.tailwindcss.com?plugins=forms"></script>
@@ -63,7 +63,7 @@
     "@type": "WebApplication",
     "name": "Inventory Management Tracker",
     "description": "Free online inventory tracker for small businesses. Track stock levels, reorder points, stock value, and supplier info. Get automatic low-stock alerts.",
-    "url": "https://profound-biscuit-1631a5.netlify.app/inventory.html",
+    "url": "https://budgettemplates.shop/inventory.html",
     "applicationCategory": "BusinessApplication",
     "operatingSystem": "Any",
     "offers": {
@@ -159,10 +159,10 @@
 ══════════════════════════════════════════════════════ -->
 <div id="demo-banner" class="hidden">
   <div class="flex items-center gap-2">
-    <span class="material-symbols-outlined text-base filled">info</span>
-    <span>You're exploring a <strong>demo inventory</strong> — Bloom Bakery &amp; Cafe. No data is saved.</span>
+    <span class="material-symbols-outlined text-base filled">timer</span>
+    <span>Trial — <strong id="trial-countdown">10:00</strong> left. Exploring <strong>demo inventory</strong> — Bloom Bakery &amp; Cafe.</span>
   </div>
-  <button onclick="showSetupModal()" class="ml-auto bg-white/20 hover:bg-white/30 transition-colors px-4 py-1.5 rounded-full text-xs font-bold">Use My Own Data →</button>
+  <button onclick="window.BT_SUB?.showUpgradeModal('inventory')" class="ml-auto bg-white/20 hover:bg-white/30 transition-colors px-4 py-1.5 rounded-full text-xs font-bold whitespace-nowrap">Unlock Full Access →</button>
 </div>
 
 <!-- ══════════════════════════════════════════════════════
@@ -179,6 +179,12 @@
       </a>
       <div class="flex items-center gap-3">
         <button onclick="enterDemo()" class="text-white/70 hover:text-white text-sm font-medium transition-colors hidden md:block">View Demo</button>
+        <a href="/auth.html" data-bt-login class="text-white/70 hover:text-white text-sm font-medium transition-colors hidden md:block">Sign In</a>
+        <div data-bt-account style="display:none" class="flex items-center gap-2">
+          <span data-bt-avatar class="flex items-center justify-center w-7 h-7 rounded-full bg-white/20 text-white text-xs font-bold border border-white/30">?</span>
+          <span data-bt-user-email class="text-white/70 text-xs hidden md:block max-w-[100px] truncate"></span>
+          <button data-bt-signout class="text-white/70 hover:text-white text-xs font-medium border border-white/30 rounded-md px-2.5 py-1">Sign Out</button>
+        </div>
         <button onclick="showSetupModal()" class="bg-white text-primary text-sm font-bold px-5 py-2.5 rounded-full hover:bg-primary-fixed transition-colors">Get Started Free</button>
       </div>
     </nav>
@@ -551,10 +557,13 @@
         <p class="font-headline text-white text-lg mb-1">BudgetTools</p>
         <p class="text-white/40 text-xs">Free financial planning tools for every life event.</p>
       </div>
-      <div class="flex gap-6 text-white/50 text-sm">
+      <div class="flex flex-wrap gap-x-6 gap-y-2 text-white/50 text-sm">
         <a href="index.html" class="hover:text-white transition-colors">Home</a>
         <a href="event-budget.html" class="hover:text-white transition-colors">Event Budget</a>
         <a href="inventory.html" class="hover:text-white transition-colors">Inventory</a>
+        <a href="/privacy.html" class="hover:text-white transition-colors">Privacy</a>
+        <a href="/terms.html" class="hover:text-white transition-colors">Terms</a>
+        <a href="/contact.html" class="hover:text-white transition-colors">Contact</a>
       </div>
       <p class="text-white/30 text-xs">© 2026 BudgetTools. All rights reserved.</p>
     </div>
@@ -839,6 +848,14 @@
     <div class="p-4 border-t border-outline-variant/20 space-y-1">
       <button onclick="prepareSettings()" class="nav-item inactive w-full"><span class="material-symbols-outlined text-xl">settings</span> Settings</button>
       <button onclick="exitToLanding()" class="nav-item inactive w-full"><span class="material-symbols-outlined text-xl">home</span> Home</button>
+      <a href="/auth.html" data-bt-login class="nav-item inactive w-full"><span class="material-symbols-outlined text-xl">login</span> Sign In</a>
+      <div data-bt-account style="display:none">
+        <div class="flex items-center gap-2 px-3 py-2">
+          <span data-bt-avatar class="flex items-center justify-center w-7 h-7 rounded-full bg-primary text-white text-xs font-bold flex-shrink-0 cursor-default">?</span>
+          <span data-bt-user-email class="text-xs text-on-surface-variant truncate"></span>
+        </div>
+        <button data-bt-signout class="nav-item inactive w-full"><span class="material-symbols-outlined text-xl">logout</span> Sign Out</button>
+      </div>
     </div>
   </aside>
 
@@ -869,6 +886,14 @@
     <div class="p-4 border-t border-outline-variant/20 space-y-1">
       <button onclick="prepareSettings();toggleDrawer()" class="nav-item inactive w-full"><span class="material-symbols-outlined text-xl">settings</span> Settings</button>
       <button onclick="exitToLanding();toggleDrawer()" class="nav-item inactive w-full"><span class="material-symbols-outlined text-xl">home</span> Home</button>
+      <a href="/auth.html" data-bt-login class="nav-item inactive w-full"><span class="material-symbols-outlined text-xl">login</span> Sign In</a>
+      <div data-bt-account style="display:none">
+        <div class="flex items-center gap-2 px-3 py-2">
+          <span data-bt-avatar class="flex items-center justify-center w-7 h-7 rounded-full bg-primary text-white text-xs font-bold flex-shrink-0 cursor-default">?</span>
+          <span data-bt-user-email class="text-xs text-on-surface-variant truncate"></span>
+        </div>
+        <button data-bt-signout class="nav-item inactive w-full"><span class="material-symbols-outlined text-xl">logout</span> Sign Out</button>
+      </div>
     </div>
   </div>
 
@@ -1195,7 +1220,7 @@ function enterDemo() {
   state.tab = 'overview';
   state.orderedFlags = {};
   showApp();
-  setTimeout(() => window.BT_SUB?.injectSaveBanner('inventory'), 8000);
+  if (window.BT_TRIAL) window.BT_TRIAL.start('inventory');
 }
 
 function exitToLanding() {
@@ -1864,5 +1889,6 @@ function toggleFaq(btn) {
 <script>window.TEMPLATE_KEY = 'bt_inventory_v1';</script>
 <script src="/js/storage-cloud.js"></script>
 <script src="/js/subscription.js"></script>
+<script src="/js/trial.js"></script>
 </body>
 </html>

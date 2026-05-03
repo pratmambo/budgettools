@@ -1,14 +1,13 @@
+functionsDirectory = "C:\\Users\\preet\\OneDrive\\Documents\\BudgetTools\\budgettools\\netlify\\functions"
+functionsDirectoryOrigin = "config-v1"
+headersOrigin = "config"
+redirectsOrigin = "config"
 plugins = []
-headers = []
-redirects = []
-
-[functions]
-
-[functions."*"]
 
 [build]
-publish = "C:\\Users\\59679\\OneDrive - Bain\\Documents\\BudgetTools"
-publishOrigin = "default"
+publish = "C:\\Users\\preet\\OneDrive\\Documents\\BudgetTools\\budgettools"
+publishOrigin = "config"
+functions = "C:\\Users\\preet\\OneDrive\\Documents\\BudgetTools\\budgettools\\netlify\\functions"
 
 [build.environment]
 
@@ -23,3 +22,59 @@ publishOrigin = "default"
 [build.processing.js]
 
 [build.services]
+
+[functions]
+
+[functions."*"]
+node_bundler = "esbuild"
+
+[[headers]]
+for = "/*.html"
+
+[headers.values]
+X-Frame-Options = "DENY"
+X-Content-Type-Options = "nosniff"
+Referrer-Policy = "strict-origin-when-cross-origin"
+Cache-Control = "no-cache, no-store, must-revalidate"
+
+[[headers]]
+for = "/js/*"
+
+[headers.values]
+Cache-Control = "public, max-age=86400"
+
+[[redirects]]
+from = "/api/*"
+to = "/.netlify/functions/:splat"
+status = 200.0
+force = false
+
+[redirects.query]
+
+[redirects.conditions]
+
+[redirects.headers]
+
+[[redirects]]
+from = "/webhooks/razorpay"
+to = "/.netlify/functions/payment-webhook"
+status = 200.0
+force = false
+
+[redirects.query]
+
+[redirects.conditions]
+
+[redirects.headers]
+
+[[redirects]]
+from = "/auth/callback"
+to = "/auth.html?mode=callback"
+status = 200.0
+force = false
+
+[redirects.query]
+
+[redirects.conditions]
+
+[redirects.headers]

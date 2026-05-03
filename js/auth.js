@@ -20,6 +20,7 @@
       persistSession: true,
       autoRefreshToken: true,
       detectSessionInUrl: true,
+      flowType: 'pkce',
     }
   });
 
@@ -87,10 +88,12 @@
       window.dispatchEvent(new CustomEvent('bt:auth:ready', {
         detail: { user: window.BT_AUTH.user, isLoggedIn: !!window.BT_AUTH.user }
       }));
+      window.BT_AUTH.updateNav();
     } catch (e) {
       console.warn('BudgetTools auth init failed:', e);
       window.BT_AUTH.isLoading = false;
       window.dispatchEvent(new CustomEvent('bt:auth:ready', { detail: { user: null, isLoggedIn: false } }));
+      window.BT_AUTH.updateNav();
     }
 
     // Listen for auth changes (token refresh, sign-out, etc.)
@@ -100,26 +103,35 @@
       window.dispatchEvent(new CustomEvent('bt:auth:change', {
         detail: { event, user: window.BT_AUTH.user }
       }));
+      window.BT_AUTH.updateNav();
     });
   }
 
   init();
 
   // ── Nav UI helper ─────────────────────────────────────────
-  // Call this after DOMContentLoaded to update nav links based on auth state
+  // Called automatically on auth ready/change. Also callable manually.
   window.BT_AUTH.updateNav = function() {
-    const loginLinks = document.querySelectorAll('[data-bt-login]');
-    const accountLinks = document.querySelectorAll('[data-bt-account]');
-    const userEmailEls = document.querySelectorAll('[data-bt-user-email]');
+    const loggedIn = !!window.BT_AUTH.user;
+    const email = window.BT_AUTH.user?.email || '';
+    const initial = email.charAt(0).toUpperCase() || '?';
 
-    if (window.BT_AUTH.isLoggedIn()) {
-      loginLinks.forEach(el => el.style.display = 'none');
-      accountLinks.forEach(el => el.style.display = '');
-      userEmailEls.forEach(el => el.textContent = window.BT_AUTH.user?.email || '');
-    } else {
-      loginLinks.forEach(el => el.style.display = '');
-      accountLinks.forEach(el => el.style.display = 'none');
-    }
+    document.querySelectorAll('[data-bt-login]').forEach(el => {
+      el.style.display = loggedIn ? 'none' : '';
+    });
+    document.querySelectorAll('[data-bt-account]').forEach(el => {
+      el.style.display = loggedIn ? '' : 'none';
+    });
+    document.querySelectorAll('[data-bt-user-email]').forEach(el => {
+      el.textContent = email;
+    });
+    document.querySelectorAll('[data-bt-avatar]').forEach(el => {
+      el.textContent = initial;
+      el.title = email;
+    });
+    document.querySelectorAll('[data-bt-signout]').forEach(el => {
+      el.onclick = () => window.BT_AUTH.signOut();
+    });
   };
 
 })();

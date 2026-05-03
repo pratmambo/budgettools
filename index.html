@@ -6,11 +6,11 @@
   <title>BudgetTools | Free Financial Calculators & Premium Planning Templates</title>
   <meta name="description" content="10 free financial calculators — wedding budget, event break-even, freelancer take-home, rental yield, and more. Plus premium planning templates for weddings, events, travel, cafe costing, and inventory."/>
   <meta name="robots" content="index, follow"/>
-  <link rel="canonical" href="https://profound-biscuit-1631a5.netlify.app/"/>
+  <link rel="canonical" href="https://budgettemplates.shop/"/>
   <meta property="og:title" content="BudgetTools | Free Calculators & Premium Planning Tools"/>
   <meta property="og:description" content="Free financial calculators for every life event. Premium planning templates for weddings, events, travel, cafes, and inventory management."/>
   <meta property="og:type" content="website"/>
-  <meta property="og:url" content="https://profound-biscuit-1631a5.netlify.app"/>
+  <meta property="og:url" content="https://budgettemplates.shop"/>
   <meta name="twitter:card" content="summary_large_image"/>
   <meta name="twitter:title" content="BudgetTools | Free Calculators & Premium Planning Tools"/>
   <meta name="twitter:description" content="Free financial calculators. Premium planning templates. No spreadsheets needed."/>
@@ -68,7 +68,7 @@
     "@type": "WebApplication",
     "name": "BudgetTools",
     "description": "Free online planning tools for weddings, events, and personal budgets",
-    "url": "https://budgettools.app",
+    "url": "https://budgettemplates.shop",
     "applicationCategory": "FinanceApplication",
     "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
     "featureList": ["Wedding Planner","Guest List Manager","Budget Tracker","Vendor Management","Wedding Checklist","Payment Tracker"]
@@ -90,11 +90,14 @@
     <div class="flex items-center gap-3">
       <a href="#calculators" class="text-on-surface-variant font-medium hover:text-primary transition-colors text-sm hidden sm:block">Try Free Calculators</a>
       <!-- Auth nav: shown/hidden by js/auth.js based on session state -->
-      <a href="/auth.html" data-bt-login style="display:none" class="text-on-surface-variant font-medium hover:text-primary transition-colors text-sm">Log In</a>
-      <a href="/account.html" data-bt-account style="display:none" class="items-center gap-2 text-on-surface-variant font-medium hover:text-primary transition-colors text-sm">
-        <span class="material-symbols-outlined text-base">account_circle</span>
-        <span class="hidden sm:inline">Account</span>
-      </a>
+      <a href="/auth.html" data-bt-login class="text-on-surface-variant font-medium hover:text-primary transition-colors text-sm border border-outline-variant px-4 py-2 rounded-lg hover:border-primary">Log In</a>
+      <div data-bt-account style="display:none" class="flex items-center gap-2">
+        <a href="/account.html" class="flex items-center justify-center w-8 h-8 rounded-full bg-primary text-white text-xs font-bold hover:opacity-90 transition-opacity flex-shrink-0">
+          <span data-bt-avatar>?</span>
+        </a>
+        <span data-bt-user-email class="text-sm text-on-surface-variant hidden lg:block max-w-[140px] truncate"></span>
+        <button data-bt-signout class="text-sm text-on-surface-variant hover:text-error transition-colors font-medium hidden sm:block">Sign out</button>
+      </div>
       <a href="#templates" class="grad-primary text-white px-5 py-2.5 rounded-lg font-semibold hover:opacity-90 transition-opacity text-sm">
         View Templates
       </a>
@@ -167,7 +170,7 @@
               </div>
               <div class="flex-1 mx-4">
                 <div class="bg-white rounded px-3 py-0.5 text-[11px] text-slate-400 max-w-xs mx-auto text-center border border-slate-200">
-                  budgettools.app/wedding-planner
+                  budgettemplates.shop/wedding-planner
                 </div>
               </div>
             </div>
@@ -694,17 +697,17 @@
       <div>
         <h4 class="font-semibold text-on-surface mb-3">Company</h4>
         <ul class="space-y-2 text-on-surface-variant">
-          <li><a href="#" class="hover:text-primary transition-colors">About</a></li>
+          <li><a href="/about.html" class="hover:text-primary transition-colors">About Us</a></li>
           <li><a href="#pricing" class="hover:text-primary transition-colors">Pricing</a></li>
-          <li><a href="#" class="hover:text-primary transition-colors">Blog</a></li>
-          <li><a href="#" class="hover:text-primary transition-colors">Contact</a></li>
+          <li><a href="/contact.html" class="hover:text-primary transition-colors">Contact</a></li>
         </ul>
       </div>
       <div>
         <h4 class="font-semibold text-on-surface mb-3">Legal</h4>
         <ul class="space-y-2 text-on-surface-variant">
-          <li><a href="#" class="hover:text-primary transition-colors">Privacy Policy</a></li>
-          <li><a href="#" class="hover:text-primary transition-colors">Terms of Service</a></li>
+          <li><a href="/privacy.html" class="hover:text-primary transition-colors">Privacy Policy</a></li>
+          <li><a href="/terms.html" class="hover:text-primary transition-colors">Terms of Service</a></li>
+          <li><a href="/terms.html#refund-policy" class="hover:text-primary transition-colors">Refund Policy</a></li>
         </ul>
       </div>
     </div>

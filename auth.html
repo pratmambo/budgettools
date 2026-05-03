@@ -57,6 +57,7 @@
     @keyframes spin { to { transform: rotate(360deg); } }
     .spinner { animation: spin 0.8s linear infinite; }
     input:focus { outline: none; box-shadow: 0 0 0 3px rgba(0,53,95,0.15); }
+    #login-password, #signup-password { padding-right: 2.75rem; }
     .form-input {
       width: 100%;
       padding: 0.625rem 0.875rem;
@@ -73,6 +74,15 @@
   </style>
 </head>
 <body class="bg-surface min-h-screen flex">
+<script>
+  // Surface any JS error as a visible banner so we can diagnose issues
+  window.onerror = function(msg, src, line, col) {
+    var b = document.createElement('div');
+    b.style.cssText = 'position:fixed;top:0;left:0;right:0;background:#b91c1c;color:#fff;padding:12px 16px;z-index:99999;font-size:13px;font-family:monospace;line-height:1.4';
+    b.textContent = 'JS ERROR (line ' + line + '): ' + msg;
+    document.body.prepend(b);
+  };
+</script>
 
 <!-- ── SPLIT LAYOUT ───────────────────────────────────────── -->
 <div class="flex w-full min-h-screen">
@@ -152,6 +162,12 @@
       <a href="/index.html" class="text-blue-200 text-sm hover:text-white transition-colors">← Home</a>
     </div>
 
+    <!-- SDK error banner (shown if Supabase CDN fails to load) -->
+    <div id="sdk-error-banner" style="display:none" class="bg-red-50 border-b border-red-200 px-6 py-3 flex items-center gap-3 text-sm text-red-700">
+      <span class="material-symbols-outlined text-lg flex-shrink-0">error</span>
+      <span><strong>Auth service unavailable.</strong> Could not load the authentication library. Check your internet connection and refresh the page.</span>
+    </div>
+
     <!-- Form area -->
     <div class="flex-1 flex items-center justify-center px-6 py-12">
       <div class="w-full max-w-md">
@@ -201,8 +217,8 @@
               <label for="login-password" class="block text-sm font-medium text-on-surface mb-1.5">Password</label>
               <div class="relative">
                 <input id="login-password" type="password" placeholder="Your password" class="form-input pr-10" autocomplete="current-password"/>
-                <button type="button" onclick="togglePassword('login-password', this)" class="absolute right-3 top-1/2 -translate-y-1/2 text-outline hover:text-on-surface-variant transition-colors" tabindex="-1">
-                  <span class="material-symbols-outlined text-lg" id="login-pw-icon">visibility</span>
+                <button type="button" onclick="togglePassword('login-password', 'login-pw-icon')" class="absolute right-3 top-1/2 -translate-y-1/2 text-outline hover:text-on-surface-variant transition-colors p-1 z-10" style="z-index:10" tabindex="-1" aria-label="Toggle password visibility">
+                  <span class="material-symbols-outlined text-xl" id="login-pw-icon">visibility</span>
                 </button>
               </div>
             </div>
@@ -271,8 +287,8 @@
               <label for="signup-password" class="block text-sm font-medium text-on-surface mb-1.5">Password</label>
               <div class="relative">
                 <input id="signup-password" type="password" placeholder="Min. 8 characters" class="form-input pr-10" autocomplete="new-password" oninput="updateStrength(this.value)"/>
-                <button type="button" onclick="togglePassword('signup-password', this)" class="absolute right-3 top-1/2 -translate-y-1/2 text-outline hover:text-on-surface-variant transition-colors" tabindex="-1">
-                  <span class="material-symbols-outlined text-lg" id="signup-pw-icon">visibility</span>
+                <button type="button" onclick="togglePassword('signup-password', 'signup-pw-icon')" class="absolute right-3 top-1/2 -translate-y-1/2 text-outline hover:text-on-surface-variant transition-colors p-1 z-10" style="z-index:10" tabindex="-1" aria-label="Toggle password visibility">
+                  <span class="material-symbols-outlined text-xl" id="signup-pw-icon">visibility</span>
                 </button>
               </div>
               <!-- Password strength -->
@@ -318,8 +334,8 @@
           </p>
           <p class="text-center text-xs text-outline mt-3 leading-relaxed">
             By creating an account, you agree to our
-            <a href="#" class="underline hover:no-underline">Terms of Service</a> and
-            <a href="#" class="underline hover:no-underline">Privacy Policy</a>.
+            <a href="/terms.html" class="underline hover:no-underline">Terms of Service</a> and
+            <a href="/privacy.html" class="underline hover:no-underline">Privacy Policy</a>.
           </p>
         </div>
 
@@ -373,7 +389,7 @@
 
     <!-- Footer -->
     <div class="px-6 pb-6 text-center">
-      <p class="text-xs text-outline">© 2025 BudgetTools · <a href="/index.html" class="hover:underline">Home</a></p>
+      <p class="text-xs text-outline">© 2026 BudgetTools · <a href="/index.html" class="hover:underline">Home</a></p>
     </div>
   </div>
 </div>
@@ -382,22 +398,39 @@
   // ── CONFIG ──────────────────────────────────────────────────
   const SUPABASE_URL = 'https://sidrjbvjkbfmzrsojtkp.supabase.co';
   const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNpZHJqYnZqa2JmbXpyc29qdGtwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU0MDk0MzcsImV4cCI6MjA5MDk4NTQzN30.IiFfDhDAomrfZk-msDTdC-w1bbcF71DtEDfIrIoN3NQ';
-  const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+  // ── SAFE SUPABASE INIT ───────────────────────────────────────
+  let sb = null;
+  try {
+    if (!window.supabase) throw new Error('SDK not loaded');
+    supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+      auth: {
+        persistSession: true,
+        autoRefreshToken: true,
+        detectSessionInUrl: true,
+        flowType: 'pkce',
+      }
+    });
+  } catch (e) {
+    console.error('Supabase init failed:', e);
+    document.addEventListener('DOMContentLoaded', () => {
+      const banner = document.getElementById('sdk-error-banner');
+      if (banner) banner.style.display = 'flex';
+    });
+  }
 
   // ── URL PARAMS ──────────────────────────────────────────────
   const params = new URLSearchParams(window.location.search);
   const mode = params.get('mode') || 'login';
-  const next = params.get('next') || '/account.html';
+  const next = params.get('next') || '/index.html';
 
   // ── INIT ────────────────────────────────────────────────────
   document.addEventListener('DOMContentLoaded', () => {
-    // Check existing session (skip in callback mode)
-    if (mode !== 'callback') {
-      supabase.auth.getSession().then(({ data: { session } }) => {
-        if (session) window.location.href = next;
-      });
-    }
     showMode(mode);
+    if (!supabase || mode === 'callback') return;
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session) window.location.href = next;
+    });
   });
 
   function showMode(m) {
@@ -412,29 +445,49 @@
     url.searchParams.set('mode', m);
     history.pushState({}, '', url);
     showMode(m);
+    clearAllAlerts();
+  }
+
+  function clearAllAlerts() {
+    document.querySelectorAll('[id$="-alert"]').forEach(el => el.classList.add('hidden'));
+    document.querySelectorAll('[id$="-success"]').forEach(el => el.classList.add('hidden'));
   }
 
   // ── CALLBACK HANDLER ────────────────────────────────────────
-  if (mode === 'callback') {
-    // Handle hash fragment (magic link)
+  if (mode === 'callback' && supabase) {
     supabase.auth.onAuthStateChange((event, session) => {
-      if (event === 'SIGNED_IN' && session) {
+      if ((event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') && session) {
         window.location.href = next;
       }
     });
 
-    // Handle PKCE code exchange (OAuth)
-    supabase.auth.exchangeCodeForSession(window.location.href).catch(() => {
-      // Not a PKCE flow, handled by onAuthStateChange
-    });
+    // Extract the auth code from the URL (PKCE flow) and exchange it
+    const authCode = params.get('code');
+    if (authCode) {
+      supabase.auth.exchangeCodeForSession(authCode).then(({ error }) => {
+        if (error) {
+          console.error('Code exchange failed:', error.message);
+          document.getElementById('callback-error').classList.remove('hidden');
+          document.getElementById('callback-error-msg').textContent = error.message || 'The link may have expired or already been used.';
+          const spinner = document.querySelector('#mode-callback .spinner');
+          if (spinner) spinner.classList.add('hidden');
+        }
+      }).catch((e) => {
+        console.error('Code exchange error:', e);
+      });
+    }
 
-    // Fallback timeout — show error if nothing happens
+    // Fallback: if no code param, check for hash-based session (implicit flow)
+    // or wait for detectSessionInUrl to handle it
     setTimeout(() => {
       supabase.auth.getSession().then(({ data: { session } }) => {
-        if (!session) {
+        if (session) {
+          window.location.href = next;
+        } else if (!authCode) {
           document.getElementById('callback-error').classList.remove('hidden');
           document.getElementById('callback-error-msg').textContent = 'The link may have expired or already been used.';
-          document.querySelector('#mode-callback .spinner').classList.add('hidden');
+          const spinner = document.querySelector('#mode-callback .spinner');
+          if (spinner) spinner.classList.add('hidden');
         }
       });
     }, 5000);
@@ -442,54 +495,87 @@
 
   // ── SIGN IN ─────────────────────────────────────────────────
   async function handleSignIn() {
+    if (!supabase) { showAlert('login', 'Auth system failed to initialize. Please refresh the page.'); return; }
     const email = document.getElementById('login-email').value.trim();
     const password = document.getElementById('login-password').value;
-    if (!email || !password) { showAlert('login', 'Please fill in all fields.'); return; }
+    if (!email || !password) { showAlert('login', 'Please fill in your email and password.'); return; }
     setLoading('login', true);
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
-    setLoading('login', false);
-    if (error) showAlert('login', error.message);
-    else window.location.href = next;
+    try {
+      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+      setLoading('login', false);
+      if (error) {
+        let msg = error.message;
+        if (msg.includes('Invalid login')) msg = 'Incorrect email or password. Check your credentials and try again.';
+        else if (msg.includes('Email not confirmed')) msg = 'Your email address has not been confirmed. Check your inbox for a confirmation link, or use "Forgot password?" to get a new magic link.';
+        showAlert('login', msg);
+      } else if (!data.session) {
+        showAlert('login', 'Sign-in returned no session. Please try again or use "Forgot password?" for a magic link.');
+      } else {
+        window.location.href = next;
+      }
+    } catch (e) {
+      setLoading('login', false);
+      console.error('Sign-in error:', e);
+      showAlert('login', 'Could not connect to the auth server. Check your internet connection.');
+    }
   }
 
   // ── SIGN UP ─────────────────────────────────────────────────
   async function handleSignUp() {
+    if (!supabase) { showAlert('signup', 'Auth system failed to initialize. Please refresh the page.'); return; }
     const name = document.getElementById('signup-name').value.trim();
     const email = document.getElementById('signup-email').value.trim();
     const password = document.getElementById('signup-password').value;
     if (!name || !email || !password) { showAlert('signup', 'Please fill in all fields.'); return; }
     if (password.length < 8) { showAlert('signup', 'Password must be at least 8 characters.'); return; }
     setLoading('signup', true);
-    const redirectTo = window.location.origin + '/auth.html?mode=callback&next=' + encodeURIComponent(next);
-    const { error } = await supabase.auth.signUp({
-      email, password,
-      options: { data: { full_name: name }, emailRedirectTo: redirectTo }
-    });
-    setLoading('signup', false);
-    if (error) showAlert('signup', error.message);
-    else {
-      document.getElementById('signup-success').classList.remove('hidden');
-      document.getElementById('signup-success-msg').textContent = 'Check your email to confirm your account.';
-      document.getElementById('signup-alert').classList.add('hidden');
+    try {
+      const redirectTo = window.location.origin + '/auth.html?mode=callback&next=' + encodeURIComponent(next);
+      const { error } = await supabase.auth.signUp({
+        email, password,
+        options: { data: { full_name: name }, emailRedirectTo: redirectTo }
+      });
+      setLoading('signup', false);
+      if (error) showAlert('signup', error.message);
+      else {
+        document.getElementById('signup-success').classList.remove('hidden');
+        document.getElementById('signup-success-msg').textContent = 'Account created! Check your email to confirm, then sign in.';
+        document.getElementById('signup-alert').classList.add('hidden');
+      }
+    } catch (e) {
+      setLoading('signup', false);
+      showAlert('signup', 'Could not connect to the auth server. Check your internet connection.');
     }
   }
 
   // ── GOOGLE OAUTH ────────────────────────────────────────────
   async function handleGoogle() {
-    const redirectTo = window.location.origin + '/auth.html?mode=callback&next=' + encodeURIComponent(next);
-    await supabase.auth.signInWithOAuth({ provider: 'google', options: { redirectTo } });
+    if (!supabase) { showAlert('login', 'Auth system failed to initialize. Please refresh the page.'); return; }
+    try {
+      const redirectTo = window.location.origin + '/auth.html?mode=callback&next=' + encodeURIComponent(next);
+      const { error } = await supabase.auth.signInWithOAuth({ provider: 'google', options: { redirectTo } });
+      if (error) showAlert('login', 'Google sign-in is not configured yet. Please use email sign-in for now.');
+    } catch (e) {
+      showAlert('login', 'Google sign-in failed. Please use email sign-in instead.');
+    }
   }
 
   // ── MAGIC LINK ───────────────────────────────────────────────
   async function handleMagicLink() {
+    if (!supabase) { showAlert('magic', 'Auth system failed to initialize. Please refresh the page.'); return; }
     const email = document.getElementById('magic-email').value.trim();
     if (!email) { showAlert('magic', 'Please enter your email address.'); return; }
     setLoading('magic', true);
-    const redirectTo = window.location.origin + '/auth.html?mode=callback&next=' + encodeURIComponent(next);
-    const { error } = await supabase.auth.signInWithOtp({ email, options: { emailRedirectTo: redirectTo } });
-    setLoading('magic', false);
-    if (error) { showAlert('magic', error.message); return; }
-    showMagicLinkSent(email);
+    try {
+      const redirectTo = window.location.origin + '/auth.html?mode=callback&next=' + encodeURIComponent(next);
+      const { error } = await supabase.auth.signInWithOtp({ email, options: { emailRedirectTo: redirectTo } });
+      setLoading('magic', false);
+      if (error) { showAlert('magic', error.message); return; }
+      showMagicLinkSent(email);
+    } catch (e) {
+      setLoading('magic', false);
+      showAlert('magic', 'Could not send magic link. Check your internet connection.');
+    }
   }
 
   function showMagicLinkSent(email) {
@@ -519,6 +605,7 @@
   }
 
   async function handleResend() {
+    if (!supabase) return;
     const email = document.getElementById('magic-sent-email').textContent;
     const redirectTo = window.location.origin + '/auth.html?mode=callback&next=' + encodeURIComponent(next);
     await supabase.auth.signInWithOtp({ email, options: { emailRedirectTo: redirectTo } });
@@ -527,9 +614,13 @@
 
   // ── UI HELPERS ───────────────────────────────────────────────
   function showAlert(modeId, message) {
-    const alert = document.getElementById(modeId + '-alert');
+    const alertEl = document.getElementById(modeId + '-alert');
     const msg = document.getElementById(modeId + '-alert-msg');
-    if (alert && msg) { msg.textContent = message; alert.classList.remove('hidden'); }
+    if (!alertEl || !msg) return;
+    msg.textContent = message;
+    alertEl.style.display = 'flex';
+    alertEl.classList.remove('hidden');
+    alertEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   }
 
   function setLoading(modeId, loading) {
@@ -545,9 +636,10 @@
     }
   }
 
-  function togglePassword(inputId, btn) {
+  function togglePassword(inputId, iconId) {
     const input = document.getElementById(inputId);
-    const icon = btn.querySelector('.material-symbols-outlined');
+    const icon = document.getElementById(iconId);
+    if (!input || !icon) return;
     if (input.type === 'password') {
       input.type = 'text';
       icon.textContent = 'visibility_off';
@@ -566,22 +658,24 @@
     if (/[0-9]/.test(pw)) score++;
     if (/[^A-Za-z0-9]/.test(pw)) score++;
     score = Math.min(score, 4);
-
     const colors = ['', '#ef4444', '#f97316', '#eab308', '#22c55e'];
     const labels = ['', 'Weak', 'Fair', 'Good', 'Strong'];
     for (let i = 1; i <= 4; i++) {
       const bar = document.getElementById('str-' + i);
-      bar.style.backgroundColor = i <= score ? colors[score] : '#e5e7eb';
+      if (bar) bar.style.backgroundColor = i <= score ? colors[score] : '#e5e7eb';
     }
     const label = document.getElementById('str-label');
-    label.textContent = pw ? labels[score] || '' : '';
-    label.style.color = colors[score] || '#9ca3af';
+    if (label) { label.textContent = pw ? labels[score] || '' : ''; label.style.color = colors[score] || '#9ca3af'; }
   }
 
-  // Allow Enter key to submit
+  // Allow Enter key to submit (only from input fields, and prevent double-fire)
   document.addEventListener('keydown', (e) => {
     if (e.key !== 'Enter') return;
+    if (!e.target.matches('input')) return;
     const currentMode = new URLSearchParams(window.location.search).get('mode') || 'login';
+    const btn = document.getElementById(currentMode + '-btn');
+    if (btn && btn.disabled) return;
+    e.preventDefault();
     if (currentMode === 'login') handleSignIn();
     else if (currentMode === 'signup') handleSignUp();
     else if (currentMode === 'magic') handleMagicLink();
