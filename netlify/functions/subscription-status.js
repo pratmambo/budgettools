@@ -29,7 +29,7 @@ exports.handler = async (event) => {
   }
 
   // Admin accounts get full access to every template without a subscription
-  const ADMIN_EMAILS = ['preetam.juturu@gmail.com'];
+  const ADMIN_EMAILS = (process.env.ADMIN_EMAILS || 'preetam.juturu@gmail.com').split(',').map(e => e.trim());
   if (ADMIN_EMAILS.includes(user.email)) {
     return {
       statusCode: 200,
@@ -39,17 +39,41 @@ exports.handler = async (event) => {
   }
 
   const templateKey = event.queryStringParameters?.template;
+
   if (!templateKey) {
-    return { statusCode: 400, body: JSON.stringify({ error: 'template param required' }) };
+    const { data: allSubs, error } = await supabase
+      .from('subscriptions')
+      .select('id, status, template_key, current_period_end, cancel_at_period_end')
+      .eq('user_id', user.id)
+      .in('status', ['active', 'trialing', 'canceled'])
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      console.error('Subscription query error:', error);
+      return { statusCode: 500, body: JSON.stringify({ error: error.message }) };
+    }
+
+    const now = new Date();
+    const active = (allSubs || []).filter(s => {
+      if (s.status === 'canceled' && s.current_period_end) {
+        return new Date(s.current_period_end) > now;
+      }
+      return s.status !== 'canceled';
+    });
+
+    return {
+      statusCode: 200,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ subscriptions: active })
+    };
   }
 
-  // Check subscriptions: user has access if they have active/trialing sub for this template OR 'all'
   const { data: subscriptions, error } = await supabase
     .from('subscriptions')
     .select('id, status, template_key, current_period_end, cancel_at_period_end')
     .eq('user_id', user.id)
     .in('template_key', [templateKey, 'all'])
-    .in('status', ['active', 'trialing'])
+    .in('status', ['active', 'trialing', 'canceled'])
     .order('created_at', { ascending: false })
     .limit(1);
 
@@ -59,7 +83,14 @@ exports.handler = async (event) => {
   }
 
   const sub = subscriptions?.[0];
-  const hasAccess = !!sub;
+  let hasAccess = false;
+  if (sub) {
+    if (sub.status === 'canceled' && sub.current_period_end) {
+      hasAccess = new Date(sub.current_period_end) > new Date();
+    } else if (sub.status !== 'canceled') {
+      hasAccess = true;
+    }
+  }
 
   return {
     statusCode: 200,

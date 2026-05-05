@@ -403,7 +403,7 @@
   let sb = null;
   try {
     if (!window.supabase) throw new Error('SDK not loaded');
-    supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+    sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
       auth: {
         persistSession: true,
         autoRefreshToken: true,
@@ -422,13 +422,14 @@
   // ── URL PARAMS ──────────────────────────────────────────────
   const params = new URLSearchParams(window.location.search);
   const mode = params.get('mode') || 'login';
-  const next = params.get('next') || '/index.html';
+  const rawNext = params.get('next') || '/index.html';
+  const next = (rawNext.startsWith('/') && !rawNext.startsWith('//')) ? rawNext : '/index.html';
 
   // ── INIT ────────────────────────────────────────────────────
   document.addEventListener('DOMContentLoaded', () => {
     showMode(mode);
-    if (!supabase || mode === 'callback') return;
-    supabase.auth.getSession().then(({ data: { session } }) => {
+    if (!sb || mode === 'callback') return;
+    sb.auth.getSession().then(({ data: { session } }) => {
       if (session) window.location.href = next;
     });
   });
@@ -454,8 +455,8 @@
   }
 
   // ── CALLBACK HANDLER ────────────────────────────────────────
-  if (mode === 'callback' && supabase) {
-    supabase.auth.onAuthStateChange((event, session) => {
+  if (mode === 'callback' && sb) {
+    sb.auth.onAuthStateChange((event, session) => {
       if ((event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') && session) {
         window.location.href = next;
       }
@@ -464,7 +465,7 @@
     // Extract the auth code from the URL (PKCE flow) and exchange it
     const authCode = params.get('code');
     if (authCode) {
-      supabase.auth.exchangeCodeForSession(authCode).then(({ error }) => {
+      sb.auth.exchangeCodeForSession(authCode).then(({ error }) => {
         if (error) {
           console.error('Code exchange failed:', error.message);
           document.getElementById('callback-error').classList.remove('hidden');
@@ -480,7 +481,7 @@
     // Fallback: if no code param, check for hash-based session (implicit flow)
     // or wait for detectSessionInUrl to handle it
     setTimeout(() => {
-      supabase.auth.getSession().then(({ data: { session } }) => {
+      sb.auth.getSession().then(({ data: { session } }) => {
         if (session) {
           window.location.href = next;
         } else if (!authCode) {
@@ -495,13 +496,13 @@
 
   // ── SIGN IN ─────────────────────────────────────────────────
   async function handleSignIn() {
-    if (!supabase) { showAlert('login', 'Auth system failed to initialize. Please refresh the page.'); return; }
+    if (!sb) { showAlert('login', 'Auth system failed to initialize. Please refresh the page.'); return; }
     const email = document.getElementById('login-email').value.trim();
     const password = document.getElementById('login-password').value;
     if (!email || !password) { showAlert('login', 'Please fill in your email and password.'); return; }
     setLoading('login', true);
     try {
-      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+      const { data, error } = await sb.auth.signInWithPassword({ email, password });
       setLoading('login', false);
       if (error) {
         let msg = error.message;
@@ -522,7 +523,7 @@
 
   // ── SIGN UP ─────────────────────────────────────────────────
   async function handleSignUp() {
-    if (!supabase) { showAlert('signup', 'Auth system failed to initialize. Please refresh the page.'); return; }
+    if (!sb) { showAlert('signup', 'Auth system failed to initialize. Please refresh the page.'); return; }
     const name = document.getElementById('signup-name').value.trim();
     const email = document.getElementById('signup-email').value.trim();
     const password = document.getElementById('signup-password').value;
@@ -531,7 +532,7 @@
     setLoading('signup', true);
     try {
       const redirectTo = window.location.origin + '/auth.html?mode=callback&next=' + encodeURIComponent(next);
-      const { error } = await supabase.auth.signUp({
+      const { error } = await sb.auth.signUp({
         email, password,
         options: { data: { full_name: name }, emailRedirectTo: redirectTo }
       });
@@ -539,7 +540,7 @@
       if (error) showAlert('signup', error.message);
       else {
         document.getElementById('signup-success').classList.remove('hidden');
-        document.getElementById('signup-success-msg').textContent = 'Account created! Check your email to confirm, then sign in.';
+        document.getElementById('signup-success-msg').textContent = 'Account created! You can now sign in.';
         document.getElementById('signup-alert').classList.add('hidden');
       }
     } catch (e) {
@@ -550,10 +551,10 @@
 
   // ── GOOGLE OAUTH ────────────────────────────────────────────
   async function handleGoogle() {
-    if (!supabase) { showAlert('login', 'Auth system failed to initialize. Please refresh the page.'); return; }
+    if (!sb) { showAlert('login', 'Auth system failed to initialize. Please refresh the page.'); return; }
     try {
       const redirectTo = window.location.origin + '/auth.html?mode=callback&next=' + encodeURIComponent(next);
-      const { error } = await supabase.auth.signInWithOAuth({ provider: 'google', options: { redirectTo } });
+      const { error } = await sb.auth.signInWithOAuth({ provider: 'google', options: { redirectTo } });
       if (error) showAlert('login', 'Google sign-in is not configured yet. Please use email sign-in for now.');
     } catch (e) {
       showAlert('login', 'Google sign-in failed. Please use email sign-in instead.');
@@ -562,13 +563,13 @@
 
   // ── MAGIC LINK ───────────────────────────────────────────────
   async function handleMagicLink() {
-    if (!supabase) { showAlert('magic', 'Auth system failed to initialize. Please refresh the page.'); return; }
+    if (!sb) { showAlert('magic', 'Auth system failed to initialize. Please refresh the page.'); return; }
     const email = document.getElementById('magic-email').value.trim();
     if (!email) { showAlert('magic', 'Please enter your email address.'); return; }
     setLoading('magic', true);
     try {
       const redirectTo = window.location.origin + '/auth.html?mode=callback&next=' + encodeURIComponent(next);
-      const { error } = await supabase.auth.signInWithOtp({ email, options: { emailRedirectTo: redirectTo } });
+      const { error } = await sb.auth.signInWithOtp({ email, options: { emailRedirectTo: redirectTo } });
       setLoading('magic', false);
       if (error) { showAlert('magic', error.message); return; }
       showMagicLinkSent(email);
@@ -605,10 +606,10 @@
   }
 
   async function handleResend() {
-    if (!supabase) return;
+    if (!sb) return;
     const email = document.getElementById('magic-sent-email').textContent;
     const redirectTo = window.location.origin + '/auth.html?mode=callback&next=' + encodeURIComponent(next);
-    await supabase.auth.signInWithOtp({ email, options: { emailRedirectTo: redirectTo } });
+    await sb.auth.signInWithOtp({ email, options: { emailRedirectTo: redirectTo } });
     startResendCountdown(30);
   }
 

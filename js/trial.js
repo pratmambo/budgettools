@@ -2,8 +2,8 @@
  * BudgetTools Trial Timer
  *
  * Manages the 10-minute demo trial for premium templates.
- * - Times are stored in sessionStorage so refreshing continues the trial,
- *   but closing the tab resets it (fresh trial on next visit).
+ * - Times are stored in localStorage so closing the tab does NOT reset the trial.
+ * - Each template has its own independent timer.
  * - Admin accounts and paid subscribers are never blocked.
  *
  * Usage in enterDemo():
@@ -14,7 +14,6 @@
 
 (function () {
   const TRIAL_MS = 10 * 60 * 1000; // 10 minutes
-  const ADMIN_EMAILS = ['preetam.juturu@gmail.com'];
 
   let _templateId = null;
   let _intervalId = null;
@@ -24,7 +23,7 @@
   }
 
   function getRemainingMs() {
-    const start = sessionStorage.getItem(storageKey(_templateId));
+    const start = localStorage.getItem(storageKey(_templateId));
     if (!start) return TRIAL_MS;
     return Math.max(0, TRIAL_MS - (Date.now() - parseInt(start, 10)));
   }
@@ -70,10 +69,11 @@
 
   function doStart() {
     // Admin accounts are never rate-limited
-    if (ADMIN_EMAILS.includes(window.BT_AUTH?.user?.email)) return;
+    const admins = window.BT_AUTH?.ADMIN_EMAILS || [];
+    if (admins.includes(window.BT_AUTH?.user?.email)) return;
 
-    if (!sessionStorage.getItem(storageKey(_templateId))) {
-      sessionStorage.setItem(storageKey(_templateId), Date.now().toString());
+    if (!localStorage.getItem(storageKey(_templateId))) {
+      localStorage.setItem(storageKey(_templateId), Date.now().toString());
     }
 
     if (getRemainingMs() <= 0) {
@@ -82,7 +82,16 @@
     }
 
     tick(); // immediate first render
+    if (_intervalId) clearInterval(_intervalId);
     _intervalId = setInterval(tick, 1000);
+  }
+
+  // Internal unlock — called after successful purchase
+  function _doUnlock() {
+    clearInterval(_intervalId);
+    _intervalId = null;
+    localStorage.removeItem(storageKey(_templateId));
+    document.getElementById('bt-trial-lock')?.remove();
   }
 
   window.BT_TRIAL = {
@@ -97,12 +106,13 @@
       }
     },
 
-    // Call this after a successful purchase to remove the lock without reloading
+    // Called after a successful purchase — verified server-side before reaching here
     unlock() {
-      clearInterval(_intervalId);
-      _intervalId = null;
-      sessionStorage.removeItem(storageKey(_templateId));
-      document.getElementById('bt-trial-lock')?.remove();
+      if (window.BT_STORAGE?.checkProAccess) {
+        window.BT_STORAGE.checkProAccess().then(({ hasAccess }) => {
+          if (hasAccess) _doUnlock();
+        }).catch(() => {});
+      }
     },
   };
 })();

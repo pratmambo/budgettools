@@ -83,24 +83,22 @@
      * Merges: if cloud data exists and is newer, use it. Otherwise use localStorage.
      */
     async get() {
-      // If not logged in, use localStorage only (same as before)
+      // Not logged in → no persistent data (demo mode is ephemeral)
       if (!window.BT_AUTH?.isLoggedIn()) {
-        return getLocalData();
+        return null;
       }
 
       // Try cloud first
       const cloudData = await loadFromCloud();
 
       if (cloudData) {
-        // Cloud data found — update local cache and return
         setLocalData(cloudData);
         return cloudData;
       }
 
-      // No cloud data yet. Check for local data to migrate.
+      // No cloud data — check localStorage cache (from a previous session)
       const localData = getLocalData();
       if (localData) {
-        // Offer migration (one-time, silent — just save it up)
         saveToCloud(localData);
       }
       return localData;
@@ -108,18 +106,15 @@
 
     /**
      * Save data.
-     * Writes localStorage immediately (sync, zero latency for UI).
-     * Debounces cloud save to avoid hammering API on rapid edits.
+     * Only persists for logged-in users (localStorage cache + debounced cloud sync).
+     * Non-logged-in / demo users keep data in memory only.
      */
     set(d) {
-      // Always write localStorage immediately
-      setLocalData(d);
+      if (!window.BT_AUTH?.isLoggedIn()) return;
 
-      // Debounce cloud save
-      if (window.BT_AUTH?.isLoggedIn()) {
-        clearTimeout(_saveTimer);
-        _saveTimer = setTimeout(() => saveToCloud(d), DEBOUNCE_MS);
-      }
+      setLocalData(d);
+      clearTimeout(_saveTimer);
+      _saveTimer = setTimeout(() => saveToCloud(d), DEBOUNCE_MS);
     },
 
     /**
@@ -145,6 +140,22 @@
   // ── Upgrade prompt helper ─────────────────────────────────
   // Templates can call this to show an upgrade modal
   window.BT_STORAGE = {
+    async waitForAuth() {
+      if (window.BT_AUTH && !window.BT_AUTH.isLoading) return;
+      return new Promise(r => window.addEventListener('bt:auth:ready', r, { once: true }));
+    },
+
+    async hasProAccess() {
+      await this.waitForAuth();
+      if (!window.BT_AUTH?.isLoggedIn()) return false;
+      const admins = window.BT_AUTH?.ADMIN_EMAILS || [];
+      if (admins.includes(window.BT_AUTH.user?.email)) return true;
+      try {
+        const { hasAccess } = await this.checkProAccess();
+        return hasAccess;
+      } catch { return false; }
+    },
+
     async checkProAccess() {
       if (!window.BT_AUTH?.isLoggedIn()) return { hasAccess: false, reason: 'not_logged_in' };
       try {
@@ -157,7 +168,7 @@
     },
 
     async startCheckout(templateId) {
-      // Delegate to subscription.js which handles the Razorpay modal
+      // Delegate to subscription.js which handles the Cashfree checkout
       if (window.BT_SUB?.startCheckout) {
         await window.BT_SUB.startCheckout(templateId);
       } else {

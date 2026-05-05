@@ -24,8 +24,11 @@
     }
   });
 
+  const ADMIN_EMAILS = ['preetam.juturu@gmail.com'];
+
   // Global auth state
   window.BT_AUTH = {
+    ADMIN_EMAILS,
     client,
     user: null,
     session: null,

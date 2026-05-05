@@ -21,7 +21,11 @@
       "Bash(powershell -command \"\\(Get-Content 'C:\\\\Users\\\\59679\\\\OneDrive - Bain\\\\Documents\\\\BudgetTools\\\\travel-budget.html'\\).Count\")",
       "Bash(python -c \"print\\(sum\\(1 for _ in open\\(r'C:\\\\Users\\\\59679\\\\OneDrive - Bain\\\\Documents\\\\BudgetTools\\\\cafe-costing.html', encoding='utf-8'\\)\\)\\)\")",
       "Bash(python:*)",
-      "Bash(powershell -Command \"\\(Get-Content 'C:\\\\Users\\\\59679\\\\OneDrive - Bain\\\\Documents\\\\BudgetTools\\\\inventory.html'\\).Count\")"
+      "Bash(powershell -Command \"\\(Get-Content 'C:\\\\Users\\\\59679\\\\OneDrive - Bain\\\\Documents\\\\BudgetTools\\\\inventory.html'\\).Count\")",
+      "PowerShell(npx netlify --version)",
+      "PowerShell(npx netlify dev --port 8888)",
+      "PowerShell(try { \\(Invoke-WebRequest -Uri \"http://localhost:8888\" -TimeoutSec 3\\).StatusCode } catch { $_.Exception.Message })",
+      "Bash(curl *)"
     ]
   }
 }

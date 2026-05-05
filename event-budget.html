@@ -168,6 +168,7 @@
      LANDING PAGE
 ══════════════════════════════════════════════════════ -->
 <div id="landing-page">
+<script>try{if(Object.keys(localStorage).some(k=>k.startsWith('sb-')&&k.endsWith('-auth-token')))document.getElementById('landing-page').classList.add('hidden');}catch(e){}</script>
 
   <!-- ── HERO ─────────────────────────────────────────── -->
   <section class="lp-hero min-h-screen flex flex-col">
@@ -185,7 +186,7 @@
           <span data-bt-user-email class="text-white/70 text-xs hidden md:block max-w-[100px] truncate"></span>
           <button data-bt-signout class="text-white/70 hover:text-white text-xs font-medium border border-white/30 rounded-md px-2.5 py-1">Sign Out</button>
         </div>
-        <button onclick="showSetupModal()" class="bg-white text-primary text-sm font-bold px-5 py-2.5 rounded-full hover:bg-primary-fixed transition-colors">Get Started Free</button>
+        <button onclick="window.BT_Interactive?BT_Interactive.handleStartFree(showSetupModal,enterDemo):showSetupModal()" class="bg-white text-primary text-sm font-bold px-5 py-2.5 rounded-full hover:bg-primary-fixed transition-colors">Get Started Free</button>
       </div>
     </nav>
 
@@ -210,7 +211,7 @@
           <li class="flex items-center gap-2 text-white/80 text-sm"><span class="material-symbols-outlined text-base text-green-300 filled">check_circle</span>Per-attendee cost &amp; revenue metrics</li>
         </ul>
         <div class="flex flex-wrap gap-3">
-          <button onclick="showSetupModal()" class="bg-white text-primary font-bold px-8 py-4 rounded-xl hover:bg-primary-fixed transition-colors text-base shadow-lg">
+          <button onclick="window.BT_Interactive?BT_Interactive.handleStartFree(showSetupModal,enterDemo):showSetupModal()" class="bg-white text-primary font-bold px-8 py-4 rounded-xl hover:bg-primary-fixed transition-colors text-base shadow-lg">
             Start Tracking Free
           </button>
           <button onclick="enterDemo()" class="border-2 border-white/40 text-white font-semibold px-8 py-4 rounded-xl hover:border-white hover:bg-white/10 transition-colors text-base">
@@ -435,7 +436,7 @@
         </div>
       </div>
       <div class="text-center mt-8">
-        <button onclick="showSetupModal()" class="grad-event text-white font-bold px-10 py-4 rounded-xl hover:opacity-90 transition-opacity text-base shadow-lg">
+        <button onclick="window.BT_Interactive?BT_Interactive.handleStartFree(showSetupModal,enterDemo):showSetupModal()" class="grad-event text-white font-bold px-10 py-4 rounded-xl hover:opacity-90 transition-opacity text-base shadow-lg">
           Start Tracking Free →
         </button>
       </div>
@@ -467,14 +468,14 @@
             <li class="flex items-center gap-2"><span class="material-symbols-outlined text-base text-profit filled">check</span>P&amp;L Summary view</li>
             <li class="flex items-center gap-2"><span class="material-symbols-outlined text-base text-profit filled">check</span>Saved locally in your browser</li>
           </ul>
-          <button onclick="showSetupModal()" class="w-full border-2 border-primary text-primary font-bold py-3 rounded-xl hover:bg-primary-fixed transition-colors">Get Started Free</button>
+          <button onclick="window.BT_Interactive?BT_Interactive.handleStartFree(showSetupModal,enterDemo):showSetupModal()" class="w-full border-2 border-primary text-primary font-bold py-3 rounded-xl hover:bg-primary-fixed transition-colors">Get Started Free</button>
         </div>
         <!-- Pro -->
         <div class="bg-primary rounded-2xl p-8 shadow-lg relative overflow-hidden">
-          <div class="absolute top-4 right-4 bg-yellow-300 text-on-surface text-xs font-bold px-3 py-1 rounded-full">Coming Soon</div>
+          <div class="absolute top-4 right-4 bg-green-300 text-green-900 text-xs font-bold px-3 py-1 rounded-full">Available Now</div>
           <p class="text-xs text-white/60 uppercase tracking-widest font-bold mb-4">Pro</p>
           <div class="mb-6">
-            <span class="text-4xl font-headline font-bold text-white">$12</span>
+            <span class="text-4xl font-headline font-bold text-white">$8.99</span>
             <span class="text-white/60 text-sm"> / month</span>
           </div>
           <ul class="space-y-3 mb-8 text-sm text-white/80">
@@ -486,7 +487,7 @@
             <li class="flex items-center gap-2"><span class="material-symbols-outlined text-base text-green-300 filled">check</span>Vendor &amp; supplier tracker</li>
             <li class="flex items-center gap-2"><span class="material-symbols-outlined text-base text-green-300 filled">check</span>Team sharing &amp; collaboration</li>
           </ul>
-          <button class="w-full bg-white/20 text-white font-bold py-3 rounded-xl cursor-not-allowed opacity-70">Join Waitlist</button>
+          <button onclick="if(window.BT_SUB)BT_SUB.showUpgradeModal('event')" class="w-full bg-white text-primary font-bold py-3 rounded-xl hover:bg-white/90 transition-colors">Upgrade Now</button>
         </div>
       </div>
     </div>
@@ -555,7 +556,7 @@
       <h2 class="font-headline text-4xl text-white mb-4">Ready to Run a Profitable Event?</h2>
       <p class="text-white/70 text-lg mb-8">Join event planners who track their budgets in real time — not after the bill arrives.</p>
       <div class="flex flex-wrap gap-3 justify-center">
-        <button onclick="showSetupModal()" class="bg-white text-primary font-bold px-10 py-4 rounded-xl hover:bg-primary-fixed transition-colors text-base shadow-lg">
+        <button onclick="window.BT_Interactive?BT_Interactive.handleStartFree(showSetupModal,enterDemo):showSetupModal()" class="bg-white text-primary font-bold px-10 py-4 rounded-xl hover:bg-primary-fixed transition-colors text-base shadow-lg">
           Start Free — No Sign-Up
         </button>
         <button onclick="enterDemo()" class="border-2 border-white/40 text-white font-semibold px-10 py-4 rounded-xl hover:border-white hover:bg-white/10 transition-colors text-base">
@@ -707,7 +708,13 @@
       <button onclick="document.getElementById('settings-overlay').classList.add('hidden')" class="flex-1 border border-outline-variant text-on-surface-variant font-semibold py-3 rounded-xl hover:bg-surface-container transition-colors text-sm">Cancel</button>
       <button onclick="saveSettings()" class="flex-1 grad-event text-white font-bold py-3 rounded-xl hover:opacity-90 transition-opacity">Save Changes</button>
     </div>
-    <div class="mt-4 pt-4 border-t border-outline-variant/20">
+    <div class="grid grid-cols-2 gap-3 mt-4 pt-4 border-t border-outline-variant/20">
+      <button onclick="backupData()" class="py-2.5 rounded-xl border border-outline-variant/30 text-on-surface-variant text-sm font-semibold hover:bg-surface-container-low transition-colors flex items-center justify-center gap-2"><span class="material-symbols-outlined text-base">download</span> Backup</button>
+      <button onclick="restoreData()" class="py-2.5 rounded-xl border border-outline-variant/30 text-on-surface-variant text-sm font-semibold hover:bg-surface-container-low transition-colors flex items-center justify-center gap-2"><span class="material-symbols-outlined text-base">upload</span> Restore</button>
+      <button onclick="exportSummaryCSV()" class="py-2.5 rounded-xl border border-outline-variant/30 text-on-surface-variant text-sm font-semibold hover:bg-surface-container-low transition-colors flex items-center justify-center gap-2"><span class="material-symbols-outlined text-base">table_chart</span> Export Summary</button>
+      <button onclick="window.print()" class="py-2.5 rounded-xl border border-outline-variant/30 text-on-surface-variant text-sm font-semibold hover:bg-surface-container-low transition-colors flex items-center justify-center gap-2"><span class="material-symbols-outlined text-base">print</span> Print</button>
+    </div>
+    <div class="mt-3">
       <button onclick="resetApp()" class="w-full text-error text-sm font-semibold py-2 hover:bg-error-container rounded-lg transition-colors">Reset &amp; Start Over</button>
     </div>
   </div>
@@ -1016,9 +1023,14 @@
           <h2 class="font-headline text-3xl text-on-surface mb-1">Event Costs</h2>
           <p class="text-on-surface-variant text-sm">Track all expenses — estimated vs actual vs paid.</p>
         </div>
-        <button onclick="openCostModal()" class="grad-event text-white font-bold px-5 py-3 rounded-xl flex items-center gap-2 hover:opacity-90 transition-opacity text-sm">
-          <span class="material-symbols-outlined text-base">add</span> Add Cost
-        </button>
+        <div class="flex items-center gap-2">
+          <button onclick="exportCostsCSV()" class="bg-surface-container-high text-on-surface-variant px-4 py-2.5 rounded-full text-xs font-bold flex items-center gap-1.5 hover:bg-surface-container-highest transition-colors" title="Export CSV">
+            <span class="material-symbols-outlined text-base">download</span> CSV
+          </button>
+          <button onclick="openCostModal()" class="grad-event text-white font-bold px-5 py-3 rounded-xl flex items-center gap-2 hover:opacity-90 transition-opacity text-sm">
+            <span class="material-symbols-outlined text-base">add</span> Add Cost
+          </button>
+        </div>
       </div>
 
       <!-- Cost summary bar -->
@@ -1037,15 +1049,16 @@
         </div>
       </div>
 
-      <!-- Category filter -->
-      <div class="flex flex-wrap gap-2 mb-5" id="cat-filter">
+      <!-- Category filter + search -->
+      <div class="flex flex-wrap gap-2 mb-5 items-center" id="cat-filter">
         <button class="cat-btn active text-xs font-semibold px-3 py-1.5 rounded-full border border-primary bg-primary text-white" onclick="filterCat('all',this)">All</button>
+        <div class="ml-auto"><input type="search" placeholder="Search costs…" oninput="costSearch=this.value;renderCosts()" class="field text-sm py-2 px-4 rounded-full w-44"/></div>
       </div>
 
       <!-- Cost table -->
       <div class="bg-white rounded-xl shadow-sm border border-outline-variant/10 overflow-hidden">
-        <div class="grid grid-cols-[1fr_120px_100px_100px_100px_80px] gap-3 px-5 py-3 bg-surface-container text-xs font-bold text-on-surface-variant uppercase tracking-wide hidden md:grid">
-          <span>Description</span><span>Category</span><span class="text-right">Estimated</span><span class="text-right">Actual</span><span class="text-right">Paid</span><span></span>
+        <div class="grid grid-cols-[1fr_120px_100px_100px_100px_100px] gap-3 px-5 py-3 bg-surface-container text-xs font-bold text-on-surface-variant uppercase tracking-wide hidden md:grid">
+          <span class="cursor-pointer hover:text-primary select-none" onclick="sortCosts('desc')">Description</span><span class="cursor-pointer hover:text-primary select-none" onclick="sortCosts('cat')">Category</span><span class="text-right cursor-pointer hover:text-primary select-none" onclick="sortCosts('estimated')">Estimated</span><span class="text-right cursor-pointer hover:text-primary select-none" onclick="sortCosts('actual')">Actual</span><span class="text-right cursor-pointer hover:text-primary select-none" onclick="sortCosts('paid')">Paid</span><span>Actions</span>
         </div>
         <div id="costs-list" class="divide-y divide-outline-variant/10">
           <p class="text-on-surface-variant text-sm text-center py-8">No costs yet. <button onclick="openCostModal()" class="text-primary font-semibold hover:underline">Add your first cost →</button></p>
@@ -1082,9 +1095,14 @@
           <h2 class="font-headline text-3xl text-on-surface mb-1">Revenue Streams</h2>
           <p class="text-on-surface-variant text-sm">Tickets, sponsorships, donations, merchandise, and more.</p>
         </div>
-        <button onclick="openRevModal()" class="grad-event text-white font-bold px-5 py-3 rounded-xl flex items-center gap-2 hover:opacity-90 transition-opacity text-sm">
-          <span class="material-symbols-outlined text-base">add</span> Add Revenue
-        </button>
+        <div class="flex items-center gap-2">
+          <button onclick="exportRevenueCSV()" class="bg-surface-container-high text-on-surface-variant px-4 py-2.5 rounded-full text-xs font-bold flex items-center gap-1.5 hover:bg-surface-container-highest transition-colors" title="Export CSV">
+            <span class="material-symbols-outlined text-base">download</span> CSV
+          </button>
+          <button onclick="openRevModal()" class="grad-event text-white font-bold px-5 py-3 rounded-xl flex items-center gap-2 hover:opacity-90 transition-opacity text-sm">
+            <span class="material-symbols-outlined text-base">add</span> Add Revenue
+          </button>
+        </div>
       </div>
 
       <!-- Revenue summary -->
@@ -1099,10 +1117,13 @@
         </div>
       </div>
 
+      <!-- Revenue search -->
+      <div class="mb-4"><input type="search" placeholder="Search revenue…" oninput="revSearch=this.value;renderRevenue()" class="field text-sm py-2 px-4 rounded-full w-52"/></div>
+
       <!-- Revenue list -->
       <div class="bg-white rounded-xl shadow-sm border border-outline-variant/10 overflow-hidden">
-        <div class="grid grid-cols-[1fr_130px_110px_110px_80px] gap-3 px-5 py-3 bg-surface-container text-xs font-bold text-on-surface-variant uppercase tracking-wide hidden md:grid">
-          <span>Source</span><span>Type</span><span class="text-right">Projected</span><span class="text-right">Received</span><span></span>
+        <div class="grid grid-cols-[1fr_130px_110px_110px_100px] gap-3 px-5 py-3 bg-surface-container text-xs font-bold text-on-surface-variant uppercase tracking-wide hidden md:grid">
+          <span class="cursor-pointer hover:text-primary select-none" onclick="sortRevenue('desc')">Source</span><span class="cursor-pointer hover:text-primary select-none" onclick="sortRevenue('type')">Type</span><span class="text-right cursor-pointer hover:text-primary select-none" onclick="sortRevenue('projected')">Projected</span><span class="text-right cursor-pointer hover:text-primary select-none" onclick="sortRevenue('actual')">Received</span><span>Actions</span>
         </div>
         <div id="revenue-list" class="divide-y divide-outline-variant/10">
           <p class="text-on-surface-variant text-sm text-center py-8">No revenue items yet. <button onclick="openRevModal()" class="text-primary font-semibold hover:underline">Add your first revenue source →</button></p>
@@ -1272,18 +1293,29 @@ let state = {
   catFilter: 'all',
   isDemo: false
 };
+let costSort={field:'',dir:'asc'};
+let revSort={field:'',dir:'asc'};
+let costSearch='';
+let revSearch='';
 
 // ── INIT ──────────────────────────────────────────────
-window.addEventListener('DOMContentLoaded', async () => {
+async function btInit() {
+  if (window.BT_STORAGE?.waitForAuth) await window.BT_STORAGE.waitForAuth();
   const saved = await Storage.get();
   if (saved) {
     state.data = saved;
     state.isDemo = false;
     showApp();
+    if (window.BT_TRIAL && window.BT_STORAGE?.hasProAccess) {
+      window.BT_STORAGE.hasProAccess().then(hp => { if (!hp) window.BT_TRIAL.start('event'); });
+    }
+  } else if (window.BT_STORAGE?.hasProAccess && await window.BT_STORAGE.hasProAccess()) {
+    document.getElementById('landing-page').classList.add('hidden');
+    showSetupModal();
   } else {
     showLanding();
   }
-});
+}
 
 // ── MODE SWITCHES ─────────────────────────────────────
 function showLanding() {
@@ -1357,6 +1389,9 @@ function completeSetup() {
   Storage.set(state.data);
   document.getElementById('setup-overlay').classList.add('hidden');
   showApp();
+  if (window.BT_TRIAL && window.BT_STORAGE?.hasProAccess) {
+    window.BT_STORAGE.hasProAccess().then(hp => { if (!hp) window.BT_TRIAL.start('event'); });
+  }
 }
 
 function resetApp() {
@@ -1598,16 +1633,19 @@ function renderCosts() {
     }
   });
 
-  const filtered = state.catFilter==='all' ? d.costs : d.costs.filter(c=>c.cat===state.catFilter);
+  let filtered = state.catFilter==='all' ? [...d.costs] : d.costs.filter(c=>c.cat===state.catFilter);
+  if(costSearch) filtered=filtered.filter(c=>(c.desc+(c.vendor||'')+(c.cat||'')+(c.notes||'')).toLowerCase().includes(costSearch.toLowerCase()));
+  if(costSort.field && window.BT_Interactive) filtered=BT_Interactive.sortArray(filtered,costSort.field,costSort.dir);
   const cl = qs('#costs-list');
   if (filtered.length===0) {
-    cl.innerHTML=`<p class="text-on-surface-variant text-sm text-center py-8">${state.catFilter==='all'?'No costs yet. <button onclick="openCostModal()" class="text-primary font-semibold hover:underline">Add your first cost →</button>':'No costs in this category.'}</p>`;
+    cl.innerHTML=`<p class="text-on-surface-variant text-sm text-center py-8">${state.catFilter==='all'&&!costSearch?'No costs yet. <button onclick="openCostModal()" class="text-primary font-semibold hover:underline">Add your first cost →</button>':'No costs match this filter.'}</p>`;
   } else {
     cl.innerHTML = filtered.map(c=>{
       const balance = (c.actual||0) - (c.paid||0);
-      return `<div class="data-row grid grid-cols-1 md:grid-cols-[1fr_120px_100px_100px_100px_80px] gap-3 px-5 py-4 items-center">
+      const overBudget = (c.actual||0)>(c.estimated||0) && c.estimated>0;
+      return `<div class="data-row grid grid-cols-1 md:grid-cols-[1fr_120px_100px_100px_100px_100px] gap-3 px-5 py-4 items-center ${overBudget?'bg-loss-bg/30':''}">
         <div>
-          <p class="font-medium text-on-surface text-sm">${c.desc}</p>
+          <p class="font-medium text-on-surface text-sm">${c.desc}${overBudget?' <span class="text-loss text-xs font-bold">OVER</span>':''}</p>
           ${c.vendor?`<p class="text-xs text-outline mt-0.5">${c.vendor}</p>`:''}
           ${c.notes?`<p class="text-xs text-primary/70 mt-0.5 italic">${c.notes}</p>`:''}
         </div>
@@ -1620,7 +1658,7 @@ function renderCosts() {
         </div>
         <div class="text-right">
           <span class="text-xs text-outline md:hidden">Actual: </span>
-          <span class="font-medium text-on-surface text-sm ${(c.actual||0)>(c.estimated||0)?'text-loss':''}">${fmt(c.actual||0,cur)}</span>
+          <span class="font-medium text-on-surface text-sm ${overBudget?'text-loss':''}">${fmt(c.actual||0,cur)}</span>
         </div>
         <div class="text-right">
           <span class="text-xs text-outline md:hidden">Paid: </span>
@@ -1628,8 +1666,9 @@ function renderCosts() {
           ${balance>0?`<p class="text-xs text-loss">Due: ${fmt(balance,cur)}</p>`:''}
         </div>
         <div class="flex gap-1 justify-end">
-          <button onclick="editCost('${c.id}')" class="p-1.5 text-outline hover:text-primary hover:bg-primary-fixed rounded-lg transition-colors"><span class="material-symbols-outlined text-base">edit</span></button>
-          <button onclick="deleteCost('${c.id}')" class="p-1.5 text-outline hover:text-error hover:bg-error-container rounded-lg transition-colors"><span class="material-symbols-outlined text-base">delete</span></button>
+          <button onclick="duplicateCost('${c.id}')" class="p-1.5 text-outline hover:text-primary hover:bg-primary-fixed rounded-lg transition-colors" title="Duplicate"><span class="material-symbols-outlined text-base">content_copy</span></button>
+          <button onclick="editCost('${c.id}')" class="p-1.5 text-outline hover:text-primary hover:bg-primary-fixed rounded-lg transition-colors" title="Edit"><span class="material-symbols-outlined text-base">edit</span></button>
+          <button onclick="deleteCost('${c.id}')" class="p-1.5 text-outline hover:text-error hover:bg-error-container rounded-lg transition-colors" title="Delete"><span class="material-symbols-outlined text-base">delete</span></button>
         </div>
       </div>`;
     }).join('');
@@ -1657,13 +1696,16 @@ function renderRevenue() {
   qs('#rev-proj-total').textContent = fmt(t.revProj,cur);
   qs('#rev-act-total').textContent  = fmt(t.revAct,cur);
 
+  let revList = [...d.revenue];
+  if(revSearch) revList=revList.filter(r=>(r.desc+(r.type||'')+(r.notes||'')).toLowerCase().includes(revSearch.toLowerCase()));
+  if(revSort.field && window.BT_Interactive) revList=BT_Interactive.sortArray(revList,revSort.field,revSort.dir);
   const rl = qs('#revenue-list');
-  if (d.revenue.length===0) {
-    rl.innerHTML=`<p class="text-on-surface-variant text-sm text-center py-8">No revenue items yet. <button onclick="openRevModal()" class="text-primary font-semibold hover:underline">Add your first revenue source →</button></p>`;
+  if (revList.length===0) {
+    rl.innerHTML=`<p class="text-on-surface-variant text-sm text-center py-8">${!d.revenue.length&&!revSearch?'No revenue items yet. <button onclick="openRevModal()" class="text-primary font-semibold hover:underline">Add your first revenue source →</button>':'No revenue items match this filter.'}</p>`;
   } else {
-    rl.innerHTML = d.revenue.map(r=>{
+    rl.innerHTML = revList.map(r=>{
       const shortfall = (r.projected||0) - (r.actual||0);
-      return `<div class="data-row grid grid-cols-1 md:grid-cols-[1fr_130px_110px_110px_80px] gap-3 px-5 py-4 items-center">
+      return `<div class="data-row grid grid-cols-1 md:grid-cols-[1fr_130px_110px_110px_100px] gap-3 px-5 py-4 items-center">
         <div>
           <p class="font-medium text-on-surface text-sm">${r.desc}</p>
           ${r.units?`<p class="text-xs text-outline mt-0.5">${r.units} × ${fmt(r.unitPrice||0,cur)}</p>`:''}
@@ -1682,8 +1724,9 @@ function renderRevenue() {
           ${shortfall>0?`<p class="text-xs text-loss">Gap: ${fmt(shortfall,cur)}</p>`:''}
         </div>
         <div class="flex gap-1 justify-end">
-          <button onclick="editRevenue('${r.id}')" class="p-1.5 text-outline hover:text-primary hover:bg-primary-fixed rounded-lg transition-colors"><span class="material-symbols-outlined text-base">edit</span></button>
-          <button onclick="deleteRevenue('${r.id}')" class="p-1.5 text-outline hover:text-error hover:bg-error-container rounded-lg transition-colors"><span class="material-symbols-outlined text-base">delete</span></button>
+          <button onclick="duplicateRevenue('${r.id}')" class="p-1.5 text-outline hover:text-primary hover:bg-primary-fixed rounded-lg transition-colors" title="Duplicate"><span class="material-symbols-outlined text-base">content_copy</span></button>
+          <button onclick="editRevenue('${r.id}')" class="p-1.5 text-outline hover:text-primary hover:bg-primary-fixed rounded-lg transition-colors" title="Edit"><span class="material-symbols-outlined text-base">edit</span></button>
+          <button onclick="deleteRevenue('${r.id}')" class="p-1.5 text-outline hover:text-error hover:bg-error-container rounded-lg transition-colors" title="Delete"><span class="material-symbols-outlined text-base">delete</span></button>
         </div>
       </div>`;
     }).join('');
@@ -1900,7 +1943,99 @@ function toggleFaq(btn) {
   const open = ans.classList.toggle('open');
   icon.textContent = open ? 'remove' : 'add';
 }
+
+// ── SORTING ──────────────────────────────────────────
+function sortCosts(field){
+  if(costSort.field===field) costSort.dir=costSort.dir==='asc'?'desc':'asc';
+  else { costSort.field=field; costSort.dir='asc'; }
+  renderCosts();
+}
+function sortRevenue(field){
+  if(revSort.field===field) revSort.dir=revSort.dir==='asc'?'desc':'asc';
+  else { revSort.field=field; revSort.dir='asc'; }
+  renderRevenue();
+}
+
+// ── DUPLICATE ────────────────────────────────────────
+function duplicateCost(id){
+  const c=state.data.costs.find(x=>x.id===id); if(!c)return;
+  state.data.costs.push({...JSON.parse(JSON.stringify(c)),id:uid(),desc:c.desc+' (copy)'});
+  if(!state.isDemo)Storage.set(state.data);
+  if(window.BT_Interactive){BT_Interactive.Undo.push();BT_Interactive.toast('Cost duplicated','success');}
+  renderCosts();renderOverview();
+}
+function duplicateRevenue(id){
+  const r=state.data.revenue.find(x=>x.id===id); if(!r)return;
+  state.data.revenue.push({...JSON.parse(JSON.stringify(r)),id:uid(),desc:r.desc+' (copy)'});
+  if(!state.isDemo)Storage.set(state.data);
+  if(window.BT_Interactive){BT_Interactive.Undo.push();BT_Interactive.toast('Revenue duplicated','success');}
+  renderRevenue();renderOverview();
+}
+
+// ── CSV EXPORT ───────────────────────────────────────
+function exportCostsCSV(){
+  const cur=state.data.currency||'$';
+  const headers=['Description','Category','Vendor','Estimated','Actual','Paid','Notes'];
+  const rows=state.data.costs.map(c=>[c.desc,c.cat,c.vendor,c.estimated,c.actual,c.paid,c.notes]);
+  BT_Interactive.exportCSV(headers,rows,'event-costs.csv');
+  BT_Interactive.toast('Costs exported','success');
+}
+function exportRevenueCSV(){
+  const headers=['Description','Type','Projected','Actual','Units','Unit Price','Notes'];
+  const rows=state.data.revenue.map(r=>[r.desc,r.type,r.projected,r.actual,r.units,r.unitPrice,r.notes]);
+  BT_Interactive.exportCSV(headers,rows,'event-revenue.csv');
+  BT_Interactive.toast('Revenue exported','success');
+}
+function exportSummaryCSV(){
+  const t=calcTotals(); const cur=state.data.currency||'$';
+  const headers=['Metric','Value'];
+  const rows=[
+    ['Event',state.data.name],['Date',state.data.date],['Attendees',state.data.attendees],
+    ['Total Revenue',t.revAct],['Total Costs',t.costAct],['Profit/Loss',t.profit],
+    ['Margin %',t.margin.toFixed(1)+'%'],['Cost per Attendee',t.perCost],['Revenue per Attendee',t.perRev],
+  ];
+  BT_Interactive.exportCSV(headers,rows,'event-summary.csv');
+  BT_Interactive.toast('Summary exported','success');
+}
+
+// ── JSON BACKUP / RESTORE ────────────────────────────
+function backupData(){
+  BT_Interactive.downloadJSON(state.data,'event-budget-backup.json');
+  BT_Interactive.toast('Backup downloaded','success');
+}
+function restoreData(){
+  BT_Interactive.importJSON(data=>{
+    if(!data.name||!data.costs){BT_Interactive.toast('Invalid backup file','error');return;}
+    state.data=data;state.isDemo=false;Storage.set(state.data);
+    if(window.BT_Interactive)BT_Interactive.Undo.push();
+    render();renderTab(state.tab);
+    BT_Interactive.toast('Data restored','success');
+  });
+}
+
+// ── INIT INTERACTIVE ─────────────────────────────────
+const _origBtInit=btInit;
+btInit=async function(){
+  await _origBtInit();
+  if(state.data && window.BT_Interactive){
+    BT_Interactive.Undo.init(()=>state.data, d=>{state.data=d;if(!state.isDemo)Storage.set(d);render();renderTab(state.tab);});
+    BT_Interactive.registerShortcuts({
+      'n':()=>{
+        if(state.tab==='costs')openCostModal();
+        else if(state.tab==='revenue')openRevModal();
+      },
+      'p':()=>window.print(),
+      '?':()=>BT_Interactive.showShortcutsHelp([
+        {key:'N',desc:'Add new item'},{key:'P',desc:'Print'},
+        {key:'Ctrl+Z',desc:'Undo'},{key:'Ctrl+Shift+Z',desc:'Redo'},
+        {key:'?',desc:'Show shortcuts'}
+      ]),
+    });
+  }
+};
+
 </script>
+<script src="/js/interactive.js"></script>
 <!-- ── AUTH + CLOUD STORAGE ─────────────────────────────── -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="/js/auth.js"></script>
@@ -1908,5 +2043,6 @@ function toggleFaq(btn) {
 <script src="/js/storage-cloud.js"></script>
 <script src="/js/subscription.js"></script>
 <script src="/js/trial.js"></script>
+<script>btInit().catch(console.error);</script>
 </body>
 </html>

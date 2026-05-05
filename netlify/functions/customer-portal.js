@@ -1,13 +1,3 @@
-/**
- * Cancel Subscription
- * Cancels the user's active Razorpay subscription at end of billing cycle.
- * Called from the account page when user clicks "Cancel Subscription".
- *
- * POST /api/customer-portal
- * Body: { template?: string }  — optional, to cancel a specific template subscription
- */
-
-const Razorpay = require('razorpay');
 const { createClient } = require('@supabase/supabase-js');
 
 const supabase = createClient(
@@ -15,17 +5,15 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY
 );
 
-const razorpay = new Razorpay({
-  key_id:     process.env.RAZORPAY_KEY_ID,
-  key_secret: process.env.RAZORPAY_KEY_SECRET,
-});
+const CASHFREE_BASE = process.env.CASHFREE_ENV === 'production'
+  ? 'https://api.cashfree.com/pg'
+  : 'https://sandbox.cashfree.com/pg';
 
 exports.handler = async (event) => {
   if (event.httpMethod !== 'POST') {
     return { statusCode: 405, body: 'Method Not Allowed' };
   }
 
-  // Validate JWT
   const authHeader = event.headers['authorization'] || '';
   const token = authHeader.replace('Bearer ', '');
   if (!token) {
@@ -45,8 +33,18 @@ exports.handler = async (event) => {
   try {
     let subId = subscriptionId;
 
-    // If no explicit subscription ID, look up by user + template
-    if (!subId) {
+    if (subId) {
+      // Verify the subscription belongs to this user
+      const { data: owned } = await supabase
+        .from('subscriptions')
+        .select('id')
+        .eq('id', subId)
+        .eq('user_id', user.id)
+        .limit(1);
+      if (!owned || owned.length === 0) {
+        return { statusCode: 403, body: JSON.stringify({ error: 'Subscription does not belong to this user' }) };
+      }
+    } else {
       const query = supabase
         .from('subscriptions')
         .select('id')
@@ -68,10 +66,25 @@ exports.handler = async (event) => {
       subId = sub.id;
     }
 
-    // cancel_at_cycle_end: 1 = cancel at end of current billing cycle (not immediately)
-    await razorpay.subscriptions.cancel(subId, { cancel_at_cycle_end: 1 });
+    const res = await fetch(CASHFREE_BASE + '/subscriptions/' + encodeURIComponent(subId) + '/manage', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-version': '2025-01-01',
+        'x-client-id': process.env.CASHFREE_APP_ID,
+        'x-client-secret': process.env.CASHFREE_SECRET_KEY,
+      },
+      body: JSON.stringify({
+        subscription_id: subId,
+        action: 'CANCEL',
+      }),
+    });
 
-    // Reflect pending cancellation in our DB immediately (webhook will confirm)
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.message || 'Cashfree cancel failed');
+    }
+
     await supabase.from('subscriptions').update({
       cancel_at_period_end: true,
       updated_at: new Date().toISOString(),
@@ -82,7 +95,7 @@ exports.handler = async (event) => {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         success: true,
-        message: 'Subscription will cancel at the end of the current billing period.',
+        message: 'Subscription cancelled. You keep access until the end of the current billing period.',
       }),
     };
 

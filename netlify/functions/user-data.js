@@ -62,6 +62,22 @@ exports.handler = async (event) => {
       return { statusCode: 400, body: JSON.stringify({ error: 'template and data required' }) };
     }
 
+    // Gate cloud writes: require active subscription (or admin)
+    const ADMIN_EMAILS = (process.env.ADMIN_EMAILS || 'preetam.juturu@gmail.com').split(',').map(e => e.trim());
+    if (!ADMIN_EMAILS.includes(user.email)) {
+      const templateId = template.replace('bt_', '').replace(/_v\d+$/, '');
+      const { data: subs } = await supabase
+        .from('subscriptions')
+        .select('id')
+        .eq('user_id', user.id)
+        .in('template_key', [templateId, 'all'])
+        .in('status', ['active', 'trialing'])
+        .limit(1);
+      if (!subs || subs.length === 0) {
+        return { statusCode: 403, body: JSON.stringify({ error: 'Pro subscription required for cloud sync' }) };
+      }
+    }
+
     const { error } = await supabase
       .from('template_data')
       .upsert({

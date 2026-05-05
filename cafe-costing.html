@@ -167,6 +167,7 @@
      LANDING PAGE
 ══════════════════════════════════════════════════════ -->
 <div id="landing-page">
+<script>try{if(Object.keys(localStorage).some(k=>k.startsWith('sb-')&&k.endsWith('-auth-token')))document.getElementById('landing-page').classList.add('hidden');}catch(e){}</script>
 
   <!-- ── HERO ─────────────────────────────────────────── -->
   <section class="lp-hero min-h-screen flex flex-col">
@@ -183,7 +184,7 @@
           <span data-bt-user-email class="text-white/70 text-xs hidden md:block max-w-[100px] truncate"></span>
           <button data-bt-signout class="text-white/70 hover:text-white text-xs font-medium border border-white/30 rounded-md px-2.5 py-1">Sign Out</button>
         </div>
-        <button onclick="showSetupModal()" class="bg-white text-primary text-sm font-bold px-5 py-2.5 rounded-full hover:bg-primary-fixed transition-colors">Get Started Free</button>
+        <button onclick="window.BT_Interactive?BT_Interactive.handleStartFree(showSetupModal,enterDemo):showSetupModal()" class="bg-white text-primary text-sm font-bold px-5 py-2.5 rounded-full hover:bg-primary-fixed transition-colors">Get Started Free</button>
       </div>
     </nav>
 
@@ -207,7 +208,7 @@
           <li class="flex items-center gap-2 text-white/80 text-sm"><span class="material-symbols-outlined text-base text-green-300 filled">check_circle</span>Daily break-even covers calculator</li>
         </ul>
         <div class="flex flex-wrap gap-3">
-          <button onclick="showSetupModal()" class="bg-white text-primary font-bold px-8 py-4 rounded-xl hover:bg-primary-fixed transition-colors text-base shadow-lg">
+          <button onclick="window.BT_Interactive?BT_Interactive.handleStartFree(showSetupModal,enterDemo):showSetupModal()" class="bg-white text-primary font-bold px-8 py-4 rounded-xl hover:bg-primary-fixed transition-colors text-base shadow-lg">
             Start Tracking Free
           </button>
           <button onclick="enterDemo()" class="border-2 border-white/40 text-white font-semibold px-8 py-4 rounded-xl hover:border-white hover:bg-white/10 transition-colors text-base">
@@ -451,7 +452,7 @@
         </div>
       </div>
       <div class="text-center mt-8">
-        <button onclick="showSetupModal()" class="grad-cafe text-white font-bold px-10 py-4 rounded-xl hover:opacity-90 transition-opacity text-base shadow-lg">
+        <button onclick="window.BT_Interactive?BT_Interactive.handleStartFree(showSetupModal,enterDemo):showSetupModal()" class="grad-cafe text-white font-bold px-10 py-4 rounded-xl hover:opacity-90 transition-opacity text-base shadow-lg">
           Start Tracking Free →
         </button>
       </div>
@@ -481,13 +482,13 @@
             <li class="flex items-center gap-2"><span class="material-symbols-outlined text-base text-profit filled">check</span>Category averages and performance flags</li>
             <li class="flex items-center gap-2"><span class="material-symbols-outlined text-base text-profit filled">check</span>Saved locally in your browser</li>
           </ul>
-          <button onclick="showSetupModal()" class="w-full border-2 border-primary text-primary font-bold py-3 rounded-xl hover:bg-primary-fixed transition-colors">Get Started Free</button>
+          <button onclick="window.BT_Interactive?BT_Interactive.handleStartFree(showSetupModal,enterDemo):showSetupModal()" class="w-full border-2 border-primary text-primary font-bold py-3 rounded-xl hover:bg-primary-fixed transition-colors">Get Started Free</button>
         </div>
         <div class="grad-cafe rounded-2xl p-8 shadow-lg relative overflow-hidden">
-          <div class="absolute top-4 right-4 bg-yellow-300 text-on-surface text-xs font-bold px-3 py-1 rounded-full">Coming Soon</div>
+          <div class="absolute top-4 right-4 bg-green-300 text-green-900 text-xs font-bold px-3 py-1 rounded-full">Available Now</div>
           <p class="text-xs text-white/60 uppercase tracking-widest font-bold mb-4">Pro</p>
           <div class="mb-6">
-            <span class="text-4xl font-headline font-bold text-white">$15</span>
+            <span class="text-4xl font-headline font-bold text-white">$8.99</span>
             <span class="text-white/60 text-sm"> / month</span>
           </div>
           <ul class="space-y-3 mb-8 text-sm text-white/80">
@@ -498,7 +499,7 @@
             <li class="flex items-center gap-2"><span class="material-symbols-outlined text-base text-green-300 filled">check</span>Daily P&amp;L</li>
             <li class="flex items-center gap-2"><span class="material-symbols-outlined text-base text-green-300 filled">check</span>PDF export</li>
           </ul>
-          <button class="w-full bg-white/20 text-white font-bold py-3 rounded-xl cursor-not-allowed opacity-70">Join Waitlist</button>
+          <button onclick="if(window.BT_SUB)BT_SUB.showUpgradeModal('cafe')" class="w-full bg-white text-primary font-bold py-3 rounded-xl hover:bg-white/90 transition-colors">Upgrade Now</button>
         </div>
       </div>
     </div>
@@ -567,7 +568,7 @@
       <h2 class="font-headline text-4xl text-white mb-4">Ready to Know Your Margins?</h2>
       <p class="text-white/70 text-lg mb-8">Join cafe and restaurant owners who cost their menu properly — not after the supplier invoice arrives.</p>
       <div class="flex flex-wrap gap-3 justify-center">
-        <button onclick="showSetupModal()" class="bg-white text-primary font-bold px-10 py-4 rounded-xl hover:bg-primary-fixed transition-colors text-base shadow-lg">
+        <button onclick="window.BT_Interactive?BT_Interactive.handleStartFree(showSetupModal,enterDemo):showSetupModal()" class="bg-white text-primary font-bold px-10 py-4 rounded-xl hover:bg-primary-fixed transition-colors text-base shadow-lg">
           Start Free — No Sign-Up
         </button>
         <button onclick="enterDemo()" class="border-2 border-white/40 text-white font-semibold px-10 py-4 rounded-xl hover:border-white hover:bg-white/10 transition-colors text-base">
@@ -716,7 +717,15 @@
       <button onclick="document.getElementById('settings-overlay').classList.add('hidden')" class="flex-1 border border-outline-variant text-on-surface-variant font-semibold py-3 rounded-xl hover:bg-surface-container transition-colors text-sm">Cancel</button>
       <button onclick="saveSettings()" class="flex-1 grad-cafe text-white font-bold py-3 rounded-xl hover:opacity-90 transition-opacity">Save Changes</button>
     </div>
-    <div class="mt-4 pt-4 border-t border-outline-variant/20">
+    <div class="mt-4 pt-4 border-t border-outline-variant/20 space-y-2">
+      <div class="flex gap-2">
+        <button onclick="backupData()" class="flex-1 flex items-center justify-center gap-1.5 border border-outline-variant text-on-surface-variant text-sm font-semibold py-2 hover:bg-surface-container rounded-lg transition-colors">
+          <span class="material-symbols-outlined text-base">download</span> Backup
+        </button>
+        <button onclick="restoreData()" class="flex-1 flex items-center justify-center gap-1.5 border border-outline-variant text-on-surface-variant text-sm font-semibold py-2 hover:bg-surface-container rounded-lg transition-colors">
+          <span class="material-symbols-outlined text-base">upload</span> Restore
+        </button>
+      </div>
       <button onclick="resetApp()" class="w-full text-error text-sm font-semibold py-2 hover:bg-error-container rounded-lg transition-colors">Reset &amp; Start Over</button>
     </div>
   </div>
@@ -937,14 +946,19 @@
 
     <!-- ════ MENU ITEMS TAB ══════════════════════════════ -->
     <div id="panel-menu" class="tab-panel hidden p-6 md:p-10 max-w-5xl mx-auto">
-      <div class="flex items-center justify-between mb-8">
+      <div class="flex items-center justify-between mb-8 flex-wrap gap-3">
         <div>
           <h2 class="font-headline text-3xl text-on-surface mb-1">Menu Items</h2>
           <p class="text-on-surface-variant text-sm">All items with food cost % and gross profit per item.</p>
         </div>
-        <button onclick="openItemModal()" class="grad-cafe text-white font-bold px-5 py-3 rounded-xl flex items-center gap-2 hover:opacity-90 transition-opacity text-sm">
-          <span class="material-symbols-outlined text-base">add</span> Add Item
-        </button>
+        <div class="flex items-center gap-2">
+          <button onclick="exportMenuCSV()" class="border border-outline-variant text-on-surface-variant font-semibold px-4 py-2.5 rounded-xl flex items-center gap-2 hover:bg-surface-container transition-colors text-sm" title="Export menu items to CSV">
+            <span class="material-symbols-outlined text-base">download</span> CSV
+          </button>
+          <button onclick="openItemModal()" class="grad-cafe text-white font-bold px-5 py-3 rounded-xl flex items-center gap-2 hover:opacity-90 transition-opacity text-sm">
+            <span class="material-symbols-outlined text-base">add</span> Add Item
+          </button>
+        </div>
       </div>
 
       <!-- Summary bar -->
@@ -960,6 +974,14 @@
         <div class="bg-surface-container-low rounded-xl p-4 text-center">
           <p class="text-xs text-outline uppercase tracking-wide mb-1">Avg GP%</p>
           <p id="menu-avg-gp" class="text-xl font-bold text-profit">—</p>
+        </div>
+      </div>
+
+      <!-- Search input -->
+      <div class="mb-4">
+        <div class="relative">
+          <span class="material-symbols-outlined text-outline absolute left-3 top-1/2 -translate-y-1/2 text-lg">search</span>
+          <input id="menu-search" type="text" class="field pl-10" placeholder="Search menu items..." oninput="state.menuSearch=this.value;renderMenuItems()"/>
         </div>
       </div>
 
@@ -1292,20 +1314,30 @@ let state = {
   data: null,
   tab: 'overview',
   menuCatFilter: 'all',
+  menuSearch: '',
+  menuSortField: '',
+  menuSortDir: 'asc',
   isDemo: false
 };
 
 // ── INIT ──────────────────────────────────────────────
-window.addEventListener('DOMContentLoaded', async () => {
+async function btInit() {
+  if (window.BT_STORAGE?.waitForAuth) await window.BT_STORAGE.waitForAuth();
   const saved = await Storage.get();
   if (saved) {
     state.data = saved;
     state.isDemo = false;
     showApp();
+    if (window.BT_TRIAL && window.BT_STORAGE?.hasProAccess) {
+      window.BT_STORAGE.hasProAccess().then(hp => { if (!hp) window.BT_TRIAL.start('cafe'); });
+    }
+  } else if (window.BT_STORAGE?.hasProAccess && await window.BT_STORAGE.hasProAccess()) {
+    document.getElementById('landing-page').classList.add('hidden');
+    showSetupModal();
   } else {
     showLanding();
   }
-});
+}
 
 // ── MODE SWITCHES ─────────────────────────────────────
 function showLanding() {
@@ -1376,6 +1408,9 @@ function completeSetup() {
   Storage.set(state.data);
   document.getElementById('setup-overlay').classList.add('hidden');
   showApp();
+  if (window.BT_TRIAL && window.BT_STORAGE?.hasProAccess) {
+    window.BT_STORAGE.hasProAccess().then(hp => { if (!hp) window.BT_TRIAL.start('cafe'); });
+  }
 }
 
 function resetApp() {
@@ -1616,7 +1651,32 @@ function renderMenuItems(){
   const d   = state.data;
   const cur = d.currency||'$';
   const items = (d.menuItems||[]);
-  const filtered = state.menuCatFilter==='all' ? items : items.filter(i=>i.cat===state.menuCatFilter);
+  let filtered = state.menuCatFilter==='all' ? [...items] : items.filter(i=>i.cat===state.menuCatFilter);
+
+  // Apply search filter
+  if (state.menuSearch) {
+    const q = state.menuSearch.toLowerCase();
+    filtered = filtered.filter(i=> i.name.toLowerCase().includes(q) || (i.cat||'').toLowerCase().includes(q) || (i.notes||'').toLowerCase().includes(q));
+  }
+
+  // Apply sorting
+  if (state.menuSortField) {
+    const sortMap = {
+      name: i => i.name.toLowerCase(),
+      cost: i => calcItemCost(i),
+      price: i => parseFloat(i.price)||0,
+      margin: i => calcItemGPpct(i),
+      fc: i => calcItemFC(i)
+    };
+    const getter = sortMap[state.menuSortField];
+    if (getter) {
+      filtered.sort((a,b) => {
+        const va = getter(a), vb = getter(b);
+        if (typeof va === 'number' && typeof vb === 'number') return state.menuSortDir === 'asc' ? va - vb : vb - va;
+        return state.menuSortDir === 'asc' ? (va < vb ? -1 : va > vb ? 1 : 0) : (va > vb ? -1 : va < vb ? 1 : 0);
+      });
+    }
+  }
 
   qs('#menu-item-count').textContent = items.length;
   if (items.length>0){
@@ -1633,18 +1693,32 @@ function renderMenuItems(){
 
   const grid = qs('#menu-grid');
   if (filtered.length===0){
-    grid.innerHTML = `<p class="text-on-surface-variant text-sm text-center py-8 col-span-2">${state.menuCatFilter==='all'?'No items yet. <button onclick="openItemModal()" class="text-primary font-semibold hover:underline">Add your first item →</button>':'No items in this category.'}</p>`;
+    grid.innerHTML = `<p class="text-on-surface-variant text-sm text-center py-8 col-span-2">${state.menuCatFilter==='all' && !state.menuSearch ?'No items yet. <button onclick="openItemModal()" class="text-primary font-semibold hover:underline">Add your first item &rarr;</button>': state.menuSearch ? 'No items match your search.' : 'No items in this category.'}</p>`;
     return;
   }
 
-  grid.innerHTML = filtered.map(item=>{
+  // Sort headers
+  const si = window.BT_Interactive ? BT_Interactive.sortIcon : function(){ return ''; };
+  const sortHdr = `<div class="col-span-2 flex items-center gap-4 mb-1 px-1 flex-wrap">
+    <span class="text-xs text-outline uppercase tracking-wide font-bold mr-2">Sort by:</span>
+    <button onclick="sortMenu('name')" class="text-xs font-semibold text-on-surface-variant hover:text-primary transition-colors flex items-center gap-1">Name ${si('name',state.menuSortField,state.menuSortDir)}</button>
+    <button onclick="sortMenu('cost')" class="text-xs font-semibold text-on-surface-variant hover:text-primary transition-colors flex items-center gap-1">Cost ${si('cost',state.menuSortField,state.menuSortDir)}</button>
+    <button onclick="sortMenu('price')" class="text-xs font-semibold text-on-surface-variant hover:text-primary transition-colors flex items-center gap-1">Price ${si('price',state.menuSortField,state.menuSortDir)}</button>
+    <button onclick="sortMenu('margin')" class="text-xs font-semibold text-on-surface-variant hover:text-primary transition-colors flex items-center gap-1">Margin ${si('margin',state.menuSortField,state.menuSortDir)}</button>
+    <button onclick="sortMenu('fc')" class="text-xs font-semibold text-on-surface-variant hover:text-primary transition-colors flex items-center gap-1">FC% ${si('fc',state.menuSortField,state.menuSortDir)}</button>
+  </div>`;
+
+  grid.innerHTML = sortHdr + filtered.map(item=>{
     const cost   = calcItemCost(item);
     const fc     = calcItemFC(item);
     const gp     = calcItemGP(item);
     const gppct  = calcItemGPpct(item);
     const flag   = itemFlag(item);
     const ingCnt = (item.ingredients||[]).length;
-    return `<div class="bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant/10 p-5">
+    // Margin color: green >60%, yellow 40-60%, red <40%
+    const marginColor = gppct > 60 ? 'text-profit' : gppct >= 40 ? 'text-yellow-700' : 'text-loss';
+    const marginBorder = gppct > 60 ? 'border-l-green-500' : gppct >= 40 ? 'border-l-yellow-500' : 'border-l-red-500';
+    return `<div class="bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant/10 border-l-4 ${marginBorder} p-5">
       <div class="flex items-start justify-between mb-3">
         <div class="flex items-center gap-2">
           <span class="text-lg">${flag}</span>
@@ -1654,8 +1728,9 @@ function renderMenuItems(){
           </div>
         </div>
         <div class="flex gap-1">
-          <button onclick="openItemModal('${item.id}')" class="p-1.5 text-outline hover:text-primary hover:bg-primary-fixed rounded-lg transition-colors"><span class="material-symbols-outlined text-base">edit</span></button>
-          <button onclick="deleteItem('${item.id}')" class="p-1.5 text-outline hover:text-error hover:bg-error-container rounded-lg transition-colors"><span class="material-symbols-outlined text-base">delete</span></button>
+          <button onclick="openItemModal('${item.id}')" class="p-1.5 text-outline hover:text-primary hover:bg-primary-fixed rounded-lg transition-colors" title="Edit"><span class="material-symbols-outlined text-base">edit</span></button>
+          <button onclick="duplicateItem('${item.id}')" class="p-1.5 text-outline hover:text-primary hover:bg-primary-fixed rounded-lg transition-colors" title="Duplicate"><span class="material-symbols-outlined text-base">content_copy</span></button>
+          <button onclick="deleteItem('${item.id}')" class="p-1.5 text-outline hover:text-error hover:bg-error-container rounded-lg transition-colors" title="Delete"><span class="material-symbols-outlined text-base">delete</span></button>
         </div>
       </div>
       <div class="grid grid-cols-3 gap-3 mb-3">
@@ -1675,11 +1750,11 @@ function renderMenuItems(){
       <div class="grid grid-cols-2 gap-3 pt-3 border-t border-outline-variant/10">
         <div>
           <p class="text-xs text-outline mb-0.5">Gross Profit</p>
-          <p class="font-bold text-profit text-sm">${fmt(gp,cur)}</p>
+          <p class="font-bold ${marginColor} text-sm">${fmt(gp,cur)}</p>
         </div>
         <div>
           <p class="text-xs text-outline mb-0.5">GP Margin</p>
-          <p class="font-bold text-profit text-sm">${gppct.toFixed(1)}%</p>
+          <p class="font-bold ${marginColor} text-sm">${gppct.toFixed(1)}%</p>
         </div>
       </div>
       <div class="mt-3 flex items-center justify-between">
@@ -1959,6 +2034,7 @@ function saveItem(){
     state.data.menuItems.push(item);
   }
   if (!state.isDemo) Storage.set(state.data);
+  if (window.BT_Interactive) BT_Interactive.Undo.push();
   closeItemModal();
   renderMenuItems();
   renderOverview();
@@ -1969,9 +2045,80 @@ function deleteItem(id){
   if (!confirm('Delete this menu item?')) return;
   state.data.menuItems = (state.data.menuItems||[]).filter(i=>i.id!==id);
   if (!state.isDemo) Storage.set(state.data);
+  if (window.BT_Interactive) BT_Interactive.Undo.push();
   renderMenuItems();
   renderOverview();
   if (state.tab==='recipe') renderRecipeTab();
+}
+
+// ── SORT MENU ────────────────────────────────────────
+function sortMenu(field){
+  if (state.menuSortField === field) {
+    state.menuSortDir = state.menuSortDir === 'asc' ? 'desc' : 'asc';
+  } else {
+    state.menuSortField = field;
+    state.menuSortDir = field === 'name' ? 'asc' : 'desc';
+  }
+  renderMenuItems();
+}
+
+// ── DUPLICATE ITEM ───────────────────────────────────
+function duplicateItem(id){
+  const item = (state.data.menuItems||[]).find(i=>i.id===id);
+  if (!item) return;
+  const dup = JSON.parse(JSON.stringify(item));
+  dup.id = uid();
+  dup.name = item.name + ' (Copy)';
+  state.data.menuItems.push(dup);
+  if (!state.isDemo) Storage.set(state.data);
+  if (window.BT_Interactive) BT_Interactive.Undo.push();
+  if (window.BT_Interactive) BT_Interactive.toast('Duplicated: ' + item.name, 'success');
+  renderMenuItems();
+  renderOverview();
+  if (state.tab==='recipe') renderRecipeTab();
+}
+
+// ── CSV EXPORT ───────────────────────────────────────
+function exportMenuCSV(){
+  const items = state.data.menuItems||[];
+  if (items.length===0){ if (window.BT_Interactive) BT_Interactive.toast('No items to export','error'); return; }
+  const headers = ['Name','Category','Selling Price','Recipe Cost','Food Cost %','Gross Profit','GP Margin %','Ingredients','Notes'];
+  const rows = items.map(item => {
+    const cost = calcItemCost(item);
+    const fc   = calcItemFC(item);
+    const gp   = calcItemGP(item);
+    const gppct = calcItemGPpct(item);
+    const ingStr = (item.ingredients||[]).map(i=>`${i.name} (${i.qty}${i.unit} @ ${i.unitCost})`).join('; ');
+    return [item.name, item.cat, item.price, cost.toFixed(2), fc.toFixed(1)+'%', gp.toFixed(2), gppct.toFixed(1)+'%', ingStr, item.notes||''];
+  });
+  if (window.BT_Interactive) {
+    BT_Interactive.exportCSV(headers, rows, 'cafe-menu-items.csv');
+    BT_Interactive.toast('Menu items exported', 'success');
+  }
+}
+
+// ── BACKUP / RESTORE ─────────────────────────────────
+function backupData(){
+  if (!state.data){ if (window.BT_Interactive) BT_Interactive.toast('No data to backup','error'); return; }
+  if (window.BT_Interactive) {
+    BT_Interactive.downloadJSON(state.data, 'cafe-costing-backup.json');
+    BT_Interactive.toast('Backup downloaded', 'success');
+  }
+}
+
+function restoreData(){
+  if (!window.BT_Interactive) return;
+  BT_Interactive.importJSON(function(data){
+    if (!data || !data.name) { BT_Interactive.toast('Invalid backup file','error'); return; }
+    if (!confirm('Restore from backup? This will overwrite your current data.')) return;
+    state.data = data;
+    state.isDemo = false;
+    Storage.set(state.data);
+    BT_Interactive.Undo.push();
+    render();
+    renderTab(state.tab);
+    BT_Interactive.toast('Data restored from backup', 'success');
+  });
 }
 
 // ── FAQ ───────────────────────────────────────────────
@@ -1987,6 +2134,8 @@ function escHtml(str){
   return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 </script>
+<!-- ── INTERACTIVE FEATURES ────────────────────────────── -->
+<script src="/js/interactive.js"></script>
 <!-- ── AUTH + CLOUD STORAGE ─────────────────────────────── -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="/js/auth.js"></script>
@@ -1994,5 +2143,39 @@ function escHtml(str){
 <script src="/js/storage-cloud.js"></script>
 <script src="/js/subscription.js"></script>
 <script src="/js/trial.js"></script>
+<script>
+// ── UNDO/REDO + SHORTCUTS INIT ──────────────────────
+const _origBtInit = btInit;
+btInit = async function() {
+  await _origBtInit();
+  if (state.data && window.BT_Interactive) {
+    BT_Interactive.Undo.init(
+      () => state.data,
+      d => { state.data = d; Storage.set(d); render(); renderTab(state.tab); }
+    );
+    BT_Interactive.registerShortcuts({
+      'n': () => openItemModal(),
+      'Ctrl+e': () => exportMenuCSV(),
+      'Ctrl+b': () => backupData(),
+      '?': () => BT_Interactive.showShortcutsHelp([
+        { key: 'N', desc: 'Add new menu item' },
+        { key: 'Ctrl+E', desc: 'Export menu CSV' },
+        { key: 'Ctrl+B', desc: 'Backup data (JSON)' },
+        { key: 'Ctrl+Z', desc: 'Undo' },
+        { key: 'Ctrl+Shift+Z', desc: 'Redo' },
+        { key: 'Ctrl+P', desc: 'Print' },
+        { key: '?', desc: 'Show shortcuts' },
+      ]),
+      'Ctrl+p': () => window.print(),
+      'Escape': () => {
+        document.getElementById('item-modal').classList.add('hidden');
+        document.getElementById('settings-overlay').classList.add('hidden');
+        document.getElementById('setup-overlay').classList.add('hidden');
+      },
+    });
+  }
+};
+btInit().catch(console.error);
+</script>
 </body>
 </html>

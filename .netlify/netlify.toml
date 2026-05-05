@@ -56,7 +56,7 @@ force = false
 [redirects.headers]
 
 [[redirects]]
-from = "/webhooks/razorpay"
+from = "/webhooks/cashfree"
 to = "/.netlify/functions/payment-webhook"
 status = 200.0
 force = false

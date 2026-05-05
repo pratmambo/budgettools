@@ -169,6 +169,7 @@
      LANDING PAGE
 ══════════════════════════════════════════════════════ -->
 <div id="landing-page">
+<script>try{if(Object.keys(localStorage).some(k=>k.startsWith('sb-')&&k.endsWith('-auth-token')))document.getElementById('landing-page').classList.add('hidden');}catch(e){}</script>
 
   <!-- ── HERO ─────────────────────────────────────────── -->
   <section class="lp-hero min-h-screen flex flex-col">
@@ -185,7 +186,7 @@
           <span data-bt-user-email class="text-white/70 text-xs hidden md:block max-w-[100px] truncate"></span>
           <button data-bt-signout class="text-white/70 hover:text-white text-xs font-medium border border-white/30 rounded-md px-2.5 py-1">Sign Out</button>
         </div>
-        <button onclick="showSetupModal()" class="bg-white text-primary text-sm font-bold px-5 py-2.5 rounded-full hover:bg-primary-fixed transition-colors">Get Started Free</button>
+        <button onclick="window.BT_Interactive?BT_Interactive.handleStartFree(showSetupModal,enterDemo):showSetupModal()" class="bg-white text-primary text-sm font-bold px-5 py-2.5 rounded-full hover:bg-primary-fixed transition-colors">Get Started Free</button>
       </div>
     </nav>
 
@@ -209,7 +210,7 @@
           <li class="flex items-center gap-2 text-white/80 text-sm"><span class="material-symbols-outlined text-base text-green-300 filled">check_circle</span>Supplier info per SKU for fast reordering</li>
         </ul>
         <div class="flex flex-wrap gap-3">
-          <button onclick="showSetupModal()" class="bg-white text-primary font-bold px-8 py-4 rounded-xl hover:bg-primary-fixed transition-colors text-base shadow-lg">
+          <button onclick="window.BT_Interactive?BT_Interactive.handleStartFree(showSetupModal,enterDemo):showSetupModal()" class="bg-white text-primary font-bold px-8 py-4 rounded-xl hover:bg-primary-fixed transition-colors text-base shadow-lg">
             Start Tracking Free
           </button>
           <button onclick="enterDemo()" class="border-2 border-white/40 text-white font-semibold px-8 py-4 rounded-xl hover:border-white hover:bg-white/10 transition-colors text-base">
@@ -422,7 +423,7 @@
         </div>
       </div>
       <div class="text-center mt-8">
-        <button onclick="showSetupModal()" class="grad-inv text-white font-bold px-10 py-4 rounded-xl hover:opacity-90 transition-opacity text-base shadow-lg">
+        <button onclick="window.BT_Interactive?BT_Interactive.handleStartFree(showSetupModal,enterDemo):showSetupModal()" class="grad-inv text-white font-bold px-10 py-4 rounded-xl hover:opacity-90 transition-opacity text-base shadow-lg">
           Start Tracking Free →
         </button>
       </div>
@@ -453,14 +454,14 @@
             <li class="flex items-center gap-2"><span class="material-symbols-outlined text-base text-profit filled">check</span>Supplier info per item</li>
             <li class="flex items-center gap-2"><span class="material-symbols-outlined text-base text-profit filled">check</span>Saved locally in your browser</li>
           </ul>
-          <button onclick="showSetupModal()" class="w-full border-2 border-primary text-primary font-bold py-3 rounded-xl hover:bg-primary-fixed transition-colors">Get Started Free</button>
+          <button onclick="window.BT_Interactive?BT_Interactive.handleStartFree(showSetupModal,enterDemo):showSetupModal()" class="w-full border-2 border-primary text-primary font-bold py-3 rounded-xl hover:bg-primary-fixed transition-colors">Get Started Free</button>
         </div>
         <!-- Pro -->
         <div class="bg-primary rounded-2xl p-8 shadow-lg relative overflow-hidden">
-          <div class="absolute top-4 right-4 bg-yellow-300 text-on-surface text-xs font-bold px-3 py-1 rounded-full">Coming Soon</div>
+          <div class="absolute top-4 right-4 bg-green-300 text-green-900 text-xs font-bold px-3 py-1 rounded-full">Available Now</div>
           <p class="text-xs text-white/60 uppercase tracking-widest font-bold mb-4">Pro</p>
           <div class="mb-6">
-            <span class="text-4xl font-headline font-bold text-white">$12</span>
+            <span class="text-4xl font-headline font-bold text-white">$8.99</span>
             <span class="text-white/60 text-sm"> / month</span>
           </div>
           <ul class="space-y-3 mb-8 text-sm text-white/80">
@@ -471,7 +472,7 @@
             <li class="flex items-center gap-2"><span class="material-symbols-outlined text-base text-green-300 filled">check</span>Shrinkage reports</li>
             <li class="flex items-center gap-2"><span class="material-symbols-outlined text-base text-green-300 filled">check</span>CSV export &amp; stock-take mode</li>
           </ul>
-          <button class="w-full bg-white/20 text-white font-bold py-3 rounded-xl cursor-not-allowed opacity-70">Join Waitlist</button>
+          <button onclick="if(window.BT_SUB)BT_SUB.showUpgradeModal('inventory')" class="w-full bg-white text-primary font-bold py-3 rounded-xl hover:bg-white/90 transition-colors">Upgrade Now</button>
         </div>
       </div>
     </div>
@@ -540,7 +541,7 @@
       <h2 class="font-headline text-4xl text-white mb-4">Ready to Stop Running Out of Stock?</h2>
       <p class="text-white/70 text-lg mb-8">Join small business owners who track their inventory in real time — not when the shelf is already empty.</p>
       <div class="flex flex-wrap gap-3 justify-center">
-        <button onclick="showSetupModal()" class="bg-white text-primary font-bold px-10 py-4 rounded-xl hover:bg-primary-fixed transition-colors text-base shadow-lg">
+        <button onclick="window.BT_Interactive?BT_Interactive.handleStartFree(showSetupModal,enterDemo):showSetupModal()" class="bg-white text-primary font-bold px-10 py-4 rounded-xl hover:bg-primary-fixed transition-colors text-base shadow-lg">
           Start Free — No Sign-Up
         </button>
         <button onclick="enterDemo()" class="border-2 border-white/40 text-white font-semibold px-10 py-4 rounded-xl hover:border-white hover:bg-white/10 transition-colors text-base">
@@ -670,7 +671,15 @@
       <button onclick="document.getElementById('settings-overlay').classList.add('hidden')" class="flex-1 border border-outline-variant text-on-surface-variant font-semibold py-3 rounded-xl hover:bg-surface-container transition-colors text-sm">Cancel</button>
       <button onclick="saveSettings()" class="flex-1 grad-inv text-white font-bold py-3 rounded-xl hover:opacity-90 transition-opacity">Save Changes</button>
     </div>
-    <div class="mt-4 pt-4 border-t border-outline-variant/20">
+    <div class="mt-4 pt-4 border-t border-outline-variant/20 space-y-2">
+      <div class="flex gap-2">
+        <button onclick="backupData();document.getElementById('settings-overlay').classList.add('hidden')" class="flex-1 border border-outline-variant text-on-surface-variant text-sm font-semibold py-2 rounded-lg hover:bg-surface-container transition-colors flex items-center justify-center gap-1.5">
+          <span class="material-symbols-outlined text-base">download</span> Backup Data
+        </button>
+        <button onclick="restoreData();document.getElementById('settings-overlay').classList.add('hidden')" class="flex-1 border border-outline-variant text-on-surface-variant text-sm font-semibold py-2 rounded-lg hover:bg-surface-container transition-colors flex items-center justify-center gap-1.5">
+          <span class="material-symbols-outlined text-base">upload</span> Restore Backup
+        </button>
+      </div>
       <button onclick="resetApp()" class="w-full text-error text-sm font-semibold py-2 hover:bg-error-container rounded-lg transition-colors">Reset &amp; Start Over</button>
     </div>
   </div>
@@ -979,9 +988,14 @@
           <h2 class="font-headline text-3xl text-on-surface mb-1">Inventory</h2>
           <p class="text-on-surface-variant text-sm">All SKUs — current stock, reorder points, and supplier info.</p>
         </div>
-        <button onclick="openItemModal()" class="grad-inv text-white font-bold px-5 py-3 rounded-xl flex items-center gap-2 hover:opacity-90 transition-opacity text-sm">
-          <span class="material-symbols-outlined text-base">add</span> Add Item
-        </button>
+        <div class="flex gap-2">
+          <button onclick="exportInventoryCSV()" class="border border-outline-variant text-on-surface-variant font-semibold px-4 py-2.5 rounded-xl flex items-center gap-1.5 hover:bg-surface-container transition-colors text-sm" title="Export CSV">
+            <span class="material-symbols-outlined text-base">download</span> CSV
+          </button>
+          <button onclick="openItemModal()" class="grad-inv text-white font-bold px-5 py-3 rounded-xl flex items-center gap-2 hover:opacity-90 transition-opacity text-sm">
+            <span class="material-symbols-outlined text-base">add</span> Add Item
+          </button>
+        </div>
       </div>
 
       <!-- Search + filter -->
@@ -992,8 +1006,17 @@
 
       <!-- Table header (desktop) -->
       <div class="bg-white rounded-xl shadow-sm border border-outline-variant/10 overflow-hidden">
-        <div class="hidden md:grid grid-cols-[80px_1fr_110px_70px_70px_70px_90px_110px_70px_80px] gap-2 px-4 py-3 bg-surface-container text-xs font-bold text-on-surface-variant uppercase tracking-wide">
-          <span>SKU</span><span>Name</span><span>Category</span><span class="text-right">Stock</span><span class="text-right">Reorder</span><span class="text-right">Unit Cost</span><span class="text-right">Value</span><span>Supplier</span><span class="text-center">Status</span><span></span>
+        <div id="inv-table-header" class="hidden md:grid grid-cols-[80px_1fr_110px_70px_70px_70px_90px_110px_70px_100px] gap-2 px-4 py-3 bg-surface-container text-xs font-bold text-on-surface-variant uppercase tracking-wide">
+          <span class="cursor-pointer hover:text-primary select-none" onclick="sortInventory('sku')">SKU</span>
+          <span class="cursor-pointer hover:text-primary select-none" onclick="sortInventory('name')">Name</span>
+          <span class="cursor-pointer hover:text-primary select-none" onclick="sortInventory('cat')">Category</span>
+          <span class="cursor-pointer hover:text-primary select-none text-right" onclick="sortInventory('currentStock')">Stock</span>
+          <span class="cursor-pointer hover:text-primary select-none text-right" onclick="sortInventory('reorderAt')">Reorder</span>
+          <span class="cursor-pointer hover:text-primary select-none text-right" onclick="sortInventory('unitCost')">Unit Cost</span>
+          <span class="cursor-pointer hover:text-primary select-none text-right" onclick="sortInventory('_value')">Value</span>
+          <span class="cursor-pointer hover:text-primary select-none" onclick="sortInventory('supplier')">Supplier</span>
+          <span class="cursor-pointer hover:text-primary select-none text-center" onclick="sortInventory('_status')">Status</span>
+          <span></span>
         </div>
         <div id="inventory-list" class="divide-y divide-outline-variant/10">
           <p class="text-on-surface-variant text-sm text-center py-10">No items yet. <button onclick="openItemModal()" class="text-primary font-semibold hover:underline">Add your first item →</button></p>
@@ -1015,6 +1038,9 @@
           <p class="text-on-surface-variant text-sm">Every stock-in and stock-out — the complete audit trail.</p>
         </div>
         <div class="flex gap-2">
+          <button onclick="exportMovementsCSV()" class="border border-outline-variant text-on-surface-variant font-semibold px-4 py-2.5 rounded-xl flex items-center gap-1.5 hover:bg-surface-container transition-colors text-sm" title="Export CSV">
+            <span class="material-symbols-outlined text-base">download</span> CSV
+          </button>
           <button onclick="openMovementModal('in')" class="bg-profit text-white font-bold px-4 py-2.5 rounded-xl flex items-center gap-1.5 hover:opacity-90 transition-opacity text-sm">
             <span class="material-symbols-outlined text-base">add_circle</span> Stock In
           </button>
@@ -1025,16 +1051,19 @@
       </div>
 
       <!-- Filter bar -->
-      <div class="flex flex-wrap gap-2 mb-5 items-center">
-        <button class="mv-filter-btn active" data-mv-filter="all" onclick="setMvFilter('all',this)">All</button>
-        <button class="mv-filter-btn" data-mv-filter="in" onclick="setMvFilter('in',this)">Stock In</button>
-        <button class="mv-filter-btn" data-mv-filter="out" onclick="setMvFilter('out',this)">Stock Out</button>
-        <div class="ml-auto flex gap-2">
-          <select id="mv-date-filter" class="field py-1.5 px-3 text-xs w-auto" onchange="renderMovements()">
-            <option value="all">All time</option>
-            <option value="7">Last 7 days</option>
-            <option value="30">Last 30 days</option>
-          </select>
+      <div class="flex flex-col sm:flex-row gap-3 mb-5">
+        <input id="mv-search" type="text" class="field flex-1 sm:max-w-xs" placeholder="Search movements by item or reason..." oninput="renderMovements()"/>
+        <div class="flex flex-wrap gap-2 items-center">
+          <button class="mv-filter-btn active" data-mv-filter="all" onclick="setMvFilter('all',this)">All</button>
+          <button class="mv-filter-btn" data-mv-filter="in" onclick="setMvFilter('in',this)">Stock In</button>
+          <button class="mv-filter-btn" data-mv-filter="out" onclick="setMvFilter('out',this)">Stock Out</button>
+          <div class="ml-auto flex gap-2">
+            <select id="mv-date-filter" class="field py-1.5 px-3 text-xs w-auto" onchange="renderMovements()">
+              <option value="all">All time</option>
+              <option value="7">Last 7 days</option>
+              <option value="30">Last 30 days</option>
+            </select>
+          </div>
         </div>
       </div>
 
@@ -1052,8 +1081,14 @@
 
       <!-- Movements list -->
       <div class="bg-white rounded-xl shadow-sm border border-outline-variant/10 overflow-hidden">
-        <div class="hidden md:grid grid-cols-[90px_1fr_60px_70px_90px_1fr_90px] gap-3 px-5 py-3 bg-surface-container text-xs font-bold text-on-surface-variant uppercase tracking-wide">
-          <span>Date</span><span>Item</span><span>Type</span><span class="text-right">Qty</span><span class="text-right">Cost</span><span>Reason</span><span>Ref</span>
+        <div id="mv-table-header" class="hidden md:grid grid-cols-[90px_1fr_60px_70px_90px_1fr_90px] gap-3 px-5 py-3 bg-surface-container text-xs font-bold text-on-surface-variant uppercase tracking-wide">
+          <span class="cursor-pointer hover:text-primary select-none" onclick="sortMovements('date')">Date</span>
+          <span class="cursor-pointer hover:text-primary select-none" onclick="sortMovements('_itemName')">Item</span>
+          <span class="cursor-pointer hover:text-primary select-none" onclick="sortMovements('type')">Type</span>
+          <span class="cursor-pointer hover:text-primary select-none text-right" onclick="sortMovements('qty')">Qty</span>
+          <span class="cursor-pointer hover:text-primary select-none text-right" onclick="sortMovements('cost')">Cost</span>
+          <span class="cursor-pointer hover:text-primary select-none" onclick="sortMovements('reason')">Reason</span>
+          <span class="cursor-pointer hover:text-primary select-none" onclick="sortMovements('ref')">Ref</span>
         </div>
         <div id="movements-list" class="divide-y divide-outline-variant/10">
           <p class="text-on-surface-variant text-sm text-center py-10">No movements logged yet.</p>
@@ -1080,9 +1115,14 @@
 
     <!-- ════ LOW STOCK TAB ═══════════════════════════════ -->
     <div id="panel-lowstock" class="tab-panel hidden p-6 md:p-10 max-w-4xl mx-auto">
-      <div class="mb-8">
-        <h2 class="font-headline text-3xl text-on-surface mb-1">Low Stock Alerts</h2>
-        <p class="text-on-surface-variant text-sm">Items that have reached or dropped below their reorder point.</p>
+      <div class="flex items-center justify-between mb-8">
+        <div>
+          <h2 class="font-headline text-3xl text-on-surface mb-1">Low Stock Alerts</h2>
+          <p class="text-on-surface-variant text-sm">Items that have reached or dropped below their reorder point.</p>
+        </div>
+        <button onclick="exportLowStockCSV()" class="border border-outline-variant text-on-surface-variant font-semibold px-4 py-2.5 rounded-xl flex items-center gap-1.5 hover:bg-surface-container transition-colors text-sm" title="Export CSV">
+          <span class="material-symbols-outlined text-base">download</span> CSV
+        </button>
       </div>
 
       <!-- Summary line -->
@@ -1176,20 +1216,75 @@ let state = {
   catFilter: 'all',
   mvFilter: 'all',
   isDemo: false,
-  orderedFlags: {}
+  orderedFlags: {},
+  invSortField: null,
+  invSortDir: 'asc',
+  mvSortField: null,
+  mvSortDir: 'asc',
+  invSearch: '',
+  mvSearch: ''
 };
 
 // ── INIT ──────────────────────────────────────────────
-window.addEventListener('DOMContentLoaded', async () => {
+const _origBtInit = async function() {
+  if (window.BT_STORAGE?.waitForAuth) await window.BT_STORAGE.waitForAuth();
   const saved = await Storage.get();
   if (saved) {
     state.data = saved;
     state.isDemo = false;
     showApp();
+    if (window.BT_TRIAL && window.BT_STORAGE?.hasProAccess) {
+      window.BT_STORAGE.hasProAccess().then(hp => { if (!hp) window.BT_TRIAL.start('inventory'); });
+    }
+  } else if (window.BT_STORAGE?.hasProAccess && await window.BT_STORAGE.hasProAccess()) {
+    document.getElementById('landing-page').classList.add('hidden');
+    showSetupModal();
   } else {
     showLanding();
   }
-});
+};
+
+async function btInit() {
+  await _origBtInit();
+  if (state.data && window.BT_Interactive) {
+    BT_Interactive.Undo.init(
+      () => state.data,
+      d => { state.data = d; Storage.set(d); render(); renderTab(state.tab); }
+    );
+    BT_Interactive.registerShortcuts({
+      'n': () => { if (state.tab === 'inventory') openItemModal(); },
+      'd': () => { if (state.tab === 'inventory') switchTab('overview'); else switchTab('inventory'); },
+      '1': () => switchTab('overview'),
+      '2': () => switchTab('inventory'),
+      '3': () => switchTab('movements'),
+      '4': () => switchTab('lowstock'),
+      'Escape': () => {
+        document.getElementById('item-modal').classList.add('hidden');
+        document.getElementById('movement-modal').classList.add('hidden');
+        document.getElementById('settings-overlay').classList.add('hidden');
+        document.getElementById('setup-overlay').classList.add('hidden');
+      },
+      'Ctrl+e': () => {
+        if (state.tab === 'inventory') exportInventoryCSV();
+        else if (state.tab === 'movements') exportMovementsCSV();
+        else if (state.tab === 'lowstock') exportLowStockCSV();
+      },
+      'Ctrl+s': () => { if (state.data) backupData(); },
+      '?': () => {
+        BT_Interactive.showShortcutsHelp([
+          { key: 'N', desc: 'Add new item' },
+          { key: '1-4', desc: 'Switch tabs' },
+          { key: 'Ctrl+Z', desc: 'Undo' },
+          { key: 'Ctrl+Shift+Z', desc: 'Redo' },
+          { key: 'Ctrl+E', desc: 'Export current tab as CSV' },
+          { key: 'Ctrl+S', desc: 'Download backup' },
+          { key: 'Esc', desc: 'Close modals' },
+          { key: '?', desc: 'Show this help' },
+        ]);
+      },
+    });
+  }
+}
 
 // ── MODE SWITCHES ─────────────────────────────────────
 function showLanding() {
@@ -1255,6 +1350,9 @@ function completeSetup() {
   Storage.set(state.data);
   document.getElementById('setup-overlay').classList.add('hidden');
   showApp();
+  if (window.BT_TRIAL && window.BT_STORAGE?.hasProAccess) {
+    window.BT_STORAGE.hasProAccess().then(hp => { if (!hp) window.BT_TRIAL.start('inventory'); });
+  }
 }
 
 function resetApp() {
@@ -1496,6 +1594,41 @@ function renderInventory() {
   if (state.catFilter !== 'all') filtered = filtered.filter(i => i.cat === state.catFilter);
   if (search) filtered = filtered.filter(i => i.name.toLowerCase().includes(search) || (i.sku||'').toLowerCase().includes(search));
 
+  // Sorting
+  if (state.invSortField && window.BT_Interactive) {
+    if (state.invSortField === '_value') {
+      filtered = [...filtered].sort((a, b) => {
+        const va = calcStockValue(a), vb = calcStockValue(b);
+        return state.invSortDir === 'asc' ? va - vb : vb - va;
+      });
+    } else if (state.invSortField === '_status') {
+      const statusOrder = { low: 0, watch: 1, ok: 2 };
+      filtered = [...filtered].sort((a, b) => {
+        const va = statusOrder[getStockStatus(a)], vb = statusOrder[getStockStatus(b)];
+        return state.invSortDir === 'asc' ? va - vb : vb - va;
+      });
+    } else {
+      filtered = BT_Interactive.sortArray(filtered, state.invSortField, state.invSortDir);
+    }
+  }
+
+  // Update sort icons in header
+  if (window.BT_Interactive) {
+    const headerEl = qs('#inv-table-header');
+    if (headerEl) {
+      const fields = ['sku','name','cat','currentStock','reorderAt','unitCost','_value','supplier','_status'];
+      const labels = ['SKU','Name','Category','Stock','Reorder','Unit Cost','Value','Supplier','Status'];
+      const rightAligned = [false, false, false, true, true, true, true, false, false];
+      const centerAligned = [false, false, false, false, false, false, false, false, true];
+      const spans = headerEl.querySelectorAll('span[onclick]');
+      spans.forEach((span, idx) => {
+        if (idx < fields.length) {
+          span.innerHTML = labels[idx] + ' ' + BT_Interactive.sortIcon(fields[idx], state.invSortField, state.invSortDir);
+        }
+      });
+    }
+  }
+
   const listEl = qs('#inventory-list');
   if (filtered.length === 0) {
     listEl.innerHTML = `<p class="text-on-surface-variant text-sm text-center py-10">${d.items.length === 0 ? 'No items yet. <button onclick="openItemModal()" class="text-primary font-semibold hover:underline">Add your first item →</button>' : 'No items match your filter.'}</p>`;
@@ -1505,23 +1638,25 @@ function renderInventory() {
       const value  = calcStockValue(item);
       const badgeCls = status === 'ok' ? 'badge-ok' : status === 'low' ? 'badge-low' : 'badge-watch';
       const badgeTxt = status === 'ok' ? 'OK' : status === 'low' ? 'LOW' : 'WATCH';
-      const rowBg    = status === 'low' ? 'bg-loss-bg/20' : '';
+      const stockColor = getStockColor(item);
+      const rowBg    = status === 'low' ? 'bg-loss-bg/20' : status === 'watch' ? 'bg-warning-bg/20' : '';
       return `<div class="data-row ${rowBg} border-b border-outline-variant/10">
         <!-- Desktop row -->
-        <div class="hidden md:grid grid-cols-[80px_1fr_110px_70px_70px_70px_90px_110px_70px_80px] gap-2 px-4 py-3 items-center">
+        <div class="hidden md:grid grid-cols-[80px_1fr_110px_70px_70px_70px_90px_110px_70px_100px] gap-2 px-4 py-3 items-center">
           <span class="text-xs font-mono text-on-surface-variant truncate">${item.sku||'—'}</span>
           <div>
             <p class="text-sm font-medium text-on-surface">${item.name}</p>
             ${item.notes ? `<p class="text-xs text-primary/60 italic">${item.notes}</p>` : ''}
           </div>
           <span class="text-xs bg-primary-fixed text-on-primary-fixed-variant px-2 py-0.5 rounded-full font-semibold truncate">${item.cat}</span>
-          <span class="text-right font-bold text-sm ${status === 'low' ? 'text-error' : 'text-on-surface'}">${fmtQty(item.currentStock)} <span class="text-xs font-normal text-outline">${item.unit}</span></span>
+          <span class="text-right font-bold text-sm" style="color:${stockColor}">${fmtQty(item.currentStock)} <span class="text-xs font-normal text-outline">${item.unit}</span></span>
           <span class="text-right text-sm text-on-surface-variant">${fmtQty(item.reorderAt)}</span>
           <span class="text-right text-sm text-on-surface-variant">${fmt(item.unitCost||0,cur)}</span>
           <span class="text-right font-semibold text-sm text-primary">${fmt(value,cur)}</span>
           <span class="text-xs text-on-surface-variant truncate">${item.supplier||'—'}</span>
           <span class="${badgeCls} justify-center">${badgeTxt}</span>
           <div class="flex gap-1 justify-end">
+            <button onclick="duplicateItem('${item.id}')" class="p-1.5 text-outline hover:text-secondary hover:bg-secondary-container rounded-lg transition-colors" title="Duplicate"><span class="material-symbols-outlined text-base">content_copy</span></button>
             <button onclick="openItemModal('${item.id}')" class="p-1.5 text-outline hover:text-primary hover:bg-primary-fixed rounded-lg transition-colors" title="Edit"><span class="material-symbols-outlined text-base">edit</span></button>
             <button onclick="deleteItem('${item.id}')" class="p-1.5 text-outline hover:text-error hover:bg-error-container rounded-lg transition-colors" title="Delete"><span class="material-symbols-outlined text-base">delete</span></button>
           </div>
@@ -1536,11 +1671,12 @@ function renderInventory() {
             <span class="${badgeCls}">${badgeTxt}</span>
           </div>
           <div class="grid grid-cols-3 gap-2 text-xs mb-2">
-            <div><p class="text-outline mb-0.5">Stock</p><p class="font-bold ${status==='low'?'text-error':'text-on-surface'}">${fmtQty(item.currentStock)} ${item.unit}</p></div>
+            <div><p class="text-outline mb-0.5">Stock</p><p class="font-bold" style="color:${stockColor}">${fmtQty(item.currentStock)} ${item.unit}</p></div>
             <div><p class="text-outline mb-0.5">Reorder at</p><p class="font-semibold text-on-surface">${fmtQty(item.reorderAt)}</p></div>
             <div><p class="text-outline mb-0.5">Value</p><p class="font-semibold text-primary">${fmt(value,cur)}</p></div>
           </div>
           <div class="flex gap-2">
+            <button onclick="duplicateItem('${item.id}')" class="px-3 border border-outline-variant text-on-surface-variant text-xs font-semibold py-1.5 rounded-lg hover:bg-surface-container transition-colors">Duplicate</button>
             <button onclick="openItemModal('${item.id}')" class="flex-1 border border-outline-variant text-on-surface-variant text-xs font-semibold py-1.5 rounded-lg hover:bg-surface-container transition-colors">Edit</button>
             <button onclick="deleteItem('${item.id}')" class="px-3 border border-error/30 text-error text-xs font-semibold py-1.5 rounded-lg hover:bg-error-container transition-colors">Delete</button>
           </div>
@@ -1580,8 +1716,49 @@ function renderMovements() {
   // Type filter
   if (mf !== 'all') filtered = filtered.filter(mv => mv.type === mf);
 
-  // Sort newest first
-  filtered.sort((a,b) => b.date.localeCompare(a.date));
+  // Search filter
+  const mvSearchVal = (qs('#mv-search')?.value || '').toLowerCase();
+  if (mvSearchVal) {
+    filtered = filtered.filter(mv => {
+      const item = d.items.find(i => i.id === mv.itemId);
+      const itemName = item ? item.name.toLowerCase() : '';
+      return itemName.includes(mvSearchVal) || (mv.reason||'').toLowerCase().includes(mvSearchVal) || (mv.ref||'').toLowerCase().includes(mvSearchVal);
+    });
+  }
+
+  // Sort: custom sort or default newest first
+  if (state.mvSortField && window.BT_Interactive) {
+    if (state.mvSortField === '_itemName') {
+      filtered.sort((a, b) => {
+        const ia = d.items.find(i => i.id === a.itemId);
+        const ib = d.items.find(i => i.id === b.itemId);
+        const na = (ia ? ia.name : '').toLowerCase();
+        const nb = (ib ? ib.name : '').toLowerCase();
+        if (na < nb) return state.mvSortDir === 'asc' ? -1 : 1;
+        if (na > nb) return state.mvSortDir === 'asc' ? 1 : -1;
+        return 0;
+      });
+    } else {
+      filtered = BT_Interactive.sortArray(filtered, state.mvSortField, state.mvSortDir);
+    }
+  } else {
+    filtered.sort((a,b) => b.date.localeCompare(a.date));
+  }
+
+  // Update sort icons in header
+  if (window.BT_Interactive) {
+    const headerEl = qs('#mv-table-header');
+    if (headerEl) {
+      const fields = ['date','_itemName','type','qty','cost','reason','ref'];
+      const labels = ['Date','Item','Type','Qty','Cost','Reason','Ref'];
+      const spans = headerEl.querySelectorAll('span[onclick]');
+      spans.forEach((span, idx) => {
+        if (idx < fields.length) {
+          span.innerHTML = labels[idx] + ' ' + BT_Interactive.sortIcon(fields[idx], state.mvSortField, state.mvSortDir);
+        }
+      });
+    }
+  }
 
   // Running totals
   const totalIn  = filtered.filter(mv => mv.type === 'in').reduce((s, mv) => s + (mv.qty||0), 0);
@@ -1781,6 +1958,7 @@ function saveItem() {
   }
 
   if (!state.isDemo) Storage.set(state.data);
+  if (window.BT_Interactive) BT_Interactive.Undo.push();
   closeItemModal();
   render();
   renderInventory();
@@ -1791,6 +1969,7 @@ function deleteItem(id) {
   if (!confirm('Delete this item? This will not delete its movement history, but stock movements for this item will show "Unknown item".')) return;
   state.data.items = state.data.items.filter(i => i.id !== id);
   if (!state.isDemo) Storage.set(state.data);
+  if (window.BT_Interactive) BT_Interactive.Undo.push();
   render();
   renderInventory();
   if (state.tab === 'overview') renderOverview();
@@ -1870,9 +2049,159 @@ function saveMovement() {
   state.data.movements.push(mv);
 
   if (!state.isDemo) Storage.set(state.data);
+  if (window.BT_Interactive) BT_Interactive.Undo.push();
   closeMovementModal();
   render();
   renderTab(state.tab);
+}
+
+// ── STOCK LEVEL COLORING ─────────────────────────────
+function getStockColor(item) {
+  const s = item.currentStock || 0;
+  const r = item.reorderAt || 0;
+  if (r <= 0) return '#191c20'; // default
+  if (s <= r) return '#ba1a1a'; // red — at or below reorder point
+  if (s <= r * 1.2) return '#92400e'; // yellow/amber — within 20% of reorder point
+  return '#166534'; // green — healthy stock
+}
+
+// ── SORT FUNCTIONS ───────────────────────────────────
+function sortInventory(field) {
+  if (state.invSortField === field) {
+    state.invSortDir = state.invSortDir === 'asc' ? 'desc' : 'asc';
+  } else {
+    state.invSortField = field;
+    state.invSortDir = 'asc';
+  }
+  renderInventory();
+}
+
+function sortMovements(field) {
+  if (state.mvSortField === field) {
+    state.mvSortDir = state.mvSortDir === 'asc' ? 'desc' : 'asc';
+  } else {
+    state.mvSortField = field;
+    state.mvSortDir = 'asc';
+  }
+  renderMovements();
+}
+
+// ── DUPLICATE ITEM ───────────────────────────────────
+function duplicateItem(id) {
+  const item = state.data.items.find(i => i.id === id);
+  if (!item) return;
+  const dup = JSON.parse(JSON.stringify(item));
+  dup.id = uid();
+  dup.name = item.name + ' (copy)';
+  if (dup.sku) dup.sku = dup.sku + '-COPY';
+  state.data.items.push(dup);
+  if (!state.isDemo) Storage.set(state.data);
+  if (window.BT_Interactive) BT_Interactive.Undo.push();
+  render();
+  renderInventory();
+  if (state.tab === 'overview') renderOverview();
+  if (window.BT_Interactive) BT_Interactive.toast('Item duplicated');
+}
+
+// ── CSV EXPORT ───────────────────────────────────────
+function exportInventoryCSV() {
+  if (!window.BT_Interactive) return;
+  const d = state.data;
+  const cur = d.currency || '$';
+  const headers = ['SKU', 'Name', 'Category', 'Unit', 'Current Stock', 'Reorder At', 'Reorder Qty', 'Unit Cost', 'Stock Value', 'Supplier', 'Supplier Contact', 'Lead Days', 'Status', 'Notes'];
+  const rows = d.items.map(item => [
+    item.sku || '',
+    item.name,
+    item.cat,
+    item.unit,
+    item.currentStock,
+    item.reorderAt,
+    item.reorderQty,
+    item.unitCost || 0,
+    calcStockValue(item).toFixed(2),
+    item.supplier || '',
+    item.supplierContact || '',
+    item.leadDays || '',
+    getStockStatus(item).toUpperCase(),
+    item.notes || ''
+  ]);
+  BT_Interactive.exportCSV(headers, rows, d.name.replace(/\s+/g, '_') + '_inventory.csv');
+  BT_Interactive.toast('Inventory CSV exported');
+}
+
+function exportMovementsCSV() {
+  if (!window.BT_Interactive) return;
+  const d = state.data;
+  const headers = ['Date', 'Item', 'SKU', 'Type', 'Quantity', 'Cost', 'Reason', 'Reference'];
+  const rows = (d.movements || []).map(mv => {
+    const item = d.items.find(i => i.id === mv.itemId);
+    return [
+      mv.date,
+      item ? item.name : 'Unknown',
+      item ? (item.sku || '') : '',
+      mv.type === 'in' ? 'Stock In' : 'Stock Out',
+      mv.qty,
+      (mv.cost || 0).toFixed(2),
+      mv.reason || '',
+      mv.ref || ''
+    ];
+  });
+  BT_Interactive.exportCSV(headers, rows, d.name.replace(/\s+/g, '_') + '_movements.csv');
+  BT_Interactive.toast('Movements CSV exported');
+}
+
+function exportLowStockCSV() {
+  if (!window.BT_Interactive) return;
+  const d = state.data;
+  const cur = d.currency || '$';
+  const t = calcTotals();
+  if (t.lowStockItems.length === 0) {
+    BT_Interactive.toast('No low stock items to export');
+    return;
+  }
+  const headers = ['SKU', 'Name', 'Category', 'Current Stock', 'Unit', 'Reorder At', 'Reorder Qty', 'Unit Cost', 'Est. Reorder Cost', 'Supplier', 'Supplier Contact', 'Lead Days'];
+  const rows = t.lowStockItems.map(item => [
+    item.sku || '',
+    item.name,
+    item.cat,
+    item.currentStock,
+    item.unit,
+    item.reorderAt,
+    item.reorderQty,
+    item.unitCost || 0,
+    ((item.reorderQty || 0) * (item.unitCost || 0)).toFixed(2),
+    item.supplier || '',
+    item.supplierContact || '',
+    item.leadDays || ''
+  ]);
+  BT_Interactive.exportCSV(headers, rows, d.name.replace(/\s+/g, '_') + '_low_stock.csv');
+  BT_Interactive.toast('Low stock CSV exported');
+}
+
+// ── BACKUP / RESTORE ─────────────────────────────────
+function backupData() {
+  if (!window.BT_Interactive || !state.data) return;
+  BT_Interactive.downloadJSON(state.data, (state.data.name || 'inventory').replace(/\s+/g, '_') + '_backup.json');
+  BT_Interactive.toast('Backup downloaded');
+}
+
+function restoreData() {
+  if (!window.BT_Interactive) return;
+  BT_Interactive.importJSON(function(data) {
+    if (!data || !data.items || !Array.isArray(data.items)) {
+      BT_Interactive.toast('Invalid backup file — must be an inventory backup', 'error');
+      return;
+    }
+    if (!confirm('Restore from backup? This will replace all current data.')) return;
+    state.data = data;
+    state.isDemo = false;
+    state.orderedFlags = {};
+    Storage.set(state.data);
+    if (window.BT_Interactive) BT_Interactive.Undo.push();
+    render();
+    renderTab(state.tab);
+    BT_Interactive.toast('Data restored from backup', 'success');
+  });
 }
 
 // ── FAQ ───────────────────────────────────────────────
@@ -1883,6 +2212,8 @@ function toggleFaq(btn) {
   icon.textContent = open ? 'remove' : 'add';
 }
 </script>
+<!-- ── INTERACTIVE FEATURES ─────────────────────────────── -->
+<script src="/js/interactive.js"></script>
 <!-- ── AUTH + CLOUD STORAGE ─────────────────────────────── -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="/js/auth.js"></script>
@@ -1890,5 +2221,6 @@ function toggleFaq(btn) {
 <script src="/js/storage-cloud.js"></script>
 <script src="/js/subscription.js"></script>
 <script src="/js/trial.js"></script>
+<script>btInit().catch(console.error);</script>
 </body>
 </html>

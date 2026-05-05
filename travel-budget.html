@@ -167,6 +167,7 @@
      LANDING PAGE
 ══════════════════════════════════════════════════════ -->
 <div id="landing-page">
+<script>try{if(Object.keys(localStorage).some(k=>k.startsWith('sb-')&&k.endsWith('-auth-token')))document.getElementById('landing-page').classList.add('hidden');}catch(e){}</script>
 
   <!-- ── HERO ─────────────────────────────────────────── -->
   <section class="lp-hero min-h-screen flex flex-col">
@@ -184,7 +185,7 @@
           <span data-bt-user-email class="text-white/70 text-xs hidden md:block max-w-[100px] truncate"></span>
           <button data-bt-signout class="text-white/70 hover:text-white text-xs font-medium border border-white/30 rounded-md px-2.5 py-1">Sign Out</button>
         </div>
-        <button onclick="showSetupModal()" class="bg-white text-primary text-sm font-bold px-5 py-2.5 rounded-full hover:bg-primary-fixed transition-colors">Get Started Free</button>
+        <button onclick="window.BT_Interactive?BT_Interactive.handleStartFree(showSetupModal,enterDemo):showSetupModal()" class="bg-white text-primary text-sm font-bold px-5 py-2.5 rounded-full hover:bg-primary-fixed transition-colors">Get Started Free</button>
       </div>
     </nav>
 
@@ -209,7 +210,7 @@
           <li class="flex items-center gap-2 text-white/80 text-sm"><span class="material-symbols-outlined text-base text-green-300 filled">check_circle</span>Built-in packing checklist</li>
         </ul>
         <div class="flex flex-wrap gap-3">
-          <button onclick="showSetupModal()" class="bg-white text-primary font-bold px-8 py-4 rounded-xl hover:bg-primary-fixed transition-colors text-base shadow-lg">
+          <button onclick="window.BT_Interactive?BT_Interactive.handleStartFree(showSetupModal,enterDemo):showSetupModal()" class="bg-white text-primary font-bold px-8 py-4 rounded-xl hover:bg-primary-fixed transition-colors text-base shadow-lg">
             Start Tracking Free
           </button>
           <button onclick="enterDemo()" class="border-2 border-white/40 text-white font-semibold px-8 py-4 rounded-xl hover:border-white hover:bg-white/10 transition-colors text-base">
@@ -439,7 +440,7 @@
         </div>
       </div>
       <div class="text-center mt-8">
-        <button onclick="showSetupModal()" class="grad-travel text-white font-bold px-10 py-4 rounded-xl hover:opacity-90 transition-opacity text-base shadow-lg">
+        <button onclick="window.BT_Interactive?BT_Interactive.handleStartFree(showSetupModal,enterDemo):showSetupModal()" class="grad-travel text-white font-bold px-10 py-4 rounded-xl hover:opacity-90 transition-opacity text-base shadow-lg">
           Start Tracking Free →
         </button>
       </div>
@@ -471,14 +472,14 @@
             <li class="flex items-center gap-2"><span class="material-symbols-outlined text-base text-profit filled">check</span>Burn rate indicator</li>
             <li class="flex items-center gap-2"><span class="material-symbols-outlined text-base text-profit filled">check</span>Saved locally in your browser</li>
           </ul>
-          <button onclick="showSetupModal()" class="w-full border-2 border-primary text-primary font-bold py-3 rounded-xl hover:bg-primary-fixed transition-colors">Get Started Free</button>
+          <button onclick="window.BT_Interactive?BT_Interactive.handleStartFree(showSetupModal,enterDemo):showSetupModal()" class="w-full border-2 border-primary text-primary font-bold py-3 rounded-xl hover:bg-primary-fixed transition-colors">Get Started Free</button>
         </div>
         <!-- Pro -->
         <div class="bg-primary rounded-2xl p-8 shadow-lg relative overflow-hidden">
-          <div class="absolute top-4 right-4 bg-yellow-300 text-on-surface text-xs font-bold px-3 py-1 rounded-full">Coming Soon</div>
+          <div class="absolute top-4 right-4 bg-green-300 text-green-900 text-xs font-bold px-3 py-1 rounded-full">Available Now</div>
           <p class="text-xs text-white/60 uppercase tracking-widest font-bold mb-4">Pro</p>
           <div class="mb-6">
-            <span class="text-4xl font-headline font-bold text-white">$9</span>
+            <span class="text-4xl font-headline font-bold text-white">$8.99</span>
             <span class="text-white/60 text-sm"> / month</span>
           </div>
           <ul class="space-y-3 mb-8 text-sm text-white/80">
@@ -488,7 +489,7 @@
             <li class="flex items-center gap-2"><span class="material-symbols-outlined text-base text-green-300 filled">check</span>Receipt photo capture</li>
             <li class="flex items-center gap-2"><span class="material-symbols-outlined text-base text-green-300 filled">check</span>PDF / CSV export</li>
           </ul>
-          <button class="w-full bg-white/20 text-white font-bold py-3 rounded-xl cursor-not-allowed opacity-70">Join Waitlist</button>
+          <button onclick="if(window.BT_SUB)BT_SUB.showUpgradeModal('travel')" class="w-full bg-white text-primary font-bold py-3 rounded-xl hover:bg-white/90 transition-colors">Upgrade Now</button>
         </div>
       </div>
     </div>
@@ -557,7 +558,7 @@
       <h2 class="font-headline text-4xl text-white mb-4">Ready to Travel Without the Budget Anxiety?</h2>
       <p class="text-white/70 text-lg mb-8">Join travelers who track their spending in real time — not after the credit card bill arrives.</p>
       <div class="flex flex-wrap gap-3 justify-center">
-        <button onclick="showSetupModal()" class="bg-white text-primary font-bold px-10 py-4 rounded-xl hover:bg-primary-fixed transition-colors text-base shadow-lg">
+        <button onclick="window.BT_Interactive?BT_Interactive.handleStartFree(showSetupModal,enterDemo):showSetupModal()" class="bg-white text-primary font-bold px-10 py-4 rounded-xl hover:bg-primary-fixed transition-colors text-base shadow-lg">
           Start Free — No Sign-Up
         </button>
         <button onclick="enterDemo()" class="border-2 border-white/40 text-white font-semibold px-10 py-4 rounded-xl hover:border-white hover:bg-white/10 transition-colors text-base">
@@ -706,7 +707,11 @@
       <button onclick="document.getElementById('settings-overlay').classList.add('hidden')" class="flex-1 border border-outline-variant text-on-surface-variant font-semibold py-3 rounded-xl hover:bg-surface-container transition-colors text-sm">Cancel</button>
       <button onclick="saveSettings()" class="flex-1 grad-travel text-white font-bold py-3 rounded-xl hover:opacity-90 transition-opacity">Save Changes</button>
     </div>
-    <div class="mt-4 pt-4 border-t border-outline-variant/20">
+    <div class="mt-4 pt-4 border-t border-outline-variant/20 space-y-2">
+      <div class="grid grid-cols-2 gap-3">
+        <button onclick="backupData()" class="py-3 rounded-xl border border-outline-variant/30 text-on-surface-variant text-sm font-semibold hover:bg-surface-container-low transition-colors flex items-center justify-center gap-2"><span class="material-symbols-outlined text-base">download</span> Backup JSON</button>
+        <button onclick="restoreData()" class="py-3 rounded-xl border border-outline-variant/30 text-on-surface-variant text-sm font-semibold hover:bg-surface-container-low transition-colors flex items-center justify-center gap-2"><span class="material-symbols-outlined text-base">upload</span> Restore</button>
+      </div>
       <button onclick="resetApp()" class="w-full text-error text-sm font-semibold py-2 hover:bg-error-container rounded-lg transition-colors">Reset &amp; Start Over</button>
     </div>
   </div>
@@ -1064,9 +1069,17 @@
           <h2 class="font-headline text-3xl text-on-surface mb-1">Expenses</h2>
           <p class="text-on-surface-variant text-sm">Pre-trip bookings and planned costs — estimated vs actual vs paid.</p>
         </div>
-        <button onclick="openExpenseModal()" class="grad-travel text-white font-bold px-5 py-3 rounded-xl flex items-center gap-2 hover:opacity-90 transition-opacity text-sm">
-          <span class="material-symbols-outlined text-base">add</span> Add Expense
-        </button>
+        <div class="flex items-center gap-2">
+          <button onclick="exportExpensesCSV()" class="border border-outline-variant text-on-surface-variant font-semibold px-4 py-3 rounded-xl flex items-center gap-2 hover:bg-surface-container transition-colors text-sm"><span class="material-symbols-outlined text-base">download</span> CSV</button>
+          <button onclick="openExpenseModal()" class="grad-travel text-white font-bold px-5 py-3 rounded-xl flex items-center gap-2 hover:opacity-90 transition-opacity text-sm">
+            <span class="material-symbols-outlined text-base">add</span> Add Expense
+          </button>
+        </div>
+      </div>
+
+      <!-- Expense search -->
+      <div class="mb-4">
+        <input type="text" id="expense-search" class="field" placeholder="Search expenses..." oninput="searchExpense=this.value;renderExpenses()"/>
       </div>
 
       <!-- Expense summary -->
@@ -1093,7 +1106,12 @@
       <!-- Expense table -->
       <div class="bg-white rounded-xl shadow-sm border border-outline-variant/10 overflow-hidden">
         <div class="grid grid-cols-[1fr_130px_95px_95px_95px_80px] gap-3 px-5 py-3 bg-surface-container text-xs font-bold text-on-surface-variant uppercase tracking-wide hidden md:grid">
-          <span>Description</span><span>Category</span><span class="text-right">Estimated</span><span class="text-right">Actual</span><span class="text-right">Paid</span><span></span>
+          <span class="cursor-pointer hover:text-primary" onclick="sortExpenses('desc')">Description <span id="cs-desc"></span></span>
+          <span class="cursor-pointer hover:text-primary" onclick="sortExpenses('cat')">Category <span id="cs-cat"></span></span>
+          <span class="text-right cursor-pointer hover:text-primary" onclick="sortExpenses('estimated')">Estimated <span id="cs-estimated"></span></span>
+          <span class="text-right cursor-pointer hover:text-primary" onclick="sortExpenses('actual')">Actual <span id="cs-actual"></span></span>
+          <span class="text-right cursor-pointer hover:text-primary" onclick="sortExpenses('paid')">Paid <span id="cs-paid"></span></span>
+          <span></span>
         </div>
         <div id="expenses-list" class="divide-y divide-outline-variant/10">
           <p class="text-on-surface-variant text-sm text-center py-8">No expenses yet. <button onclick="openExpenseModal()" class="text-primary font-semibold hover:underline">Add your first expense →</button></p>
@@ -1130,9 +1148,17 @@
           <h2 class="font-headline text-3xl text-on-surface mb-1">Daily Log</h2>
           <p class="text-on-surface-variant text-sm">Log expenses each day as you travel.</p>
         </div>
-        <button onclick="openDayModal()" class="grad-travel text-white font-bold px-5 py-3 rounded-xl flex items-center gap-2 hover:opacity-90 transition-opacity text-sm">
-          <span class="material-symbols-outlined text-base">add</span> Add Day
-        </button>
+        <div class="flex items-center gap-2">
+          <button onclick="exportDaysCSV()" class="border border-outline-variant text-on-surface-variant font-semibold px-4 py-3 rounded-xl flex items-center gap-2 hover:bg-surface-container transition-colors text-sm"><span class="material-symbols-outlined text-base">download</span> CSV</button>
+          <button onclick="openDayModal()" class="grad-travel text-white font-bold px-5 py-3 rounded-xl flex items-center gap-2 hover:opacity-90 transition-opacity text-sm">
+            <span class="material-symbols-outlined text-base">add</span> Add Day
+          </button>
+        </div>
+      </div>
+
+      <!-- Day search -->
+      <div class="mb-4">
+        <input type="text" id="day-search" class="field" placeholder="Search daily log..." oninput="searchDay=this.value;renderDailyLog()"/>
       </div>
 
       <!-- Daily target + running total -->
@@ -1184,9 +1210,12 @@
           <h2 class="font-headline text-3xl text-on-surface mb-1">Packing Checklist</h2>
           <p class="text-on-surface-variant text-sm">Check off items as you pack. Never forget the essentials.</p>
         </div>
-        <button onclick="openPackModal()" class="grad-travel text-white font-bold px-5 py-3 rounded-xl flex items-center gap-2 hover:opacity-90 transition-opacity text-sm">
-          <span class="material-symbols-outlined text-base">add</span> Add Item
-        </button>
+        <div class="flex items-center gap-2">
+          <button onclick="exportPackingCSV()" class="border border-outline-variant text-on-surface-variant font-semibold px-4 py-3 rounded-xl flex items-center gap-2 hover:bg-surface-container transition-colors text-sm"><span class="material-symbols-outlined text-base">download</span> CSV</button>
+          <button onclick="openPackModal()" class="grad-travel text-white font-bold px-5 py-3 rounded-xl flex items-center gap-2 hover:opacity-90 transition-opacity text-sm">
+            <span class="material-symbols-outlined text-base">add</span> Add Item
+          </button>
+        </div>
       </div>
 
       <!-- Progress -->
@@ -1295,18 +1324,29 @@ let state = {
   catFilter: 'all',
   isDemo: false
 };
+let costSort = { field:'', dir:'asc' };
+let daySort  = { field:'', dir:'asc' };
+let searchExpense = '';
+let searchDay = '';
 
 // ── INIT ──────────────────────────────────────────────
-window.addEventListener('DOMContentLoaded', async () => {
+async function btInit() {
+  if (window.BT_STORAGE?.waitForAuth) await window.BT_STORAGE.waitForAuth();
   const saved = await Storage.get();
   if (saved) {
     state.data = saved;
     state.isDemo = false;
     showApp();
+    if (window.BT_TRIAL && window.BT_STORAGE?.hasProAccess) {
+      window.BT_STORAGE.hasProAccess().then(hp => { if (!hp) window.BT_TRIAL.start('travel'); });
+    }
+  } else if (window.BT_STORAGE?.hasProAccess && await window.BT_STORAGE.hasProAccess()) {
+    document.getElementById('landing-page').classList.add('hidden');
+    showSetupModal();
   } else {
     showLanding();
   }
-});
+}
 
 // ── MODE SWITCHES ─────────────────────────────────────
 function showLanding() {
@@ -1390,6 +1430,9 @@ function completeSetup() {
   Storage.set(state.data);
   document.getElementById('setup-overlay').classList.add('hidden');
   showApp();
+  if (window.BT_TRIAL && window.BT_STORAGE?.hasProAccess) {
+    window.BT_STORAGE.hasProAccess().then(hp => { if (!hp) window.BT_TRIAL.start('travel'); });
+  }
 }
 
 function resetApp() {
@@ -1425,6 +1468,7 @@ function saveSettings() {
   state.data.currency    = document.getElementById('set-currency').value;
   state.data.notes       = document.getElementById('set-notes').value;
   if (!state.isDemo) Storage.set(state.data);
+  if (window.BT_Interactive) BT_Interactive.Undo.push();
   document.getElementById('settings-overlay').classList.add('hidden');
   render();
   renderTab(state.tab);
@@ -1627,7 +1671,8 @@ function renderOverview() {
     catBd.innerHTML = catEntries.map(([cat,v])=>{
       const pctBar = totalSpent>0 ? Math.min(100, v.actual/totalSpent*100) : 0;
       const over = v.estimated > 0 && v.actual > v.estimated;
-      return `<div>
+      const rowStyle = over ? 'background:rgba(254,226,226,0.5);border-radius:8px;padding:6px 8px;margin:-6px -8px;' : '';
+      return `<div style="${rowStyle}">
         <div class="flex justify-between text-sm mb-1">
           <span class="text-on-surface font-medium">${cat}</span>
           <span class="text-on-surface-variant">${fmt(v.actual,cur)} <span class="text-xs text-outline">(${pctBar.toFixed(0)}%)</span>${over?` <span class="text-xs text-loss font-bold">over</span>`:''}</span>
@@ -1665,15 +1710,34 @@ function renderExpenses() {
     }
   });
 
-  const filtered = state.catFilter==='all' ? d.expenses : d.expenses.filter(e=>e.cat===state.catFilter);
+  let filtered = state.catFilter==='all' ? [...d.expenses] : d.expenses.filter(e=>e.cat===state.catFilter);
+
+  // Search filter
+  if (searchExpense) {
+    const q = searchExpense.toLowerCase();
+    filtered = filtered.filter(e => e.desc.toLowerCase().includes(q) || e.cat.toLowerCase().includes(q) || (e.notes||'').toLowerCase().includes(q));
+  }
+
+  // Sort
+  if (costSort.field && window.BT_Interactive) {
+    filtered = BT_Interactive.sortArray(filtered, costSort.field, costSort.dir);
+  }
+
+  // Update sort icons
+  ['desc','cat','estimated','actual','paid'].forEach(f => {
+    const el = qs('#cs-'+f);
+    if (el) el.innerHTML = window.BT_Interactive ? BT_Interactive.sortIcon(f, costSort.field, costSort.dir) : '';
+  });
+
   const el = qs('#expenses-list');
   if (filtered.length===0) {
-    el.innerHTML = `<p class="text-on-surface-variant text-sm text-center py-8">${state.catFilter==='all'?'No expenses yet. <button onclick="openExpenseModal()" class="text-primary font-semibold hover:underline">Add your first expense →</button>':'No expenses in this category.'}</p>`;
+    el.innerHTML = `<p class="text-on-surface-variant text-sm text-center py-8">${state.catFilter==='all' && !searchExpense?'No expenses yet. <button onclick="openExpenseModal()" class="text-primary font-semibold hover:underline">Add your first expense →</button>':'No matching expenses.'}</p>`;
   } else {
     el.innerHTML = filtered.map(e=>{
       const balance = (e.actual||0)-(e.paid||0);
       const over    = (e.actual||0)>(e.estimated||0) && e.estimated>0;
-      return `<div class="data-row grid grid-cols-1 md:grid-cols-[1fr_130px_95px_95px_95px_80px] gap-3 px-5 py-4 items-center">
+      const rowBg   = over ? 'background:rgba(254,226,226,0.5);' : '';
+      return `<div class="data-row grid grid-cols-1 md:grid-cols-[1fr_130px_95px_95px_95px_80px] gap-3 px-5 py-4 items-center" style="${rowBg}">
         <div>
           <p class="font-medium text-on-surface text-sm">${e.desc}</p>
           ${e.notes?`<p class="text-xs text-primary/70 mt-0.5 italic">${e.notes}</p>`:''}
@@ -1695,8 +1759,9 @@ function renderExpenses() {
           ${balance>0?`<p class="text-xs text-loss">Due: ${fmt(balance,cur)}</p>`:''}
         </div>
         <div class="flex gap-1 justify-end">
-          <button onclick="openExpenseModal('${e.id}')" class="p-1.5 text-outline hover:text-primary hover:bg-primary-fixed rounded-lg transition-colors"><span class="material-symbols-outlined text-base">edit</span></button>
-          <button onclick="deleteExpense('${e.id}')" class="p-1.5 text-outline hover:text-error hover:bg-error-container rounded-lg transition-colors"><span class="material-symbols-outlined text-base">delete</span></button>
+          <button onclick="duplicateExpense('${e.id}')" class="p-1.5 text-outline hover:text-primary hover:bg-primary-fixed rounded-lg transition-colors" title="Duplicate"><span class="material-symbols-outlined text-base">content_copy</span></button>
+          <button onclick="openExpenseModal('${e.id}')" class="p-1.5 text-outline hover:text-primary hover:bg-primary-fixed rounded-lg transition-colors" title="Edit"><span class="material-symbols-outlined text-base">edit</span></button>
+          <button onclick="deleteExpense('${e.id}')" class="p-1.5 text-outline hover:text-error hover:bg-error-container rounded-lg transition-colors" title="Delete"><span class="material-symbols-outlined text-base">delete</span></button>
         </div>
       </div>`;
     }).join('');
@@ -1735,8 +1800,27 @@ function renderDailyLog() {
     return;
   }
 
-  const sorted = [...d.dailyLog].sort((a,b)=>a.date.localeCompare(b.date));
-  dl.innerHTML = sorted.map(day=>{
+  let dayList = [...d.dailyLog];
+
+  // Search filter
+  if (searchDay) {
+    const q = searchDay.toLowerCase();
+    dayList = dayList.filter(day => (day.location||'').toLowerCase().includes(q) || day.date.includes(q) || day.entries.some(en => en.desc.toLowerCase().includes(q)));
+  }
+
+  // Sort
+  if (daySort.field && window.BT_Interactive) {
+    dayList = BT_Interactive.sortArray(dayList, daySort.field, daySort.dir);
+  } else {
+    dayList.sort((a,b)=>a.date.localeCompare(b.date));
+  }
+
+  if (dayList.length===0) {
+    dl.innerHTML = `<p class="text-on-surface-variant text-sm text-center py-8">No matching days.</p>`;
+    return;
+  }
+
+  dl.innerHTML = dayList.map(day=>{
     const dayTotal = day.entries.reduce((s,en)=>s+(en.amount||0),0);
     const ratio    = t.dailyBudget>0 ? dayTotal/t.dailyBudget : 0;
     let cardColor  = 'bg-profit-bg border-green-200';
@@ -1777,7 +1861,10 @@ function renderDailyLog() {
         <button onclick="openEntryModal('${day.id}')" class="text-primary text-xs font-bold hover:underline flex items-center gap-1">
           <span class="material-symbols-outlined text-sm">add</span> Add Entry
         </button>
-        <button onclick="deleteDay('${day.id}')" class="text-error text-xs font-semibold hover:underline">Delete Day</button>
+        <div class="flex items-center gap-3">
+          <button onclick="duplicateDay('${day.id}')" class="text-primary text-xs font-semibold hover:underline">Duplicate</button>
+          <button onclick="deleteDay('${day.id}')" class="text-error text-xs font-semibold hover:underline">Delete Day</button>
+        </div>
       </div>
     </div>`;
   }).join('');
@@ -1884,6 +1971,7 @@ function saveExpense() {
     state.data.expenses.push(item);
   }
   if (!state.isDemo) Storage.set(state.data);
+  if (window.BT_Interactive) BT_Interactive.Undo.push();
   closeExpenseModal();
   renderExpenses();
   renderOverview();
@@ -1893,6 +1981,7 @@ function deleteExpense(id) {
   if (!confirm('Delete this expense?')) return;
   state.data.expenses = state.data.expenses.filter(e=>e.id!==id);
   if (!state.isDemo) Storage.set(state.data);
+  if (window.BT_Interactive) BT_Interactive.Undo.push();
   // remove cat filter btn if no more items in that cat
   qs('#exp-cat-filter').querySelectorAll('.cat-btn[data-cat]').forEach(b=>{
     if (b.dataset.cat!=='all' && !state.data.expenses.find(e=>e.cat===b.dataset.cat)) b.remove();
@@ -1931,6 +2020,7 @@ function saveDay() {
   };
   state.data.dailyLog.push(day);
   if (!state.isDemo) Storage.set(state.data);
+  if (window.BT_Interactive) BT_Interactive.Undo.push();
   closeDayModal();
   renderDailyLog();
   renderOverview();
@@ -1940,6 +2030,7 @@ function deleteDay(id) {
   if (!confirm('Delete this day log?')) return;
   state.data.dailyLog = state.data.dailyLog.filter(d=>d.id!==id);
   if (!state.isDemo) Storage.set(state.data);
+  if (window.BT_Interactive) BT_Interactive.Undo.push();
   renderDailyLog();
   renderOverview();
 }
@@ -1965,6 +2056,7 @@ function saveEntry() {
   if (!day) return;
   day.entries.push({ desc, amount, cat: qs('#entry-cat').value });
   if (!state.isDemo) Storage.set(state.data);
+  if (window.BT_Interactive) BT_Interactive.Undo.push();
   closeEntryModal();
   renderDailyLog();
   renderOverview();
@@ -1975,6 +2067,7 @@ function deleteDayEntry(dayId, entryIdx) {
   if (!day) return;
   day.entries.splice(entryIdx, 1);
   if (!state.isDemo) Storage.set(state.data);
+  if (window.BT_Interactive) BT_Interactive.Undo.push();
   renderDailyLog();
   renderOverview();
 }
@@ -1998,6 +2091,7 @@ function savePackItem() {
     checked: false
   });
   if (!state.isDemo) Storage.set(state.data);
+  if (window.BT_Interactive) BT_Interactive.Undo.push();
   closePackModal();
   renderPacking();
 }
@@ -2012,6 +2106,7 @@ function togglePacking(id) {
 function deletePackItem(id) {
   state.data.packing = state.data.packing.filter(p=>p.id!==id);
   if (!state.isDemo) Storage.set(state.data);
+  if (window.BT_Interactive) BT_Interactive.Undo.push();
   renderPacking();
 }
 
@@ -2022,7 +2117,139 @@ function toggleFaq(btn) {
   const open = ans.classList.toggle('open');
   icon.textContent = open ? 'remove' : 'add';
 }
+
+// ── SORT FUNCTIONS ───────────────────────────────────
+function sortExpenses(field) {
+  if (costSort.field === field) costSort.dir = costSort.dir === 'asc' ? 'desc' : 'asc';
+  else { costSort.field = field; costSort.dir = 'asc'; }
+  renderExpenses();
+}
+
+function sortDays(field) {
+  if (daySort.field === field) daySort.dir = daySort.dir === 'asc' ? 'desc' : 'asc';
+  else { daySort.field = field; daySort.dir = 'asc'; }
+  renderDailyLog();
+}
+
+// ── DUPLICATE FUNCTIONS ──────────────────────────────
+function duplicateExpense(id) {
+  const e = state.data.expenses.find(x => x.id === id);
+  if (!e) return;
+  const copy = { ...JSON.parse(JSON.stringify(e)), id: uid(), desc: e.desc + ' (copy)' };
+  state.data.expenses.push(copy);
+  if (!state.isDemo) Storage.set(state.data);
+  if (window.BT_Interactive) BT_Interactive.Undo.push();
+  renderExpenses();
+  renderOverview();
+  if (window.BT_Interactive) BT_Interactive.toast('Expense duplicated', 'success');
+}
+
+function duplicateDay(id) {
+  const day = state.data.dailyLog.find(x => x.id === id);
+  if (!day) return;
+  const copy = JSON.parse(JSON.stringify(day));
+  copy.id = uid();
+  copy.location = (copy.location || '') + ' (copy)';
+  // Offset date by one day to avoid duplicate date conflict
+  const dt = new Date(copy.date);
+  dt.setDate(dt.getDate() + 1);
+  copy.date = dt.toISOString().split('T')[0];
+  copy.day = state.data.dailyLog.length + 1;
+  state.data.dailyLog.push(copy);
+  if (!state.isDemo) Storage.set(state.data);
+  if (window.BT_Interactive) BT_Interactive.Undo.push();
+  renderDailyLog();
+  renderOverview();
+  if (window.BT_Interactive) BT_Interactive.toast('Day duplicated', 'success');
+}
+
+// ── CSV EXPORT FUNCTIONS ─────────────────────────────
+function exportExpensesCSV() {
+  if (!window.BT_Interactive) return;
+  const headers = ['Description', 'Category', 'Estimated', 'Actual', 'Paid', 'Notes'];
+  const rows = state.data.expenses.map(e => [e.desc, e.cat, e.estimated || 0, e.actual || 0, e.paid || 0, e.notes || '']);
+  BT_Interactive.exportCSV(headers, rows, 'travel-expenses.csv');
+  BT_Interactive.toast('Expenses exported', 'success');
+}
+
+function exportDaysCSV() {
+  if (!window.BT_Interactive) return;
+  const headers = ['Day', 'Date', 'Location', 'Entry', 'Category', 'Amount'];
+  const rows = [];
+  state.data.dailyLog.forEach(day => {
+    if (day.entries.length === 0) {
+      rows.push([day.day, day.date, day.location || '', '', '', 0]);
+    } else {
+      day.entries.forEach(en => {
+        rows.push([day.day, day.date, day.location || '', en.desc, en.cat || 'Other', en.amount || 0]);
+      });
+    }
+  });
+  BT_Interactive.exportCSV(headers, rows, 'travel-daily-log.csv');
+  BT_Interactive.toast('Daily log exported', 'success');
+}
+
+function exportPackingCSV() {
+  if (!window.BT_Interactive) return;
+  const headers = ['Category', 'Item', 'Packed'];
+  const rows = state.data.packing.map(p => [p.cat, p.item, p.checked ? 'Yes' : 'No']);
+  BT_Interactive.exportCSV(headers, rows, 'travel-packing.csv');
+  BT_Interactive.toast('Packing list exported', 'success');
+}
+
+// ── JSON BACKUP / RESTORE ────────────────────────────
+function backupData() {
+  if (!window.BT_Interactive) return;
+  BT_Interactive.downloadJSON(state.data, 'travel-budget-backup.json');
+  BT_Interactive.toast('Backup downloaded', 'success');
+}
+
+function restoreData() {
+  if (!window.BT_Interactive) return;
+  BT_Interactive.importJSON(data => {
+    if (!data.name || !data.startDate) { BT_Interactive.toast('Invalid backup file', 'error'); return; }
+    state.data = data;
+    state.isDemo = false;
+    Storage.set(state.data);
+    if (window.BT_Interactive) BT_Interactive.Undo.push();
+    render();
+    renderTab(state.tab);
+    BT_Interactive.toast('Data restored', 'success');
+  });
+}
+
+// ── INIT UNDO + SHORTCUTS ────────────────────────────
+const _origInit = btInit;
+btInit = async function() {
+  await _origInit();
+  if (state.data && window.BT_Interactive) {
+    BT_Interactive.Undo.init(() => state.data, d => { state.data = d; if (!state.isDemo) Storage.set(d); render(); renderTab(state.tab); });
+    BT_Interactive.registerShortcuts({
+      'n': () => {
+        const tab = state.tab;
+        if (tab === 'expenses') openExpenseModal();
+        else if (tab === 'dailylog') openDayModal();
+        else if (tab === 'packing') openPackModal();
+      },
+      '/': () => {
+        const tab = state.tab;
+        if (tab === 'expenses') { const s = qs('#expense-search'); if (s) { s.focus(); s.select(); } }
+        else if (tab === 'dailylog') { const s = qs('#day-search'); if (s) { s.focus(); s.select(); } }
+      },
+      'p': () => window.print(),
+      '?': () => BT_Interactive.showShortcutsHelp([
+        { key: 'N', desc: 'Add new item' },
+        { key: '/', desc: 'Search' },
+        { key: 'P', desc: 'Print' },
+        { key: 'Ctrl+Z', desc: 'Undo' },
+        { key: 'Ctrl+Shift+Z', desc: 'Redo' },
+        { key: '?', desc: 'Show shortcuts' }
+      ]),
+    });
+  }
+};
 </script>
+<script src="/js/interactive.js"></script>
 <!-- ── AUTH + CLOUD STORAGE ─────────────────────────────── -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="/js/auth.js"></script>
@@ -2030,5 +2257,6 @@ function toggleFaq(btn) {
 <script src="/js/storage-cloud.js"></script>
 <script src="/js/subscription.js"></script>
 <script src="/js/trial.js"></script>
+<script>btInit().catch(console.error);</script>
 </body>
 </html>

@@ -1,7 +1,7 @@
 -- ============================================================
 -- BudgetTools — Supabase Database Schema
 -- Paste this entire file into the Supabase SQL Editor and run.
--- Uses Razorpay for payments (replaces Stripe).
+-- Uses Cashfree for payments (replaces Stripe).
 -- ============================================================
 
 
@@ -63,16 +63,16 @@ CREATE TRIGGER on_auth_user_created
 
 -- ============================================================
 -- SECTION 3: SUBSCRIPTIONS
--- One row per Razorpay subscription (sub_xxx).
+-- One row per Cashfree subscription (sub_xxx).
 -- Written only by the payment-webhook Netlify function.
 -- template_key matches the keys used in PLAN_MAP:
 --   'wedding' | 'event' | 'travel' | 'cafe' | 'inventory' | 'all'
 -- ============================================================
 
 CREATE TABLE IF NOT EXISTS public.subscriptions (
-  id                    TEXT PRIMARY KEY,     -- Razorpay subscription ID (sub_xxx)
+  id                    TEXT PRIMARY KEY,     -- Cashfree subscription ID (sub_xxx)
   user_id               UUID NOT NULL REFERENCES public.profiles(id) ON DELETE CASCADE,
-  plan_id               TEXT,                 -- Razorpay plan ID (plan_xxx)
+  plan_id               TEXT,                 -- Cashfree plan ID (plan_xxx)
   template_key          TEXT NOT NULL,        -- which template this subscription covers
   status                TEXT NOT NULL,        -- active | trialing | past_due | canceled | paused
   current_period_start  TIMESTAMPTZ,

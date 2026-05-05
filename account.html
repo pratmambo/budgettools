@@ -323,7 +323,7 @@
   <!-- ── SECTION 5: Billing (shown if subscribed) ── -->
   <div id="billing-section" class="hidden card p-6">
     <h2 class="text-lg font-semibold text-on-surface mb-1">Billing</h2>
-    <p class="text-sm text-on-surface-variant mb-5">Your active subscription details. Payments are processed securely via Razorpay.</p>
+    <p class="text-sm text-on-surface-variant mb-5">Your active subscription details. Payments are processed securely via Cashfree.</p>
     <div id="billing-subscriptions" class="space-y-3 mb-5"></div>
     <button onclick="document.getElementById('cancel-dialog').classList.remove('hidden')" class="flex items-center gap-2 text-sm font-medium text-amber-700 border border-amber-200 px-4 py-2 rounded-lg hover:bg-amber-50 transition-colors">
       <span class="material-symbols-outlined text-base">cancel</span>
@@ -350,12 +350,12 @@
   // ── CONFIG ──────────────────────────────────────────────────
   const SUPABASE_URL = 'https://sidrjbvjkbfmzrsojtkp.supabase.co';
   const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNpZHJqYnZqa2JmbXpyc29qdGtwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU0MDk0MzcsImV4cCI6MjA5MDk4NTQzN30.IiFfDhDAomrfZk-msDTdC-w1bbcF71DtEDfIrIoN3NQ';
-  const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+  const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
     auth: { persistSession: true, autoRefreshToken: true, flowType: 'pkce' }
   });
 
   // ── AUTH GUARD ──────────────────────────────────────────────
-  supabase.auth.getSession().then(({ data: { session } }) => {
+  sb.auth.getSession().then(({ data: { session } }) => {
     if (!session) {
       window.location.href = '/auth.html?next=/account.html';
       return;
@@ -381,7 +381,7 @@
     document.getElementById('joined-date').textContent = 'Member since ' + joined;
 
     // Load subscriptions from Supabase
-    const { data: subs } = await supabase
+    const { data: subs } = await sb
       .from('subscriptions')
       .select('*')
       .eq('user_id', user.id)
@@ -506,7 +506,7 @@
 
   // ── SIGN OUT ────────────────────────────────────────────────
   async function handleSignOut() {
-    await supabase.auth.signOut();
+    await sb.auth.signOut();
     window.location.href = '/index.html';
   }
 
@@ -517,7 +517,7 @@
     btn.disabled    = true;
 
     try {
-      const { data: { session } } = await supabase.auth.getSession();
+      const { data: { session } } = await sb.auth.getSession();
       const res = await fetch('/api/customer-portal', {
         method:  'POST',
         headers: {
@@ -545,10 +545,29 @@
 
   // ── DELETE ACCOUNT ───────────────────────────────────────────
   async function confirmDeleteAccount() {
-    document.getElementById('delete-dialog').classList.add('hidden');
-    // Account deletion requires service role — sign out for now
-    await supabase.auth.signOut();
-    window.location.href = '/index.html';
+    const btn = document.querySelector('#delete-dialog button:last-child');
+    if (btn) { btn.textContent = 'Deleting…'; btn.disabled = true; }
+    try {
+      const { data: { session } } = await sb.auth.getSession();
+      const res = await fetch('/api/delete-account', {
+        method: 'POST',
+        headers: {
+          'Authorization': 'Bearer ' + session.access_token,
+          'Content-Type': 'application/json',
+        },
+        body: '{}',
+      });
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.error || 'Deletion failed');
+      }
+      await sb.auth.signOut();
+      window.location.href = '/index.html';
+    } catch (err) {
+      document.getElementById('delete-dialog').classList.add('hidden');
+      if (btn) { btn.textContent = 'Yes, delete my account'; btn.disabled = false; }
+      alert('Could not delete account: ' + err.message);
+    }
   }
 </script>
 </body>

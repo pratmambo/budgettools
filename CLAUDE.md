@@ -26,10 +26,8 @@ BudgetTools is a **static HTML SaaS** with serverless backend functions. There i
 | Service | Role |
 |---|---|
 | **Supabase** | Auth (email/password + Google OAuth) and database (Postgres with RLS) |
-| **Razorpay** | Subscription payments — modal checkout, webhook-driven activation |
+| **Cashfree** | Subscription payments — JS SDK checkout, webhook-driven activation |
 | **Netlify** | Hosting (static files) + serverless functions (`netlify/functions/`) |
-
-> **Note:** `SETUP.md` still references Stripe from an earlier version. The codebase has fully migrated to Razorpay. Treat `SETUP.md` as outdated for payment-related instructions.
 
 ### Two categories of HTML pages
 
@@ -43,7 +41,7 @@ All four are loaded via `<script>` tags in templates — there is no bundler.
 
 - **`auth.js`** — Initialises Supabase client, exposes `window.BT_AUTH` with session/user state and `apiFetch()` for authenticated calls to Netlify Functions. Dispatches `bt:auth:ready` and `bt:auth:change` custom events. Also provides `updateNav()` which toggles visibility of elements with `data-bt-*` attributes (`data-bt-login`, `data-bt-account`, `data-bt-user-email`, `data-bt-avatar`, `data-bt-signout`).
 - **`storage-cloud.js`** — Overrides `window.Storage` with a cloud-backed API (`Storage.get()`, `Storage.set()`, `Storage.clear()`). Writes localStorage immediately (zero latency) and debounces cloud saves by 800 ms. Falls back to localStorage when logged out. Exposes `window.BT_STORAGE.checkProAccess()` and `window.BT_STORAGE.startCheckout()`.
-- **`subscription.js`** — Exposes `window.BT_SUB` with the upgrade banner/modal and Razorpay checkout flow (`startCheckout(templateId)`). Called by `BT_STORAGE.startCheckout()`.
+- **`subscription.js`** — Exposes `window.BT_SUB` with the upgrade banner/modal and Cashfree checkout flow (`startCheckout(templateId, phone)`). Loads the Cashfree JS SDK on demand. Called by `BT_STORAGE.startCheckout()`.
 - **`trial.js`** — 10-minute demo timer for premium templates. Uses `sessionStorage` (resets on tab close). After expiry, dims the page and shows the upgrade modal via `BT_SUB.showUpgradeModal()`. Exposes `window.BT_TRIAL.start(templateId)` and `window.BT_TRIAL.unlock()`.
 
 **Script load order in premium templates:** Supabase CDN → `auth.js` → set `window.TEMPLATE_KEY` → `storage-cloud.js` → `subscription.js` → `trial.js`.
@@ -60,21 +58,21 @@ All functions use the Supabase **service role key** (bypasses RLS). Client JS on
 |---|---|---|
 | `user-data.js` | `GET/POST /api/user-data` | Read/write template state (JSONB) in `template_data` table |
 | `subscription-status.js` | `GET /api/subscription-status` | Check if user has active sub for a template or `all` |
-| `create-checkout-session.js` | `POST /api/create-checkout-session` | Create Razorpay subscription, return `subscriptionId` + `keyId` |
-| `customer-portal.js` | `POST /api/customer-portal` | Cancel Razorpay subscription at end of billing cycle |
-| `payment-webhook.js` | `POST /webhooks/razorpay` | Receive Razorpay lifecycle events → upsert `subscriptions` table |
+| `create-checkout-session.js` | `POST /api/create-checkout-session` | Create Cashfree subscription, return `sessionId` for JS SDK |
+| `customer-portal.js` | `POST /api/customer-portal` | Cancel Cashfree subscription |
+| `payment-webhook.js` | `POST /webhooks/cashfree` | Receive Cashfree lifecycle events → upsert `subscriptions` table |
 
 ### Database schema (`supabase-schema.sql`)
 
 Three tables with RLS enabled:
 
 - **`profiles`** — one row per user, auto-created by `on_auth_user_created` trigger on `auth.users` insert.
-- **`subscriptions`** — one row per Razorpay subscription (`sub_xxx`). Written **only** by the webhook function (service role). `template_key` is one of: `wedding | event | travel | cafe | inventory | all`.
+- **`subscriptions`** — one row per Cashfree subscription. Written **only** by the webhook function (service role). `template_key` is one of: `wedding | event | travel | cafe | inventory | all`.
 - **`template_data`** — one row per `(user_id, template_key)`. Stores the template's entire state as JSONB.
 
 ### Template keys
 
-Each paid template maps to a key used consistently across `PLAN_MAP` (functions), `KEY_TO_TEMPLATE` (storage-cloud.js), `TEMPLATES` (subscription.js), and the database:
+Each paid template maps to a key used consistently across `PLAN_PRICES` (create-checkout-session.js), `KEY_TO_TEMPLATE` (storage-cloud.js), `TEMPLATES` (subscription.js), and the database:
 
 `wedding`, `event`, `travel`, `cafe`, `inventory`, `all`
 
@@ -83,13 +81,15 @@ The localStorage keys use a versioned format: `bt_wedding_v2`, `bt_event_v2`, `b
 ### Routing (`netlify.toml`)
 
 - `/api/*` → `/.netlify/functions/:splat`
-- `/webhooks/razorpay` → `/.netlify/functions/payment-webhook`
+- `/webhooks/cashfree` → `/.netlify/functions/payment-webhook`
 - `/auth/callback` → `/auth.html?mode=callback`
 
 ### Environment variables
 
 All secrets live in Netlify environment variables (never in client JS):
 
-`SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, `RAZORPAY_KEY_ID`, `RAZORPAY_KEY_SECRET`, `RAZORPAY_WEBHOOK_SECRET`, `RAZORPAY_PLAN_WEDDING`, `RAZORPAY_PLAN_EVENT`, `RAZORPAY_PLAN_TRAVEL`, `RAZORPAY_PLAN_CAFE`, `RAZORPAY_PLAN_INVENTORY`, `RAZORPAY_PLAN_ALL`, `URL`
+`SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, `CASHFREE_APP_ID`, `CASHFREE_SECRET_KEY`, `CASHFREE_WEBHOOK_SECRET`, `CASHFREE_ENV` (sandbox or production), `URL`
+
+Cashfree plan prices are hardcoded in `create-checkout-session.js` (no per-plan env vars needed — plans are created inline).
 
 The client-side `SUPABASE_URL` and `SUPABASE_ANON_KEY` are hard-coded in `js/auth.js` — the anon key is safe to expose because RLS enforces data isolation.

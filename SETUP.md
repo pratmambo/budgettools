@@ -96,14 +96,14 @@ Find the same two placeholders in the `<script>` block near the top of `account.
 
 Create 6 products with monthly recurring prices. For each one, you must add a `template_key` metadata field so the webhook can match a subscription to a template.
 
-| Product name             | Price     | `template_key` metadata value |
-|--------------------------|-----------|-------------------------------|
-| Wedding Planner Pro      | $9/month  | `wedding`                     |
-| Event Budget & P&L Pro   | $9/month  | `event`                       |
-| Travel Budget Planner Pro| $9/month  | `travel`                      |
-| Cafe Costing Pro         | $15/month | `cafe`                        |
-| Inventory Management Pro | $12/month | `inventory`                   |
-| All Templates — All-Access | $29/month | `all`                        |
+| Product name             | Price        | `template_key` metadata value |
+|--------------------------|--------------|-------------------------------|
+| Wedding Planner Pro      | $8.99/month  | `wedding`                     |
+| Event Budget & P&L Pro   | $8.99/month  | `event`                       |
+| Travel Budget Planner Pro| $8.99/month  | `travel`                      |
+| Cafe Costing Pro         | $8.99/month  | `cafe`                        |
+| Inventory Management Pro | $8.99/month  | `inventory`                   |
+| All Templates — All-Access | $19.99/month | `all`                        |
 
 **For each product:**
 1. Go to **Products** → **Add product**.

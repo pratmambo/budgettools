@@ -1,4 +1,4 @@
-const Razorpay = require('razorpay');
+const crypto = require('crypto');
 const { createClient } = require('@supabase/supabase-js');
 
 const supabase = createClient(
@@ -6,19 +6,17 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY
 );
 
-const razorpay = new Razorpay({
-  key_id:     process.env.RAZORPAY_KEY_ID,
-  key_secret: process.env.RAZORPAY_KEY_SECRET,
-});
+const CASHFREE_BASE = process.env.CASHFREE_ENV === 'production'
+  ? 'https://api.cashfree.com/pg'
+  : 'https://sandbox.cashfree.com/pg';
 
-// Map template keys to Razorpay plan IDs (created in Razorpay dashboard)
-const PLAN_MAP = {
-  wedding:   process.env.RAZORPAY_PLAN_WEDDING,
-  event:     process.env.RAZORPAY_PLAN_EVENT,
-  travel:    process.env.RAZORPAY_PLAN_TRAVEL,
-  cafe:      process.env.RAZORPAY_PLAN_CAFE,
-  inventory: process.env.RAZORPAY_PLAN_INVENTORY,
-  all:       process.env.RAZORPAY_PLAN_ALL,
+const PLAN_PRICES = {
+  wedding:   { name: 'Wedding Planner Pro',      amount: 8.99 },
+  event:     { name: 'Event Budget Pro',          amount: 8.99 },
+  travel:    { name: 'Travel Budget Pro',         amount: 8.99 },
+  cafe:      { name: 'Cafe Costing Pro',          amount: 8.99 },
+  inventory: { name: 'Inventory Management Pro',  amount: 8.99 },
+  all:       { name: 'All Templates Pro',         amount: 19.99 },
 };
 
 exports.handler = async (event) => {
@@ -26,7 +24,6 @@ exports.handler = async (event) => {
     return { statusCode: 405, body: 'Method Not Allowed' };
   }
 
-  // Validate JWT
   const authHeader = event.headers['authorization'] || '';
   const token = authHeader.replace('Bearer ', '');
   if (!token) {
@@ -45,38 +42,83 @@ exports.handler = async (event) => {
     return { statusCode: 400, body: JSON.stringify({ error: 'Invalid JSON' }) };
   }
 
-  const { template } = body;
-  const planId = PLAN_MAP[template];
+  const { template, phone } = body;
+  const plan = PLAN_PRICES[template];
 
-  if (!planId) {
+  if (!plan) {
     return { statusCode: 400, body: JSON.stringify({ error: 'Invalid template key: ' + template }) };
   }
 
+  if (!phone || phone.length < 10) {
+    return { statusCode: 400, body: JSON.stringify({ error: 'Valid phone number required' }) };
+  }
+
+  const subscriptionId = 'sub_' + template + '_' + crypto.randomBytes(8).toString('hex');
+  const returnUrl = (process.env.URL || 'https://budgettemplates.shop') + '/account.html?payment=success';
+
   try {
-    // Create Razorpay subscription
-    // total_count = 120 = 10 years of monthly billing (user can cancel any time)
-    const subscription = await razorpay.subscriptions.create({
-      plan_id:          planId,
-      customer_notify:  1,      // Razorpay sends email notifications
-      total_count:      120,
-      notes: {
-        user_id:      user.id,
-        template_key: template,
-        user_email:   user.email,
+    const res = await fetch(CASHFREE_BASE + '/subscriptions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-version': '2025-01-01',
+        'x-client-id': process.env.CASHFREE_APP_ID,
+        'x-client-secret': process.env.CASHFREE_SECRET_KEY,
       },
+      body: JSON.stringify({
+        subscription_id: subscriptionId,
+        customer_details: {
+          customer_email: user.email,
+          customer_phone: phone.replace(/\D/g, '').slice(-10),
+          customer_name: user.user_metadata?.full_name || user.email.split('@')[0],
+        },
+        plan_details: {
+          plan_name: plan.name + ' Monthly',
+          plan_type: 'PERIODIC',
+          plan_currency: 'USD',
+          plan_amount: plan.amount,
+          plan_max_amount: plan.amount,
+          plan_intervals: 1,
+          plan_interval_type: 'MONTH',
+        },
+        authorization_details: {
+          authorization_amount: 0,
+          authorization_amount_refund: true,
+        },
+        subscription_meta: {
+          return_url: returnUrl,
+          notification_url: (process.env.URL || 'https://budgettemplates.shop') + '/webhooks/cashfree',
+          notification_channel: ['EMAIL', 'WEBHOOK'],
+        },
+        subscription_tags: {
+          user_id: user.id,
+          template_key: template,
+        },
+      }),
     });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      console.error('Cashfree subscription error:', JSON.stringify(data));
+      return {
+        statusCode: res.status,
+        body: JSON.stringify({ error: data.message || 'Failed to create subscription' }),
+      };
+    }
 
     return {
       statusCode: 200,
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        subscriptionId: subscription.id,
-        keyId:          process.env.RAZORPAY_KEY_ID,
+        sessionId: data.subscription_session_id,
+        subscriptionId: data.subscription_id,
+        cfSubscriptionId: data.cf_subscription_id,
       }),
     };
 
   } catch (err) {
-    console.error('Razorpay subscription error:', err);
+    console.error('Cashfree subscription error:', err);
     return {
       statusCode: 500,
       body: JSON.stringify({ error: 'Failed to create subscription' }),
