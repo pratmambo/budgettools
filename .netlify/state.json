@@ -1,6 +1,6 @@
 {
 	"siteId": "52ed8c66-3f27-4280-a71a-4249faf70056",
-	"dbConnectionString": "postgres://localhost:64089/postgres",
+	"dbConnectionString": "postgres://localhost:59225/postgres",
 	"geolocation": {
 		"data": {
 			"city": "Hyderabad",
@@ -17,6 +17,6 @@
 			"longitude": 78.4583,
 			"postalCode": "500001"
 		},
-		"timestamp": 1777873197788
+		"timestamp": 1777963906176
 	}
 }

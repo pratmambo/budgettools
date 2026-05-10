@@ -4,12 +4,17 @@
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Event Budget & Profit Tracker | BudgetTools — Free Online Event Planning Tool</title>
-  <meta name="description" content="Track event costs, ticket revenue, sponsorships and profit in real time. Break-even calculator, per-attendee metrics, P&L summary — free for birthday parties, corporate events, workshops and more."/>
+  <meta name="description" content="Track event costs, ticket revenue, sponsorships and profit in real time. Break-even calculator, per-attendee metrics, P&L summary — for birthday parties, corporate events, workshops and more."/>
   <meta name="keywords" content="event budget tracker, event profit loss calculator, corporate event budget, party budget planner, event cost tracker, event planning spreadsheet, break even calculator events"/>
   <meta property="og:title" content="Event Budget & Profit Tracker | BudgetTools"/>
-  <meta property="og:description" content="Stop guessing at event profitability. Track costs, revenue, and profit in real time — free forever."/>
+  <meta property="og:description" content="Stop guessing at event profitability. Track costs, revenue, and profit in real time. Try the demo free."/>
   <meta property="og:type" content="website"/>
   <meta property="og:url" content="https://budgettemplates.shop/event-budget.html"/>
+  <meta property="og:image" content="https://budgettemplates.shop/og-image.png"/>
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:image" content="https://budgettemplates.shop/og-image.png"/>
+  <meta name="twitter:title" content="Event Budget & Profit Tracker | BudgetTools"/>
+  <meta name="twitter:description" content="Track event costs, ticket revenue, sponsorships and profit in real time. Try the demo free."/>
   <link rel="canonical" href="https://budgettemplates.shop/event-budget.html"/>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
@@ -62,15 +67,15 @@
     "@context": "https://schema.org",
     "@type": "WebApplication",
     "name": "Event Budget & Profit Tracker",
-    "description": "Free online event budget and profit tracker for corporate events, birthday parties, workshops, concerts and fundraisers. Real-time P&L, break-even calculator, per-attendee cost metrics.",
+    "description": "Online event budget and profit tracker for corporate events, birthday parties, workshops, concerts and fundraisers. Real-time P&L, break-even calculator, per-attendee cost metrics. Try the demo free, purchase from $8.99 / 30 days.",
     "url": "https://budgettemplates.shop/event-budget.html",
     "applicationCategory": "FinanceApplication",
     "operatingSystem": "Any",
     "offers": {
       "@type": "Offer",
-      "price": "0",
+      "price": "8.99",
       "priceCurrency": "USD",
-      "description": "Free forever — no credit card required"
+      "description": "Try the demo free. Buy from $8.99 / 30 days."
     },
     "featureList": [
       "Cost tracking by category",
@@ -159,7 +164,7 @@
 <div id="demo-banner" class="hidden">
   <div class="flex items-center gap-2">
     <span class="material-symbols-outlined text-base filled">timer</span>
-    <span>Trial — <strong id="trial-countdown">10:00</strong> left. Exploring <strong>demo event</strong> — TechConnect Summit 2026.</span>
+    <span>Trial — <strong id="trial-countdown">5:00</strong> left. Exploring <strong>demo event</strong> — TechConnect Summit 2026.</span>
   </div>
   <button onclick="window.BT_SUB?.showUpgradeModal('event')" class="ml-auto bg-white/20 hover:bg-white/30 transition-colors px-4 py-1.5 rounded-full text-xs font-bold whitespace-nowrap">Unlock Full Access →</button>
 </div>
@@ -168,7 +173,6 @@
      LANDING PAGE
 ══════════════════════════════════════════════════════ -->
 <div id="landing-page">
-<script>try{if(Object.keys(localStorage).some(k=>k.startsWith('sb-')&&k.endsWith('-auth-token')))document.getElementById('landing-page').classList.add('hidden');}catch(e){}</script>
 
   <!-- ── HERO ─────────────────────────────────────────── -->
   <section class="lp-hero min-h-screen flex flex-col">
@@ -186,7 +190,7 @@
           <span data-bt-user-email class="text-white/70 text-xs hidden md:block max-w-[100px] truncate"></span>
           <button data-bt-signout class="text-white/70 hover:text-white text-xs font-medium border border-white/30 rounded-md px-2.5 py-1">Sign Out</button>
         </div>
-        <button onclick="window.BT_Interactive?BT_Interactive.handleStartFree(showSetupModal,enterDemo):showSetupModal()" class="bg-white text-primary text-sm font-bold px-5 py-2.5 rounded-full hover:bg-primary-fixed transition-colors">Get Started Free</button>
+        <button onclick="window.BT_Interactive?BT_Interactive.handleStartFree(showSetupModal,enterDemo):showSetupModal()" class="bg-white text-primary text-sm font-bold px-5 py-2.5 rounded-full hover:bg-primary-fixed transition-colors">Get Started</button>
       </div>
     </nav>
 
@@ -196,7 +200,7 @@
       <div>
         <div class="inline-flex items-center gap-2 bg-white/10 border border-white/20 rounded-full px-4 py-1.5 text-white/80 text-xs font-semibold mb-8">
           <span class="material-symbols-outlined text-sm filled text-yellow-300">star</span>
-          Free Forever — No credit card required
+          Try the Demo Free — No credit card required
         </div>
         <h1 class="font-headline text-5xl md:text-6xl text-white leading-tight mb-6">
           Run Events<br/>That Actually<br/><em>Make Money.</em>
@@ -212,7 +216,7 @@
         </ul>
         <div class="flex flex-wrap gap-3">
           <button onclick="window.BT_Interactive?BT_Interactive.handleStartFree(showSetupModal,enterDemo):showSetupModal()" class="bg-white text-primary font-bold px-8 py-4 rounded-xl hover:bg-primary-fixed transition-colors text-base shadow-lg">
-            Start Tracking Free
+            Get Started
           </button>
           <button onclick="enterDemo()" class="border-2 border-white/40 text-white font-semibold px-8 py-4 rounded-xl hover:border-white hover:bg-white/10 transition-colors text-base">
             Try the Demo →
@@ -437,7 +441,7 @@
       </div>
       <div class="text-center mt-8">
         <button onclick="window.BT_Interactive?BT_Interactive.handleStartFree(showSetupModal,enterDemo):showSetupModal()" class="grad-event text-white font-bold px-10 py-4 rounded-xl hover:opacity-90 transition-opacity text-base shadow-lg">
-          Start Tracking Free →
+          Get Started →
         </button>
       </div>
     </div>
@@ -448,27 +452,27 @@
     <div class="max-w-4xl mx-auto">
       <div class="text-center mb-14">
         <span class="text-primary text-xs uppercase tracking-[0.25em] font-bold block mb-3">Pricing</span>
-        <h2 class="font-headline text-4xl text-on-surface mb-4">Free for Individuals. Pro for Teams.</h2>
-        <p class="text-on-surface-variant text-lg max-w-xl mx-auto">Start free and stay free for single events. Upgrade when you need multi-event dashboards, exports, and team collaboration.</p>
+        <h2 class="font-headline text-4xl text-on-surface mb-4">Try the demo free. Unlock when you're ready.</h2>
+        <p class="text-on-surface-variant text-lg max-w-xl mx-auto">Explore the full tracker with sample data. Purchase to save your own events, sync across devices, and export reports.</p>
       </div>
       <div class="grid md:grid-cols-2 gap-6 max-w-3xl mx-auto">
-        <!-- Free -->
+        <!-- Demo -->
         <div class="bg-white rounded-2xl p-8 shadow-sm border-2 border-outline-variant/30">
-          <p class="text-xs text-outline uppercase tracking-widest font-bold mb-4">Free</p>
+          <p class="text-xs text-outline uppercase tracking-widest font-bold mb-4">Free Demo</p>
           <div class="mb-6">
             <span class="text-4xl font-headline font-bold text-on-surface">$0</span>
-            <span class="text-on-surface-variant text-sm"> / forever</span>
+            <span class="text-on-surface-variant text-sm"> / 5-min trial</span>
           </div>
           <ul class="space-y-3 mb-8 text-sm text-on-surface-variant">
-            <li class="flex items-center gap-2"><span class="material-symbols-outlined text-base text-profit filled">check</span>1 active event at a time</li>
-            <li class="flex items-center gap-2"><span class="material-symbols-outlined text-base text-profit filled">check</span>Unlimited cost &amp; revenue line items</li>
+            <li class="flex items-center gap-2"><span class="material-symbols-outlined text-base text-profit filled">check</span>Explore with sample event data</li>
             <li class="flex items-center gap-2"><span class="material-symbols-outlined text-base text-profit filled">check</span>Real-time P&amp;L calculation</li>
             <li class="flex items-center gap-2"><span class="material-symbols-outlined text-base text-profit filled">check</span>Break-even calculator</li>
             <li class="flex items-center gap-2"><span class="material-symbols-outlined text-base text-profit filled">check</span>Per-attendee metrics</li>
             <li class="flex items-center gap-2"><span class="material-symbols-outlined text-base text-profit filled">check</span>P&amp;L Summary view</li>
-            <li class="flex items-center gap-2"><span class="material-symbols-outlined text-base text-profit filled">check</span>Saved locally in your browser</li>
+            <li class="flex items-center gap-2"><span class="material-symbols-outlined text-base text-profit filled">check</span>All features unlocked</li>
+            <li class="flex items-center gap-2"><span class="material-symbols-outlined text-base text-profit filled">check</span>No account required</li>
           </ul>
-          <button onclick="window.BT_Interactive?BT_Interactive.handleStartFree(showSetupModal,enterDemo):showSetupModal()" class="w-full border-2 border-primary text-primary font-bold py-3 rounded-xl hover:bg-primary-fixed transition-colors">Get Started Free</button>
+          <button onclick="enterDemo()" class="w-full border-2 border-primary text-primary font-bold py-3 rounded-xl hover:bg-primary-fixed transition-colors">Try the Demo</button>
         </div>
         <!-- Pro -->
         <div class="bg-primary rounded-2xl p-8 shadow-lg relative overflow-hidden">
@@ -476,7 +480,7 @@
           <p class="text-xs text-white/60 uppercase tracking-widest font-bold mb-4">Pro</p>
           <div class="mb-6">
             <span class="text-4xl font-headline font-bold text-white">$8.99</span>
-            <span class="text-white/60 text-sm"> / month</span>
+            <span class="text-white/60 text-sm"> / 30 days</span>
           </div>
           <ul class="space-y-3 mb-8 text-sm text-white/80">
             <li class="flex items-center gap-2"><span class="material-symbols-outlined text-base text-green-300 filled">check</span>Unlimited events &amp; history</li>
@@ -503,11 +507,11 @@
       <div class="space-y-3" id="faq-list">
         <div class="border border-outline-variant/30 rounded-xl overflow-hidden">
           <button class="faq-toggle w-full text-left px-6 py-4 flex justify-between items-center" onclick="toggleFaq(this)">
-            <span class="font-semibold text-on-surface text-sm">Is this really free? What's the catch?</span>
+            <span class="font-semibold text-on-surface text-sm">How does the demo work?</span>
             <span class="material-symbols-outlined text-outline text-xl faq-icon">add</span>
           </button>
           <div class="faq-answer px-6 pb-4 text-on-surface-variant text-sm leading-relaxed">
-            <p>Genuinely free. The core tracker — costs, revenue, P&amp;L, break-even — is free forever for one active event. We plan to offer a paid Pro tier for teams and multi-event features, but the free version is not time-limited or crippled. Your data is saved in your browser's localStorage.</p>
+            <p>You can explore the full event tracker free for 5 minutes using sample data. When you're ready to track your own events, purchase 30-day access for $8.99 to save your data, sync across devices, and export reports. Or get all 5 templates for $19.99 / 30 days.</p>
           </div>
         </div>
         <div class="border border-outline-variant/30 rounded-xl overflow-hidden">
@@ -516,7 +520,7 @@
             <span class="material-symbols-outlined text-outline text-xl faq-icon">add</span>
           </button>
           <div class="faq-answer px-6 pb-4 text-on-surface-variant text-sm leading-relaxed">
-            <p>Your event data is saved locally in your browser (localStorage). Nothing is sent to a server. This means your data is private — and also means clearing your browser cache will delete it. We recommend exporting important events (Pro feature coming soon).</p>
+            <p>With Pro access ($8.99 / 30 days), your data syncs to the cloud across all your devices and can be exported as CSV. In demo mode, data is temporary and resets when the trial ends.</p>
           </div>
         </div>
         <div class="border border-outline-variant/30 rounded-xl overflow-hidden">
@@ -557,7 +561,7 @@
       <p class="text-white/70 text-lg mb-8">Join event planners who track their budgets in real time — not after the bill arrives.</p>
       <div class="flex flex-wrap gap-3 justify-center">
         <button onclick="window.BT_Interactive?BT_Interactive.handleStartFree(showSetupModal,enterDemo):showSetupModal()" class="bg-white text-primary font-bold px-10 py-4 rounded-xl hover:bg-primary-fixed transition-colors text-base shadow-lg">
-          Start Free — No Sign-Up
+          Get Started
         </button>
         <button onclick="enterDemo()" class="border-2 border-white/40 text-white font-semibold px-10 py-4 rounded-xl hover:border-white hover:bg-white/10 transition-colors text-base">
           See Demo First

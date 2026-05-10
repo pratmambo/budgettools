@@ -13,7 +13,6 @@ exports.handler = async (event) => {
   const authHeader = event.headers['authorization'] || '';
   const token = authHeader.replace('Bearer ', '');
   if (!token) {
-    // Not logged in — return free status without error
     return {
       statusCode: 200,
       body: JSON.stringify({ hasAccess: false, status: 'unauthenticated' })
@@ -28,7 +27,6 @@ exports.handler = async (event) => {
     };
   }
 
-  // Admin accounts get full access to every template without a subscription
   const ADMIN_EMAILS = (process.env.ADMIN_EMAILS || 'preetam.juturu@gmail.com').split(',').map(e => e.trim());
   if (ADMIN_EMAILS.includes(user.email)) {
     return {
@@ -39,13 +37,13 @@ exports.handler = async (event) => {
   }
 
   const templateKey = event.queryStringParameters?.template;
+  const now = new Date();
 
   if (!templateKey) {
     const { data: allSubs, error } = await supabase
       .from('subscriptions')
       .select('id, status, template_key, current_period_end, cancel_at_period_end')
       .eq('user_id', user.id)
-      .in('status', ['active', 'trialing', 'canceled'])
       .order('created_at', { ascending: false });
 
     if (error) {
@@ -53,13 +51,9 @@ exports.handler = async (event) => {
       return { statusCode: 500, body: JSON.stringify({ error: error.message }) };
     }
 
-    const now = new Date();
-    const active = (allSubs || []).filter(s => {
-      if (s.status === 'canceled' && s.current_period_end) {
-        return new Date(s.current_period_end) > now;
-      }
-      return s.status !== 'canceled';
-    });
+    const active = (allSubs || []).filter(s =>
+      s.current_period_end && new Date(s.current_period_end) > now
+    );
 
     return {
       statusCode: 200,
@@ -73,8 +67,7 @@ exports.handler = async (event) => {
     .select('id, status, template_key, current_period_end, cancel_at_period_end')
     .eq('user_id', user.id)
     .in('template_key', [templateKey, 'all'])
-    .in('status', ['active', 'trialing', 'canceled'])
-    .order('created_at', { ascending: false })
+    .order('current_period_end', { ascending: false })
     .limit(1);
 
   if (error) {
@@ -83,24 +76,18 @@ exports.handler = async (event) => {
   }
 
   const sub = subscriptions?.[0];
-  let hasAccess = false;
-  if (sub) {
-    if (sub.status === 'canceled' && sub.current_period_end) {
-      hasAccess = new Date(sub.current_period_end) > new Date();
-    } else if (sub.status !== 'canceled') {
-      hasAccess = true;
-    }
-  }
+  const hasAccess = sub?.current_period_end
+    ? new Date(sub.current_period_end) > now
+    : false;
 
   return {
     statusCode: 200,
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
       hasAccess,
-      status: sub?.status || 'free',
+      status: hasAccess ? 'active' : (sub ? 'expired' : 'free'),
       templateKey: sub?.template_key,
-      renewsAt: sub?.current_period_end,
-      cancelAtPeriodEnd: sub?.cancel_at_period_end || false
+      expiresAt: sub?.current_period_end,
     })
   };
 };

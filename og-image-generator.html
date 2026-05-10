@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>OG Image Generator — BudgetTools</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #f0f0f0; display: flex; flex-direction: column; align-items: center; padding: 40px; font-family: system-ui; }
+  .instructions { max-width: 700px; margin-bottom: 30px; text-align: center; color: #333; }
+  .instructions h1 { font-size: 20px; margin-bottom: 8px; }
+  .instructions p { font-size: 14px; color: #666; line-height: 1.5; }
+  .card-wrap { box-shadow: 0 4px 20px rgba(0,0,0,0.15); }
+  canvas { display: block; }
+  .download-btn { margin-top: 20px; background: #00355f; color: white; border: none; padding: 12px 32px; border-radius: 8px; font-size: 15px; font-weight: 600; cursor: pointer; }
+  .download-btn:hover { background: #0f4c81; }
+</style>
+</head>
+<body>
+
+<div class="instructions">
+  <h1>OG Image Generator</h1>
+  <p>Click the button below to download the image as PNG (1200x630). Then place <code>og-image.png</code> in your site root folder.</p>
+</div>
+
+<div class="card-wrap">
+  <canvas id="canvas" width="1200" height="630"></canvas>
+</div>
+
+<button class="download-btn" onclick="downloadImage()">Download og-image.png</button>
+
+<script>
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+
+function draw() {
+  // Background gradient
+  const grad = ctx.createLinearGradient(0, 0, 1200, 630);
+  grad.addColorStop(0, '#00355f');
+  grad.addColorStop(0.5, '#0f4c81');
+  grad.addColorStop(1, '#2c694e');
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, 1200, 630);
+
+  // Subtle pattern overlay
+  ctx.globalAlpha = 0.04;
+  for (let x = 0; x < 1200; x += 40) {
+    for (let y = 0; y < 630; y += 40) {
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(x, y, 1, 1);
+    }
+  }
+  ctx.globalAlpha = 1;
+
+  // Top accent line
+  const accentGrad = ctx.createLinearGradient(80, 0, 500, 0);
+  accentGrad.addColorStop(0, '#4ade80');
+  accentGrad.addColorStop(1, '#22d3ee');
+  ctx.fillStyle = accentGrad;
+  ctx.beginPath();
+  ctx.roundRect(80, 80, 120, 4, 2);
+  ctx.fill();
+
+  // "BudgetTools" brand name
+  ctx.fillStyle = '#ffffff';
+  ctx.font = '700 28px "Segoe UI", system-ui, sans-serif';
+  ctx.letterSpacing = '1px';
+  ctx.fillText('BudgetTools', 80, 140);
+
+  // Main headline
+  ctx.fillStyle = '#ffffff';
+  ctx.font = '700 56px "Georgia", "Noto Serif", serif';
+  const lines = ['Free Financial Calculators', '& Premium Planning Templates'];
+  ctx.fillText(lines[0], 80, 240);
+  ctx.fillText(lines[1], 80, 310);
+
+  // Subtext
+  ctx.fillStyle = 'rgba(255,255,255,0.7)';
+  ctx.font = '400 22px "Segoe UI", system-ui, sans-serif';
+  ctx.fillText('Wedding  ·  Events  ·  Travel  ·  Cafe Costing  ·  Inventory', 80, 380);
+
+  // Feature pills
+  const pills = ['10 Free Calculators', '5 Premium Templates', 'No Spreadsheets'];
+  let pillX = 80;
+  ctx.font = '600 16px "Segoe UI", system-ui, sans-serif';
+  pills.forEach(pill => {
+    const w = ctx.measureText(pill).width + 32;
+    ctx.fillStyle = 'rgba(255,255,255,0.12)';
+    ctx.beginPath();
+    ctx.roundRect(pillX, 430, w, 38, 19);
+    ctx.fill();
+    ctx.fillStyle = 'rgba(255,255,255,0.9)';
+    ctx.fillText(pill, pillX + 16, 455);
+    pillX += w + 12;
+  });
+
+  // URL at bottom
+  ctx.fillStyle = 'rgba(255,255,255,0.5)';
+  ctx.font = '500 18px "Segoe UI", system-ui, sans-serif';
+  ctx.fillText('budgettemplates.shop', 80, 570);
+
+  // Decorative circles on right side
+  ctx.globalAlpha = 0.06;
+  ctx.fillStyle = '#ffffff';
+  ctx.beginPath();
+  ctx.arc(1050, 150, 200, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.beginPath();
+  ctx.arc(1100, 450, 250, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.globalAlpha = 1;
+
+  // Right side icon-like elements
+  const icons = [
+    { emoji: '\u{1F4B0}', y: 180, label: 'Budget' },
+    { emoji: '\u{1F4CA}', y: 280, label: 'Analytics' },
+    { emoji: '\u{2705}', y: 380, label: 'Track' },
+  ];
+  icons.forEach(({ emoji, y, label }) => {
+    ctx.fillStyle = 'rgba(255,255,255,0.08)';
+    ctx.beginPath();
+    ctx.roundRect(920, y - 25, 200, 50, 12);
+    ctx.fill();
+    ctx.font = '28px serif';
+    ctx.fillText(emoji, 935, y + 8);
+    ctx.fillStyle = 'rgba(255,255,255,0.7)';
+    ctx.font = '500 16px "Segoe UI", system-ui, sans-serif';
+    ctx.fillText(label, 975, y + 6);
+  });
+}
+
+draw();
+
+function downloadImage() {
+  const link = document.createElement('a');
+  link.download = 'og-image.png';
+  link.href = canvas.toDataURL('image/png');
+  link.click();
+}
+</script>
+</body>
+</html>

@@ -68,13 +68,13 @@ exports.handler = async (event) => {
       const templateId = template.replace('bt_', '').replace(/_v\d+$/, '');
       const { data: subs } = await supabase
         .from('subscriptions')
-        .select('id')
+        .select('id, current_period_end')
         .eq('user_id', user.id)
         .in('template_key', [templateId, 'all'])
-        .in('status', ['active', 'trialing'])
+        .gte('current_period_end', new Date().toISOString())
         .limit(1);
       if (!subs || subs.length === 0) {
-        return { statusCode: 403, body: JSON.stringify({ error: 'Pro subscription required for cloud sync' }) };
+        return { statusCode: 403, body: JSON.stringify({ error: 'Pro access required for cloud sync' }) };
       }
     }
 

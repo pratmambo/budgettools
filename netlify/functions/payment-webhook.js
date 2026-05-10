@@ -16,6 +16,12 @@ function verifySignature(body, timestamp, signature) {
   return computed === signature;
 }
 
+function getExpiryDate() {
+  const d = new Date();
+  d.setDate(d.getDate() + 30);
+  return d.toISOString();
+}
+
 exports.handler = async (event) => {
   if (event.httpMethod !== 'POST') {
     return { statusCode: 405, body: 'Method Not Allowed' };
@@ -39,119 +45,53 @@ exports.handler = async (event) => {
     return { statusCode: 400, body: 'Invalid signature' };
   }
 
-  console.log('Cashfree webhook raw event type:', payload.type, 'keys:', Object.keys(payload.data || {}));
+  console.log('Cashfree webhook event type:', payload.type);
 
   const eventType = payload.type;
   const data = payload.data || {};
-  console.log('Cashfree event received:', eventType);
 
   try {
     switch (eventType) {
 
-      case 'SUBSCRIPTION_AUTH_STATUS': {
-        const sub = data.subscription || {};
-        const auth = data.authorization || sub.authorization || {};
-        const subId = sub.subscription_id || data.subscription_id;
-        const tags = sub.subscription_tags || data.subscription_tags || {};
+      case 'PAYMENT_SUCCESS_WEBHOOK': {
+        const order = data.order || {};
+        const payment = data.payment || {};
+        const tags = order.order_tags || {};
         const userId = tags.user_id;
         const templateKey = tags.template_key || 'unknown';
-        const authStatus = auth.authorization_status || data.authorization_status;
+        const orderId = order.order_id;
 
-        if (!subId || !userId) {
-          console.error('Missing subscription_id or user_id in auth event');
+        if (!orderId || !userId) {
+          console.error('Missing order_id or user_id in payment success event');
           break;
         }
 
-        if (authStatus === 'ACTIVE' || authStatus === 'SUCCESS') {
-          await supabase.from('subscriptions').upsert({
-            id: subId,
-            user_id: userId,
-            plan_id: sub.plan_details?.plan_id || subId,
-            template_key: templateKey,
-            status: 'active',
-            current_period_start: new Date().toISOString(),
-            current_period_end: getNextMonthISO(),
-            cancel_at_period_end: false,
-            updated_at: new Date().toISOString(),
-          }, { onConflict: 'id' });
-
-          console.log(`Subscription ${subId} authorized for user ${userId}, template: ${templateKey}`);
-        } else {
-          console.log(`Subscription ${subId} auth failed: ${authStatus}`);
-        }
-        break;
-      }
-
-      case 'SUBSCRIPTION_STATUS_CHANGED': {
-        const sub = data.subscription || data;
-        const subId = sub.subscription_id || data.subscription_id;
-        const subStatus = sub.subscription_status || data.subscription_status;
-        const tags = sub.subscription_tags || data.subscription_tags || {};
-
-        if (!subId) break;
-
-        const statusMap = {
-          'ACTIVE': 'active',
-          'ON_HOLD': 'past_due',
-          'COMPLETED': 'canceled',
-          'CANCELLED': 'canceled',
-          'CUSTOMER_CANCELLED': 'canceled',
-          'CUSTOMER_PAUSED': 'paused',
-          'EXPIRED': 'canceled',
-          'BANK_APPROVAL_PENDING': 'trialing',
-        };
-
-        const mappedStatus = statusMap[subStatus];
-        if (!mappedStatus) {
-          console.log(`Unknown subscription status: ${subStatus}`);
-          break;
-        }
-
-        const updateData = {
-          status: mappedStatus,
-          updated_at: new Date().toISOString(),
-        };
-
-        if (mappedStatus === 'active' && tags.user_id) {
-          updateData.user_id = tags.user_id;
-          updateData.template_key = tags.template_key || undefined;
-        }
-
-        await supabase.from('subscriptions').update(updateData).eq('id', subId);
-        console.log(`Subscription ${subId} status → ${mappedStatus} (was ${subStatus})`);
-        break;
-      }
-
-      case 'SUBSCRIPTION_PAYMENT_SUCCESS': {
-        const sub = data.subscription || {};
-        const payment = data.payment || {};
-        const subId = sub.subscription_id || data.subscription_id;
-
-        if (!subId) break;
-
-        await supabase.from('subscriptions').update({
+        await supabase.from('subscriptions').upsert({
+          id: orderId,
+          user_id: userId,
+          plan_id: orderId,
+          template_key: templateKey,
           status: 'active',
           current_period_start: new Date().toISOString(),
-          current_period_end: getNextMonthISO(),
+          current_period_end: getExpiryDate(),
+          cancel_at_period_end: false,
           updated_at: new Date().toISOString(),
-        }).eq('id', subId);
+        }, { onConflict: 'id' });
 
-        console.log(`Subscription ${subId} payment success, payment_id: ${payment.cf_payment_id || 'N/A'}`);
+        console.log(`Payment success: order ${orderId}, user ${userId}, template ${templateKey}, access until ${getExpiryDate()}`);
         break;
       }
 
-      case 'SUBSCRIPTION_PAYMENT_FAILED': {
-        const sub = data.subscription || {};
-        const subId = sub.subscription_id || data.subscription_id;
+      case 'PAYMENT_FAILED_WEBHOOK': {
+        const order = data.order || {};
+        const orderId = order.order_id;
+        console.log(`Payment failed: order ${orderId}`);
+        break;
+      }
 
-        if (!subId) break;
-
-        await supabase.from('subscriptions').update({
-          status: 'past_due',
-          updated_at: new Date().toISOString(),
-        }).eq('id', subId);
-
-        console.log(`Subscription ${subId} payment failed`);
+      case 'PAYMENT_USER_DROPPED_WEBHOOK': {
+        const order = data.order || {};
+        console.log(`User dropped: order ${order.order_id}`);
         break;
       }
 
@@ -166,9 +106,3 @@ exports.handler = async (event) => {
     return { statusCode: 500, body: JSON.stringify({ error: err.message }) };
   }
 };
-
-function getNextMonthISO() {
-  const d = new Date();
-  d.setMonth(d.getMonth() + 1);
-  return d.toISOString();
-}

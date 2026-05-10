@@ -262,7 +262,7 @@
         <div id="mode-signup" class="hidden">
           <div class="mb-8">
             <h1 class="text-3xl font-semibold text-primary mb-2">Create your account</h1>
-            <p class="text-on-surface-variant text-sm">Join free. Calculators stay free forever.</p>
+            <p class="text-on-surface-variant text-sm">Create an account to unlock Pro access and save your data.</p>
           </div>
 
           <div id="signup-alert" class="hidden mb-5 bg-red-50 border border-red-200 text-red-700 rounded-lg p-4 text-sm flex items-start gap-2">
@@ -532,15 +532,17 @@
     setLoading('signup', true);
     try {
       const redirectTo = window.location.origin + '/auth.html?mode=callback&next=' + encodeURIComponent(next);
-      const { error } = await sb.auth.signUp({
+      const { data, error } = await sb.auth.signUp({
         email, password,
         options: { data: { full_name: name }, emailRedirectTo: redirectTo }
       });
       setLoading('signup', false);
       if (error) showAlert('signup', error.message);
-      else {
+      else if (data.session) {
+        window.location.href = next;
+      } else {
         document.getElementById('signup-success').classList.remove('hidden');
-        document.getElementById('signup-success-msg').textContent = 'Account created! You can now sign in.';
+        document.getElementById('signup-success-msg').textContent = 'Check your email to confirm your account, then sign in.';
         document.getElementById('signup-alert').classList.add('hidden');
       }
     } catch (e) {

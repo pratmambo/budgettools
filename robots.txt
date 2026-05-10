@@ -1,0 +1,10 @@
+User-agent: *
+Allow: /
+
+Disallow: /auth.html
+Disallow: /account.html
+Disallow: /og-image-generator.html
+Disallow: /api/
+Disallow: /webhooks/
+
+Sitemap: https://budgettemplates.shop/sitemap.xml

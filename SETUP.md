@@ -92,24 +92,20 @@ Find the same two placeholders in the `<script>` block near the top of `account.
 1. Go to [stripe.com](https://stripe.com) and sign up or sign in.
 2. Stay in **Test mode** until you are ready to go live (toggle in the dashboard top-left).
 
-### 3.2 Create subscription products
+### 3.2 Pricing (one-time payments)
 
-Create 6 products with monthly recurring prices. For each one, you must add a `template_key` metadata field so the webhook can match a subscription to a template.
+Each payment gives the user 30 days of Pro access. Prices are in USD.
 
-| Product name             | Price        | `template_key` metadata value |
-|--------------------------|--------------|-------------------------------|
-| Wedding Planner Pro      | $8.99/month  | `wedding`                     |
-| Event Budget & P&L Pro   | $8.99/month  | `event`                       |
-| Travel Budget Planner Pro| $8.99/month  | `travel`                      |
-| Cafe Costing Pro         | $8.99/month  | `cafe`                        |
-| Inventory Management Pro | $8.99/month  | `inventory`                   |
-| All Templates — All-Access | $19.99/month | `all`                        |
+| Product name             | Price     | `template_key` value |
+|--------------------------|-----------|----------------------|
+| Wedding Planner Pro      | $8.99      | `wedding`            |
+| Event Budget & P&L Pro   | $8.99      | `event`              |
+| Travel Budget Planner Pro| $8.99      | `travel`             |
+| Cafe Costing Pro         | $8.99      | `cafe`               |
+| Inventory Management Pro | $8.99      | `inventory`          |
+| All Templates — All-Access | $19.99    | `all`                |
 
-**For each product:**
-1. Go to **Products** → **Add product**.
-2. Enter the name, set pricing to **Recurring** → **Monthly**, and enter the price.
-3. Under **Product metadata**, add key `template_key` with the value from the table above.
-4. Save the product and copy the **Price ID** (starts with `price_`). You will need these for the environment variables.
+Prices are hardcoded in `netlify/functions/create-checkout-session.js` (PLAN_PRICES object). No Cashfree dashboard product setup required — orders are created inline via the API.
 
 ### 3.3 Enable the Customer Portal
 

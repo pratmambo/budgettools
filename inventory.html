@@ -4,12 +4,17 @@
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Inventory Management Tracker | BudgetTools — Free Stock Tracking Tool</title>
-  <meta name="description" content="Track stock levels, reorder points, stock value and supplier info for your small business. Get low-stock alerts before you run out. Free for cafes, retail, food businesses and workshops."/>
+  <meta name="description" content="Track stock levels, reorder points, stock value and supplier info for your small business. Get low-stock alerts before you run out. Try the demo free."/>
   <meta name="keywords" content="inventory management, stock tracker, reorder point alerts, small business inventory, stock level tracker, free inventory tool, cafe inventory, retail stock management"/>
   <meta property="og:title" content="Inventory Management Tracker | BudgetTools"/>
-  <meta property="og:description" content="Never run out of stock — or drown in it. Track levels, get low-stock alerts, and see your total stock value in real time. Free forever."/>
+  <meta property="og:description" content="Never run out of stock — or drown in it. Track levels, get low-stock alerts, and see your total stock value in real time. Try the demo free."/>
   <meta property="og:type" content="website"/>
   <meta property="og:url" content="https://budgettemplates.shop/inventory.html"/>
+  <meta property="og:image" content="https://budgettemplates.shop/og-image.png"/>
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:image" content="https://budgettemplates.shop/og-image.png"/>
+  <meta name="twitter:title" content="Inventory Management Tracker | BudgetTools"/>
+  <meta name="twitter:description" content="Track stock levels, reorder points, and stock value for your small business. Try the demo free."/>
   <link rel="canonical" href="https://budgettemplates.shop/inventory.html"/>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
@@ -62,15 +67,15 @@
     "@context": "https://schema.org",
     "@type": "WebApplication",
     "name": "Inventory Management Tracker",
-    "description": "Free online inventory tracker for small businesses. Track stock levels, reorder points, stock value, and supplier info. Get automatic low-stock alerts.",
+    "description": "Online inventory tracker for small businesses. Track stock levels, reorder points, stock value, and supplier info. Get automatic low-stock alerts. Try the demo free, purchase from $8.99 / 30 days.",
     "url": "https://budgettemplates.shop/inventory.html",
     "applicationCategory": "BusinessApplication",
     "operatingSystem": "Any",
     "offers": {
       "@type": "Offer",
-      "price": "0",
+      "price": "8.99",
       "priceCurrency": "USD",
-      "description": "Free forever — no credit card required"
+      "description": "Try the demo free. Buy from $8.99 / 30 days."
     },
     "featureList": [
       "Real-time stock level tracking",
@@ -160,7 +165,7 @@
 <div id="demo-banner" class="hidden">
   <div class="flex items-center gap-2">
     <span class="material-symbols-outlined text-base filled">timer</span>
-    <span>Trial — <strong id="trial-countdown">10:00</strong> left. Exploring <strong>demo inventory</strong> — Bloom Bakery &amp; Cafe.</span>
+    <span>Trial — <strong id="trial-countdown">5:00</strong> left. Exploring <strong>demo inventory</strong> — Bloom Bakery &amp; Cafe.</span>
   </div>
   <button onclick="window.BT_SUB?.showUpgradeModal('inventory')" class="ml-auto bg-white/20 hover:bg-white/30 transition-colors px-4 py-1.5 rounded-full text-xs font-bold whitespace-nowrap">Unlock Full Access →</button>
 </div>
@@ -169,7 +174,6 @@
      LANDING PAGE
 ══════════════════════════════════════════════════════ -->
 <div id="landing-page">
-<script>try{if(Object.keys(localStorage).some(k=>k.startsWith('sb-')&&k.endsWith('-auth-token')))document.getElementById('landing-page').classList.add('hidden');}catch(e){}</script>
 
   <!-- ── HERO ─────────────────────────────────────────── -->
   <section class="lp-hero min-h-screen flex flex-col">
@@ -186,7 +190,7 @@
           <span data-bt-user-email class="text-white/70 text-xs hidden md:block max-w-[100px] truncate"></span>
           <button data-bt-signout class="text-white/70 hover:text-white text-xs font-medium border border-white/30 rounded-md px-2.5 py-1">Sign Out</button>
         </div>
-        <button onclick="window.BT_Interactive?BT_Interactive.handleStartFree(showSetupModal,enterDemo):showSetupModal()" class="bg-white text-primary text-sm font-bold px-5 py-2.5 rounded-full hover:bg-primary-fixed transition-colors">Get Started Free</button>
+        <button onclick="window.BT_Interactive?BT_Interactive.handleStartFree(showSetupModal,enterDemo):showSetupModal()" class="bg-white text-primary text-sm font-bold px-5 py-2.5 rounded-full hover:bg-primary-fixed transition-colors">Get Started</button>
       </div>
     </nav>
 
@@ -195,7 +199,7 @@
       <div>
         <div class="inline-flex items-center gap-2 bg-white/10 border border-white/20 rounded-full px-4 py-1.5 text-white/80 text-xs font-semibold mb-8">
           <span class="material-symbols-outlined text-sm filled text-yellow-300">star</span>
-          Free Forever — No credit card required
+          Try the Demo Free — No credit card required
         </div>
         <h1 class="font-headline text-5xl md:text-6xl text-white leading-tight mb-6">
           Never Run Out<br/>of Stock —<br/><em>or Drown in It.</em>
@@ -211,7 +215,7 @@
         </ul>
         <div class="flex flex-wrap gap-3">
           <button onclick="window.BT_Interactive?BT_Interactive.handleStartFree(showSetupModal,enterDemo):showSetupModal()" class="bg-white text-primary font-bold px-8 py-4 rounded-xl hover:bg-primary-fixed transition-colors text-base shadow-lg">
-            Start Tracking Free
+            Get Started
           </button>
           <button onclick="enterDemo()" class="border-2 border-white/40 text-white font-semibold px-8 py-4 rounded-xl hover:border-white hover:bg-white/10 transition-colors text-base">
             Try the Demo →
@@ -424,7 +428,7 @@
       </div>
       <div class="text-center mt-8">
         <button onclick="window.BT_Interactive?BT_Interactive.handleStartFree(showSetupModal,enterDemo):showSetupModal()" class="grad-inv text-white font-bold px-10 py-4 rounded-xl hover:opacity-90 transition-opacity text-base shadow-lg">
-          Start Tracking Free →
+          Get Started →
         </button>
       </div>
     </div>
@@ -435,26 +439,26 @@
     <div class="max-w-4xl mx-auto">
       <div class="text-center mb-14">
         <span class="text-primary text-xs uppercase tracking-[0.25em] font-bold block mb-3">Pricing</span>
-        <h2 class="font-headline text-4xl text-on-surface mb-4">Free for Small Business. Pro for Growth.</h2>
-        <p class="text-on-surface-variant text-lg max-w-xl mx-auto">Start free with unlimited SKUs and all core tracking features. Upgrade when you need multi-location, barcodes, and purchase orders.</p>
+        <h2 class="font-headline text-4xl text-on-surface mb-4">Try the demo free. Unlock when you're ready.</h2>
+        <p class="text-on-surface-variant text-lg max-w-xl mx-auto">Explore the full tracker with sample data. Purchase to save your own inventory, sync across devices, and export reports.</p>
       </div>
       <div class="grid md:grid-cols-2 gap-6 max-w-3xl mx-auto">
-        <!-- Free -->
+        <!-- Demo -->
         <div class="bg-white rounded-2xl p-8 shadow-sm border-2 border-outline-variant/30">
-          <p class="text-xs text-outline uppercase tracking-widest font-bold mb-4">Free</p>
+          <p class="text-xs text-outline uppercase tracking-widest font-bold mb-4">Free Demo</p>
           <div class="mb-6">
             <span class="text-4xl font-headline font-bold text-on-surface">$0</span>
-            <span class="text-on-surface-variant text-sm"> / forever</span>
+            <span class="text-on-surface-variant text-sm"> / 5-min trial</span>
           </div>
           <ul class="space-y-3 mb-8 text-sm text-on-surface-variant">
-            <li class="flex items-center gap-2"><span class="material-symbols-outlined text-base text-profit filled">check</span>Unlimited SKUs</li>
+            <li class="flex items-center gap-2"><span class="material-symbols-outlined text-base text-profit filled">check</span>Explore with sample data</li>
             <li class="flex items-center gap-2"><span class="material-symbols-outlined text-base text-profit filled">check</span>Stock movements log</li>
             <li class="flex items-center gap-2"><span class="material-symbols-outlined text-base text-profit filled">check</span>Low-stock alerts</li>
             <li class="flex items-center gap-2"><span class="material-symbols-outlined text-base text-profit filled">check</span>Total stock value</li>
-            <li class="flex items-center gap-2"><span class="material-symbols-outlined text-base text-profit filled">check</span>Supplier info per item</li>
-            <li class="flex items-center gap-2"><span class="material-symbols-outlined text-base text-profit filled">check</span>Saved locally in your browser</li>
+            <li class="flex items-center gap-2"><span class="material-symbols-outlined text-base text-profit filled">check</span>All features unlocked</li>
+            <li class="flex items-center gap-2"><span class="material-symbols-outlined text-base text-profit filled">check</span>No account required</li>
           </ul>
-          <button onclick="window.BT_Interactive?BT_Interactive.handleStartFree(showSetupModal,enterDemo):showSetupModal()" class="w-full border-2 border-primary text-primary font-bold py-3 rounded-xl hover:bg-primary-fixed transition-colors">Get Started Free</button>
+          <button onclick="enterDemo()" class="w-full border-2 border-primary text-primary font-bold py-3 rounded-xl hover:bg-primary-fixed transition-colors">Try the Demo</button>
         </div>
         <!-- Pro -->
         <div class="bg-primary rounded-2xl p-8 shadow-lg relative overflow-hidden">
@@ -462,7 +466,7 @@
           <p class="text-xs text-white/60 uppercase tracking-widest font-bold mb-4">Pro</p>
           <div class="mb-6">
             <span class="text-4xl font-headline font-bold text-white">$8.99</span>
-            <span class="text-white/60 text-sm"> / month</span>
+            <span class="text-white/60 text-sm"> / 30 days</span>
           </div>
           <ul class="space-y-3 mb-8 text-sm text-white/80">
             <li class="flex items-center gap-2"><span class="material-symbols-outlined text-base text-green-300 filled">check</span>Multiple locations + transfers</li>
@@ -542,7 +546,7 @@
       <p class="text-white/70 text-lg mb-8">Join small business owners who track their inventory in real time — not when the shelf is already empty.</p>
       <div class="flex flex-wrap gap-3 justify-center">
         <button onclick="window.BT_Interactive?BT_Interactive.handleStartFree(showSetupModal,enterDemo):showSetupModal()" class="bg-white text-primary font-bold px-10 py-4 rounded-xl hover:bg-primary-fixed transition-colors text-base shadow-lg">
-          Start Free — No Sign-Up
+          Get Started
         </button>
         <button onclick="enterDemo()" class="border-2 border-white/40 text-white font-semibold px-10 py-4 rounded-xl hover:border-white hover:bg-white/10 transition-colors text-base">
           See Demo First

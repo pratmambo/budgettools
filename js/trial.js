@@ -1,7 +1,7 @@
 /**
  * BudgetTools Trial Timer
  *
- * Manages the 10-minute demo trial for premium templates.
+ * Manages the 5-minute demo trial for premium templates.
  * - Times are stored in localStorage so closing the tab does NOT reset the trial.
  * - Each template has its own independent timer.
  * - Admin accounts and paid subscribers are never blocked.
@@ -9,11 +9,11 @@
  * Usage in enterDemo():
  *   if (window.BT_TRIAL) window.BT_TRIAL.start('wedding');
  *
- * Demo banner must contain: <span id="trial-countdown">10:00</span>
+ * Demo banner must contain: <span id="trial-countdown">5:00</span>
  */
 
 (function () {
-  const TRIAL_MS = 10 * 60 * 1000; // 10 minutes
+  const TRIAL_MS = 5 * 60 * 1000; // 5 minutes
 
   let _templateId = null;
   let _intervalId = null;

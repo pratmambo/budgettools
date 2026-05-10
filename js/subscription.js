@@ -1,21 +1,12 @@
-/**
- * BudgetTools Subscription Module
- *
- * Handles the "unlock" flow in templates:
- * - Shows upgrade banner/modal for free users
- * - Triggers Cashfree checkout (UPI Autopay / Cards / eNACH)
- * - Shows "save to account" prompt for logged-in but free users
- */
-
 (function() {
 
   const TEMPLATES = {
-    wedding:   { name: 'Wedding Planner',       price: '$8.99/month',  color: '#506351' },
-    event:     { name: 'Event Budget & P&L',    price: '$8.99/month',  color: '#4527a0' },
-    travel:    { name: 'Travel Budget Planner', price: '$8.99/month',  color: '#006874' },
-    cafe:      { name: 'Cafe Costing',          price: '$8.99/month',  color: '#5d1a0a' },
-    inventory: { name: 'Inventory Management',  price: '$8.99/month',  color: '#1565c0' },
-    all:       { name: 'All Templates',         price: '$19.99/month', color: '#00355f' },
+    wedding:   { name: 'Wedding Planner',       price: '$8.99',  color: '#506351' },
+    event:     { name: 'Event Budget & P&L',    price: '$8.99',  color: '#4527a0' },
+    travel:    { name: 'Travel Budget Planner', price: '$8.99',  color: '#006874' },
+    cafe:      { name: 'Cafe Costing',          price: '$8.99',  color: '#5d1a0a' },
+    inventory: { name: 'Inventory Management',  price: '$8.99',  color: '#1565c0' },
+    all:       { name: 'All Templates',         price: '$19.99', color: '#00355f' },
   };
 
   let _cashfreeLoaded = false;
@@ -57,13 +48,13 @@
           <p style="font-size:12px;font-weight:700;color:#92400e;text-transform:uppercase;letter-spacing:0.05em;margin:0;">Demo Mode</p>
           <button onclick="document.getElementById('bt-save-banner').remove()" style="margin-left:auto;background:none;border:none;cursor:pointer;color:#94a3b8;font-size:18px;line-height:1;padding:0;">×</button>
         </div>
-        <p style="font-size:13px;color:#374151;margin:0;line-height:1.4;">Your data isn’t saved. Upgrade to sync across devices, export reports, and unlock all features.</p>
+        <p style="font-size:13px;color:#374151;margin:0;line-height:1.4;">Your data isn't saved. Get 30-day Pro access to sync across devices, export reports, and unlock all features.</p>
         <div style="display:flex;gap:8px;">
           <button onclick="window.BT_SUB.showUpgradeModal('${templateId}')" style="flex:1;background:${template.color};color:white;border:none;border-radius:8px;padding:8px 14px;font-size:13px;font-weight:700;cursor:pointer;">
             Unlock ${template.name} →
           </button>
         </div>
-        <p style="font-size:11px;color:#94a3b8;margin:0;text-align:center;">${template.price} · UPI / Card · Cancel anytime</p>
+        <p style="font-size:11px;color:#94a3b8;margin:0;text-align:center;">${template.price} for 30 days · Visa / Mastercard · Buy again to renew</p>
       `;
 
       document.body.appendChild(banner);
@@ -92,27 +83,27 @@
             <span style="font-size:24px;">⭐</span>
           </div>
           <h2 style="font-family:'Noto Serif',serif;font-size:24px;color:#0d1c2f;margin:0 0 8px;">Unlock ${template.name} Pro</h2>
-          <p style="color:#64748b;font-size:15px;margin:0 0 24px;line-height:1.5;">Save your data across devices, export reports, and get full access — no demo mode.</p>
+          <p style="color:#64748b;font-size:15px;margin:0 0 24px;line-height:1.5;">Get 30-day Pro access — save your data across devices, export reports, and use all features.</p>
           <ul style="list-style:none;padding:0;margin:0 0 20px;display:flex;flex-direction:column;gap:8px;">
             <li style="display:flex;align-items:center;gap:8px;font-size:14px;color:#374151;"><span style="color:#16a34a;font-size:16px;">✓</span> Cloud sync across all your devices</li>
             <li style="display:flex;align-items:center;gap:8px;font-size:14px;color:#374151;"><span style="color:#16a34a;font-size:16px;">✓</span> Full history, unlimited entries</li>
             <li style="display:flex;align-items:center;gap:8px;font-size:14px;color:#374151;"><span style="color:#16a34a;font-size:16px;">✓</span> PDF & CSV export</li>
-            <li style="display:flex;align-items:center;gap:8px;font-size:14px;color:#374151;"><span style="color:#16a34a;font-size:16px;">✓</span> Cancel anytime from your account</li>
+            <li style="display:flex;align-items:center;gap:8px;font-size:14px;color:#374151;"><span style="color:#16a34a;font-size:16px;">✓</span> 30-day access · Buy again to renew</li>
           </ul>
           <div style="margin-bottom:16px;">
             <label style="display:block;font-size:13px;font-weight:600;color:#374151;margin-bottom:6px;">Phone number (required for payment)</label>
-            <input id="bt-checkout-phone" type="tel" placeholder="10-digit mobile number" maxlength="10" pattern="[0-9]{10}"
+            <input id="bt-checkout-phone" type="tel" placeholder="Phone number" maxlength="15" pattern="[0-9]{7,15}"
               style="width:100%;padding:10px 12px;border:1px solid #e2e8f0;border-radius:8px;font-size:14px;font-family:inherit;box-sizing:border-box;" />
             <p id="bt-phone-error" style="display:none;color:#dc2626;font-size:12px;margin:4px 0 0;"></p>
           </div>
           <div style="display:flex;gap:12px;">
             <button onclick="document.getElementById('bt-upgrade-modal').remove()" style="flex:1;border:2px solid #e2e8f0;background:white;color:#64748b;border-radius:12px;padding:12px;font-weight:600;cursor:pointer;font-size:14px;">Maybe Later</button>
             <button id="bt-checkout-btn" onclick="window.BT_SUB._doCheckout('${templateId}')" style="flex:2;background:${template.color};color:white;border:none;border-radius:12px;padding:12px;font-weight:700;cursor:pointer;font-size:15px;">
-              Unlock for ${template.price} →
+              Pay ${template.price} →
             </button>
           </div>
           <p style="text-align:center;margin:12px 0 0;font-size:12px;color:#94a3b8;">
-            Secure payment via Cashfree · UPI · Cards · Net Banking
+            Secure payment via Cashfree · Visa · Mastercard · UPI · Net Banking
           </p>
         </div>
       `;
@@ -129,9 +120,9 @@
       const phoneError = document.getElementById('bt-phone-error');
       const phone = (phoneInput?.value || '').replace(/\D/g, '');
 
-      if (phone.length !== 10) {
+      if (phone.length < 7 || phone.length > 15) {
         if (phoneError) {
-          phoneError.textContent = 'Please enter a valid 10-digit mobile number.';
+          phoneError.textContent = 'Please enter a valid phone number (7–15 digits).';
           phoneError.style.display = 'block';
         }
         phoneInput?.focus();
@@ -144,7 +135,7 @@
 
     async startCheckout(templateId, phone) {
       if (!window.BT_AUTH?.isLoggedIn()) {
-        window.location.href = '/auth.html?mode=signup&redirect=' + encodeURIComponent(window.location.pathname);
+        window.location.href = '/auth.html?mode=signup&next=' + encodeURIComponent(window.location.pathname);
         return;
       }
 
@@ -153,7 +144,7 @@
       if (btn) { btn.textContent = 'Loading…'; btn.disabled = true; }
 
       try {
-        const { sessionId } = await window.BT_AUTH.apiFetch('/api/create-checkout-session', {
+        const { sessionId, cashfreeEnv } = await window.BT_AUTH.apiFetch('/api/create-checkout-session', {
           method: 'POST',
           body: JSON.stringify({ template: templateId, phone }),
         });
@@ -161,7 +152,7 @@
         await loadCashfreeSDK();
 
         const cashfree = window.Cashfree({
-          mode: window.location.hostname === 'localhost' ? 'sandbox' : 'production',
+          mode: cashfreeEnv || 'production',
         });
 
         const result = await cashfree.checkout({
@@ -192,7 +183,7 @@
         console.error('Checkout error:', err);
         const b = document.getElementById('bt-checkout-btn');
         if (b) { b.textContent = 'Try Again'; b.disabled = false; }
-        alert('Could not start checkout. Please try again or contact support.');
+        alert('Could not start checkout: ' + (err.message || 'Unknown error') + '. Please try again or contact support.');
       }
     },
 
@@ -242,7 +233,7 @@
       <span style="font-size:20px;">🎉</span>
       <div>
         <p style="margin:0;font-weight:700;font-size:14px;">Payment successful!</p>
-        <p style="margin:0;font-size:12px;opacity:0.85;">Activating your ${templateName} Pro access…</p>
+        <p style="margin:0;font-size:12px;opacity:0.85;">Activating your ${templateName} Pro access for 30 days…</p>
       </div>
     `;
     document.body.appendChild(banner);

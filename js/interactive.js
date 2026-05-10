@@ -229,7 +229,7 @@
             <span class="material-symbols-outlined" style="font-size:28px;color:#16a34a;">person</span>
           </div>
           <h2 style="font-family:'Noto Serif',serif;font-size:22px;color:#0f172a;margin:0 0 8px;">How would you like to start?</h2>
-          <p style="color:#64748b;font-size:14px;margin:0;line-height:1.5;">Create a free account to save your data across devices and unlock cloud sync.</p>
+          <p style="color:#64748b;font-size:14px;margin:0;line-height:1.5;">Sign in to unlock Pro access and save your data across devices with cloud sync.</p>
         </div>
         <div style="display:flex;flex-direction:column;gap:12px;">
           <a href="/auth.html?mode=signup&next=${redirectPath}" id="bt-lc-signin" style="display:flex;align-items:center;justify-content:center;gap:10px;background:#0f172a;color:white;border:none;border-radius:12px;padding:14px;font-weight:700;font-size:15px;cursor:pointer;text-decoration:none;text-align:center;transition:opacity 0.15s;" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">
@@ -237,11 +237,11 @@
             Sign In / Create Account
           </a>
           <button id="bt-lc-continue" style="display:flex;flex-direction:column;align-items:center;background:none;border:2px solid #e2e8f0;border-radius:12px;padding:14px;cursor:pointer;transition:all 0.15s;font-family:inherit;" onmouseover="this.style.borderColor='#94a3b8'" onmouseout="this.style.borderColor='#e2e8f0'">
-            <span style="font-weight:600;font-size:14px;color:#334155;">Continue Without Account</span>
-            <span style="font-size:12px;color:#94a3b8;margin-top:2px;">Data saved in this browser only</span>
+            <span style="font-weight:600;font-size:14px;color:#334155;">Try Demo Instead</span>
+            <span style="font-size:12px;color:#94a3b8;margin-top:2px;">Explore with sample data</span>
           </button>
         </div>
-        <p style="text-align:center;margin:16px 0 0;font-size:12px;color:#94a3b8;">You can always create an account later to enable cloud sync.</p>
+        <p style="text-align:center;margin:16px 0 0;font-size:12px;color:#94a3b8;">Unlock Pro to save your own data and sync across devices.</p>
       </div>
     `;
 
@@ -254,12 +254,61 @@
     document.body.appendChild(modal);
   }
 
-  function handleStartFree(onSetup, onDemo) {
+  async function handleStartFree(onSetup, onDemo) {
     if (window.BT_AUTH?.isLoggedIn()) {
-      onSetup();
+      if (window.BT_STORAGE?.hasProAccess) {
+        const hasPro = await window.BT_STORAGE.hasProAccess();
+        if (hasPro) { onSetup(); return; }
+      }
+      const templateKey = (window.TEMPLATE_KEY || '').replace('bt_', '').replace(/_v\d+$/, '');
+      showSubscribeChoice(templateKey || 'all', onDemo || onSetup);
     } else {
       showLoginChoice(onDemo || onSetup);
     }
+  }
+
+  function showSubscribeChoice(templateKey, onDemo) {
+    const existing = document.getElementById('bt-subscribe-choice');
+    if (existing) existing.remove();
+
+    const modal = document.createElement('div');
+    modal.id = 'bt-subscribe-choice';
+    modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.5);backdrop-filter:blur(4px);z-index:300;display:flex;align-items:center;justify-content:center;padding:16px;';
+    modal.innerHTML = `
+      <div style="background:white;border-radius:20px;padding:36px;max-width:440px;width:100%;box-shadow:0 24px 60px rgba(0,0,0,0.2);font-family:'Plus Jakarta Sans',sans-serif;">
+        <div style="text-align:center;margin-bottom:24px;">
+          <div style="width:56px;height:56px;border-radius:16px;background:linear-gradient(135deg,#dbeafe,#bfdbfe);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;">
+            <span class="material-symbols-outlined" style="font-size:28px;color:#1d4ed8;">star</span>
+          </div>
+          <h2 style="font-family:'Noto Serif',serif;font-size:22px;color:#0f172a;margin:0 0 8px;">Ready to get started?</h2>
+          <p style="color:#64748b;font-size:14px;margin:0;line-height:1.5;">Get 30-day Pro access to save your data across devices, or try the demo first.</p>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:12px;">
+          <button id="bt-sc-subscribe" style="display:flex;align-items:center;justify-content:center;gap:10px;background:#0f172a;color:white;border:none;border-radius:12px;padding:14px;font-weight:700;font-size:15px;cursor:pointer;transition:opacity 0.15s;font-family:inherit;" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">
+            <span class="material-symbols-outlined" style="font-size:20px;">lock_open</span>
+            Unlock Pro Access
+          </button>
+          <button id="bt-sc-demo" style="display:flex;flex-direction:column;align-items:center;background:none;border:2px solid #e2e8f0;border-radius:12px;padding:14px;cursor:pointer;transition:all 0.15s;font-family:inherit;" onmouseover="this.style.borderColor='#94a3b8'" onmouseout="this.style.borderColor='#e2e8f0'">
+            <span style="font-weight:600;font-size:14px;color:#334155;">Try Demo Instead</span>
+            <span style="font-size:12px;color:#94a3b8;margin-top:2px;">5-minute trial with sample data</span>
+          </button>
+        </div>
+      </div>
+    `;
+
+    modal.addEventListener('click', e => { if (e.target === modal) modal.remove(); });
+    modal.querySelector('#bt-sc-subscribe').addEventListener('click', () => {
+      modal.remove();
+      if (window.BT_SUB?.showUpgradeModal) {
+        window.BT_SUB.showUpgradeModal(templateKey);
+      }
+    });
+    modal.querySelector('#bt-sc-demo').addEventListener('click', () => {
+      modal.remove();
+      if (onDemo) onDemo();
+    });
+
+    document.body.appendChild(modal);
   }
 
   // ── PUBLIC API ─────────────────────────────────────────
