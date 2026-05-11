@@ -281,7 +281,7 @@
             <span class="material-symbols-outlined" style="font-size:28px;color:#1d4ed8;">star</span>
           </div>
           <h2 style="font-family:'Noto Serif',serif;font-size:22px;color:#0f172a;margin:0 0 8px;">Ready to get started?</h2>
-          <p style="color:#64748b;font-size:14px;margin:0;line-height:1.5;">Get 30-day Pro access to save your data across devices, or try the demo first.</p>
+          <p style="color:#64748b;font-size:14px;margin:0;line-height:1.5;">Get Pro access to save your data across devices, or try the demo first.</p>
         </div>
         <div style="display:flex;flex-direction:column;gap:12px;">
           <button id="bt-sc-subscribe" style="display:flex;align-items:center;justify-content:center;gap:10px;background:#0f172a;color:white;border:none;border-radius:12px;padding:14px;font-weight:700;font-size:15px;cursor:pointer;transition:opacity 0.15s;font-family:inherit;" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">

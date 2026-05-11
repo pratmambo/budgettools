@@ -94,16 +94,15 @@ Find the same two placeholders in the `<script>` block near the top of `account.
 
 ### 3.2 Pricing (one-time payments)
 
-Each payment gives the user 30 days of Pro access. Prices are in USD.
+Each payment grants permanent Pro access. Prices are in INR. One-time payment, no auto-renewal.
 
 | Product name             | Price     | `template_key` value |
 |--------------------------|-----------|----------------------|
-| Wedding Planner Pro      | $8.99      | `wedding`            |
-| Event Budget & P&L Pro   | $8.99      | `event`              |
-| Travel Budget Planner Pro| $8.99      | `travel`             |
-| Cafe Costing Pro         | $8.99      | `cafe`               |
-| Inventory Management Pro | $8.99      | `inventory`          |
-| All Templates — All-Access | $19.99    | `all`                |
+| Wedding Planner Pro      | ₹899      | `wedding`            |
+| Event Budget & P&L Pro   | ₹899      | `event`              |
+| Travel Budget Planner Pro| ₹899      | `travel`             |
+| Cafe Costing Pro         | ₹899      | `cafe`               |
+| Inventory Management Pro | ₹899      | `inventory`          |
 
 Prices are hardcoded in `netlify/functions/create-checkout-session.js` (PLAN_PRICES object). No Cashfree dashboard product setup required — orders are created inline via the API.
 

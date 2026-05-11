@@ -52,7 +52,7 @@ exports.handler = async (event) => {
     }
 
     const active = (allSubs || []).filter(s =>
-      s.current_period_end && new Date(s.current_period_end) > now
+      s.status === 'active' && s.current_period_end && new Date(s.current_period_end) > now
     );
 
     return {
@@ -76,7 +76,7 @@ exports.handler = async (event) => {
   }
 
   const sub = subscriptions?.[0];
-  const hasAccess = sub?.current_period_end
+  const hasAccess = sub && sub.status === 'active' && sub.current_period_end
     ? new Date(sub.current_period_end) > now
     : false;
 

@@ -1,6 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=AW-18154608762"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'AW-18154608762');
+  </script>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>BudgetTools | Free Financial Calculators & Premium Planning Templates</title>
@@ -73,8 +81,8 @@
     "url": "https://budgettemplates.shop",
     "applicationCategory": "FinanceApplication",
     "offers": [
-      { "@type": "Offer", "price": "0", "priceCurrency": "USD", "description": "10 free financial calculators" },
-      { "@type": "Offer", "price": "8.99", "priceCurrency": "USD", "description": "Premium planning template — 30-day access" }
+      { "@type": "Offer", "price": "0", "priceCurrency": "INR", "description": "10 free financial calculators" },
+      { "@type": "Offer", "price": "899", "priceCurrency": "INR", "description": "Premium planning template — one-time purchase" }
     ],
     "featureList": ["Wedding Budget Calculator","Event Break-Even Calculator","Loan Affordability Calculator","Freelancer Take-Home Calculator","Rental Yield Calculator","Product Margin Calculator","Travel Cost Splitter","Household Savings Calculator","Project Burn Rate Calculator","Inventory Reorder Calculator","Wedding Planner Template","Event Budget Template","Travel Budget Template","Cafe Costing Template","Inventory Tracker Template"]
   }
@@ -102,6 +110,23 @@
         </a>
         <span data-bt-user-email class="text-sm text-on-surface-variant hidden lg:block max-w-[140px] truncate"></span>
         <button data-bt-signout class="text-sm text-on-surface-variant hover:text-error transition-colors font-medium hidden sm:block">Sign out</button>
+      </div>
+      <div id="my-templates-nav" style="display:none" class="relative">
+        <button onclick="document.getElementById('my-templates-dropdown').classList.toggle('hidden')" class="flex items-center gap-1.5 text-sm font-semibold text-primary hover:text-primary-container transition-colors">
+          <span class="material-symbols-outlined text-lg filled">apps</span>
+          <span class="hidden sm:inline">My Templates</span>
+          <span class="material-symbols-outlined text-sm">expand_more</span>
+        </button>
+        <div id="my-templates-dropdown" class="hidden absolute right-0 top-full mt-2 w-80 bg-white rounded-xl shadow-2xl border border-outline-variant/20 z-[60] overflow-hidden">
+          <div class="px-4 py-3 bg-surface-container-low border-b border-outline-variant/10">
+            <p class="text-xs font-bold text-on-surface-variant uppercase tracking-wider">Your Templates</p>
+          </div>
+          <div id="my-templates-list"></div>
+          <div class="px-4 py-3 bg-surface-container-low/50 border-t border-outline-variant/10 flex items-center justify-between">
+            <a href="/account.html" class="text-xs text-on-surface-variant hover:text-primary font-medium">Account settings</a>
+            <a href="#templates" onclick="document.getElementById('my-templates-dropdown').classList.add('hidden')" class="text-xs text-primary hover:underline font-medium">Browse all →</a>
+          </div>
+        </div>
       </div>
       <a href="#templates" class="grad-primary text-white px-5 py-2.5 rounded-lg font-semibold hover:opacity-90 transition-opacity text-sm">
         View Templates
@@ -414,7 +439,7 @@
           </div>
           <div class="flex items-center justify-between text-sm">
             <span class="template-cta text-primary font-bold group-hover:underline">Explore Template →</span>
-            <span class="text-on-surface-variant text-xs">Pro: $8.99</span>
+            <span class="text-on-surface-variant text-xs">Pro: ₹899</span>
           </div>
         </div>
       </a>
@@ -437,7 +462,7 @@
           </div>
           <div class="flex items-center justify-between text-sm">
             <span class="template-cta text-primary font-bold group-hover:underline">Explore Template →</span>
-            <span class="text-on-surface-variant text-xs">Pro: $8.99</span>
+            <span class="text-on-surface-variant text-xs">Pro: ₹899</span>
           </div>
         </div>
       </a>
@@ -460,7 +485,7 @@
           </div>
           <div class="flex items-center justify-between text-sm">
             <span class="template-cta text-primary font-bold group-hover:underline">Explore Template →</span>
-            <span class="text-on-surface-variant text-xs">Pro: $8.99</span>
+            <span class="text-on-surface-variant text-xs">Pro: ₹899</span>
           </div>
         </div>
       </a>
@@ -483,7 +508,7 @@
           </div>
           <div class="flex items-center justify-between text-sm">
             <span class="template-cta text-primary font-bold group-hover:underline">Explore Template →</span>
-            <span class="text-on-surface-variant text-xs">Pro: $8.99</span>
+            <span class="text-on-surface-variant text-xs">Pro: ₹899</span>
           </div>
         </div>
       </a>
@@ -506,7 +531,7 @@
           </div>
           <div class="flex items-center justify-between text-sm">
             <span class="template-cta text-primary font-bold group-hover:underline">Explore Template →</span>
-            <span class="text-on-surface-variant text-xs">Pro: $8.99</span>
+            <span class="text-on-surface-variant text-xs">Pro: ₹899</span>
           </div>
         </div>
       </a>
@@ -533,11 +558,11 @@
       <h2 class="text-4xl font-semibold text-primary mb-4">Simple, Honest Pricing</h2>
       <p class="text-on-surface-variant text-lg max-w-xl mx-auto">Calculators are free forever. Templates are premium — try the demo, pay only when you're ready to track your own data.</p>
     </div>
-    <div class="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+    <div class="grid md:grid-cols-2 gap-6 max-w-3xl mx-auto">
       <div class="bg-white rounded-2xl p-8 border border-outline-variant/20 shadow-sm">
         <div class="inline-flex items-center gap-2 bg-green-100 text-green-800 px-3 py-1 rounded-full text-xs font-bold mb-6">Free Forever</div>
         <div class="mb-6">
-          <span class="text-4xl font-headline font-bold text-on-surface">$0</span>
+          <span class="text-4xl font-headline font-bold text-on-surface">₹0</span>
           <span class="text-on-surface-variant text-sm"> / always</span>
         </div>
         <ul class="space-y-3 text-sm text-on-surface-variant mb-8">
@@ -548,37 +573,21 @@
         </ul>
         <a href="#calculators" class="w-full border-2 border-primary text-primary font-bold py-3 rounded-xl hover:bg-primary-fixed transition-colors block text-center">Try Free Calculators</a>
       </div>
-      <div class="bg-white rounded-2xl p-8 border-2 border-primary/20 shadow-sm">
-        <div class="inline-flex items-center gap-2 bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-xs font-bold mb-6">Single Template</div>
-        <div class="mb-6">
-          <span class="text-4xl font-headline font-bold text-on-surface">$8.99</span>
-          <span class="text-on-surface-variant text-sm"> / 30 days</span>
-        </div>
-        <ul class="space-y-3 text-sm text-on-surface-variant mb-8">
-          <li class="flex items-center gap-2"><span class="material-symbols-outlined text-base text-green-600 filled">check</span>Pick any one template</li>
-          <li class="flex items-center gap-2"><span class="material-symbols-outlined text-base text-green-600 filled">check</span>Save your own data</li>
-          <li class="flex items-center gap-2"><span class="material-symbols-outlined text-base text-green-600 filled">check</span>Full history, unlimited entries</li>
-          <li class="flex items-center gap-2"><span class="material-symbols-outlined text-base text-green-600 filled">check</span>Cloud sync across devices</li>
-          <li class="flex items-center gap-2"><span class="material-symbols-outlined text-base text-green-600 filled">check</span>PDF & CSV export</li>
-        </ul>
-        <a href="#templates" class="w-full border-2 border-primary text-primary font-bold py-3 rounded-xl hover:bg-primary-fixed transition-colors block text-center">Choose a Template</a>
-      </div>
       <div class="bg-primary rounded-2xl p-8 shadow-lg relative overflow-hidden">
-        <div class="absolute top-4 right-4 bg-yellow-300 text-on-surface text-xs font-bold px-3 py-1 rounded-full">Best Value</div>
-        <div class="inline-flex items-center gap-2 bg-white/20 text-white px-3 py-1 rounded-full text-xs font-bold mb-6">All Access</div>
+        <div class="absolute top-4 right-4 bg-yellow-300 text-on-surface text-xs font-bold px-3 py-1 rounded-full">Per Template</div>
+        <div class="inline-flex items-center gap-2 bg-white/20 text-white px-3 py-1 rounded-full text-xs font-bold mb-6">Pro Access</div>
         <div class="mb-6">
-          <span class="text-4xl font-headline font-bold text-white">$19.99</span>
-          <span class="text-white/60 text-sm"> / 30 days</span>
+          <span class="text-4xl font-headline font-bold text-white">₹899</span>
+          <span class="text-white/60 text-sm"> one-time</span>
         </div>
         <ul class="space-y-3 text-sm text-white/80 mb-8">
-          <li class="flex items-center gap-2"><span class="material-symbols-outlined text-base text-green-300 filled">check</span>All 5 premium templates</li>
+          <li class="flex items-center gap-2"><span class="material-symbols-outlined text-base text-green-300 filled">check</span>Pick any one template</li>
           <li class="flex items-center gap-2"><span class="material-symbols-outlined text-base text-green-300 filled">check</span>Save your own data</li>
           <li class="flex items-center gap-2"><span class="material-symbols-outlined text-base text-green-300 filled">check</span>Full history, unlimited entries</li>
           <li class="flex items-center gap-2"><span class="material-symbols-outlined text-base text-green-300 filled">check</span>Cloud sync across devices</li>
           <li class="flex items-center gap-2"><span class="material-symbols-outlined text-base text-green-300 filled">check</span>PDF & CSV export</li>
-          <li class="flex items-center gap-2"><span class="material-symbols-outlined text-base text-green-300 filled">check</span>Priority support</li>
         </ul>
-        <a href="auth.html" class="w-full bg-white text-primary font-bold py-3 rounded-xl hover:bg-white/90 transition-colors block text-center">Get All Access</a>
+        <a href="#templates" class="w-full bg-white text-primary font-bold py-3 rounded-xl hover:bg-white/90 transition-colors block text-center">Choose a Template</a>
       </div>
     </div>
   </div>
@@ -675,7 +684,7 @@
         Explore Templates
       </a>
     </div>
-    <p class="mt-6 text-white/40 text-sm">Calculators: always free · Templates: demo free, Pro from $8.99</p>
+    <p class="mt-6 text-white/40 text-sm">Calculators: always free · Templates: demo free, Pro at ₹899</p>
   </div>
 </section>
 
@@ -734,55 +743,82 @@
   </div>
   <div class="border-t border-outline-variant/10 py-5 px-6 max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-2 text-sm text-on-surface-variant">
     <span>© 2026 BudgetTools. All rights reserved.</span>
-    <span class="text-outline text-xs">Built with care for couples everywhere.</span>
+    <span class="text-outline text-xs">Free calculators &amp; premium planning templates.</span>
   </div>
 </footer>
 
 <script>
 (function(){
-  const ADMIN_EMAILS = ['preetam.juturu@gmail.com'];
+  var ADMIN_EMAILS = ['preetam.juturu@gmail.com'];
+  var TEMPLATE_META = {
+    wedding:   { name: 'Wedding Planner', href: '/wedding-planner.html', icon: 'favorite', color: '#506351', bg: 'rgba(80,99,81,0.12)' },
+    event:     { name: 'Event Budget', href: '/event-budget.html', icon: 'event_note', color: '#4527a0', bg: 'rgba(69,39,160,0.10)' },
+    travel:    { name: 'Travel Budget', href: '/travel-budget.html', icon: 'flight_takeoff', color: '#006874', bg: 'rgba(0,104,116,0.10)' },
+    cafe:      { name: 'Cafe Costing', href: '/cafe-costing.html', icon: 'restaurant', color: '#5d1a0a', bg: 'rgba(93,26,10,0.10)' },
+    inventory: { name: 'Inventory', href: '/inventory.html', icon: 'inventory_2', color: '#1565c0', bg: 'rgba(21,101,192,0.10)' },
+  };
 
   function markPurchased(card) {
-    const badge = card.querySelector('.template-badge');
+    var badge = card.querySelector('.template-badge');
     if (badge) {
       badge.textContent = 'Purchased';
       badge.className = 'template-badge text-[10px] font-bold bg-green-100 text-green-800 px-2.5 py-1 rounded-full';
     }
-    const cta = card.querySelector('.template-cta');
+    var cta = card.querySelector('.template-cta');
     if (cta) cta.textContent = 'Open Template →';
+  }
+
+  function showMyTemplates(ownedKeys) {
+    if (!ownedKeys.length) return;
+    var nav = document.getElementById('my-templates-nav');
+    if (nav) nav.style.display = '';
+    var list = document.getElementById('my-templates-list');
+    if (!list) return;
+    list.innerHTML = ownedKeys.map(function(key) {
+      var t = TEMPLATE_META[key];
+      if (!t) return '';
+      return '<a href="' + t.href + '" class="flex items-center gap-3 px-4 py-3 hover:bg-surface-container-low transition-colors">' +
+        '<div class="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0" style="background:' + t.bg + '">' +
+        '<span class="material-symbols-outlined filled" style="color:' + t.color + ';font-size:18px">' + t.icon + '</span></div>' +
+        '<div class="flex-1 min-w-0"><div class="text-sm font-semibold text-on-surface">' + t.name + '</div>' +
+        '<div class="text-xs text-green-700 font-medium">Pro Access</div></div>' +
+        '<span class="material-symbols-outlined text-outline text-sm">open_in_new</span></a>';
+    }).join('');
   }
 
   async function checkAndUpdateBadges() {
     if (!window.BT_AUTH || !window.BT_AUTH.isLoggedIn()) return;
-    const user = window.BT_AUTH.user;
+    var user = window.BT_AUTH.user;
     if (!user) return;
 
     if (ADMIN_EMAILS.includes(user.email)) {
       document.querySelectorAll('[data-template]').forEach(markPurchased);
+      showMyTemplates(Object.keys(TEMPLATE_META));
       return;
     }
 
     try {
-      const resp = await window.BT_AUTH.apiFetch('/api/subscription-status');
-      if (!resp.ok) return;
-      const data = await resp.json();
+      var data = await window.BT_AUTH.apiFetch('/api/subscription-status');
       if (!data.subscriptions || !data.subscriptions.length) return;
 
-      const owned = new Set();
+      var owned = [];
       data.subscriptions.forEach(function(sub) {
-        if (sub.template_key === 'all') {
-          document.querySelectorAll('[data-template]').forEach(markPurchased);
-          return;
-        }
-        owned.add(sub.template_key);
-      });
-
-      owned.forEach(function(key) {
-        const card = document.querySelector('[data-template="' + key + '"]');
+        owned.push(sub.template_key);
+        var card = document.querySelector('[data-template="' + sub.template_key + '"]');
         if (card) markPurchased(card);
       });
+
+      showMyTemplates(owned);
     } catch(e) {}
   }
+
+  document.addEventListener('click', function(e) {
+    var nav = document.getElementById('my-templates-nav');
+    if (nav && !nav.contains(e.target)) {
+      var dd = document.getElementById('my-templates-dropdown');
+      if (dd) dd.classList.add('hidden');
+    }
+  });
 
   window.addEventListener('bt:auth:ready', checkAndUpdateBadges);
   window.addEventListener('bt:auth:change', checkAndUpdateBadges);

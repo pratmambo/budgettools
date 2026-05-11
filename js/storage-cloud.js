@@ -141,7 +141,8 @@
   // Templates can call this to show an upgrade modal
   window.BT_STORAGE = {
     async waitForAuth() {
-      if (window.BT_AUTH && !window.BT_AUTH.isLoading) return;
+      if (!window.BT_AUTH) return;
+      if (!window.BT_AUTH.isLoading) return;
       return new Promise(r => window.addEventListener('bt:auth:ready', r, { once: true }));
     },
 
@@ -159,7 +160,7 @@
     async checkProAccess() {
       if (!window.BT_AUTH?.isLoggedIn()) return { hasAccess: false, reason: 'not_logged_in' };
       try {
-        const templateId = KEY_TO_TEMPLATE[key]?.replace('bt_', '').replace('_v1','').replace('_v2','') || 'unknown';
+        const templateId = (KEY_TO_TEMPLATE[key] || key).replace(/^bt_/, '').replace(/_v\d+$/, '') || 'unknown';
         const data = await window.BT_AUTH.apiFetch('/api/subscription-status?template=' + templateId);
         return { hasAccess: data.hasAccess, status: data.status, renewsAt: data.renewsAt };
       } catch(e) {

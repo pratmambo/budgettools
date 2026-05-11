@@ -6,17 +6,16 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY
 );
 
-const CASHFREE_BASE = process.env.CASHFREE_ENV === 'production'
-  ? 'https://api.cashfree.com/pg'
-  : 'https://sandbox.cashfree.com/pg';
+const CASHFREE_BASE = process.env.CASHFREE_ENV === 'sandbox'
+  ? 'https://sandbox.cashfree.com/pg'
+  : 'https://api.cashfree.com/pg';
 
 const PLAN_PRICES = {
-  wedding:   { name: 'Wedding Planner Pro',      amount: 8.99 },
-  event:     { name: 'Event Budget Pro',          amount: 8.99 },
-  travel:    { name: 'Travel Budget Pro',         amount: 8.99 },
-  cafe:      { name: 'Cafe Costing Pro',          amount: 8.99 },
-  inventory: { name: 'Inventory Management Pro',  amount: 8.99 },
-  all:       { name: 'All Templates Pro',         amount: 19.99 },
+  wedding:   { name: 'Wedding Planner Pro',      amount: 899 },
+  event:     { name: 'Event Budget Pro',          amount: 899 },
+  travel:    { name: 'Travel Budget Pro',         amount: 899 },
+  cafe:      { name: 'Cafe Costing Pro',          amount: 899 },
+  inventory: { name: 'Inventory Management Pro',  amount: 899 },
 };
 
 exports.handler = async (event) => {
@@ -49,12 +48,25 @@ exports.handler = async (event) => {
     return { statusCode: 400, body: JSON.stringify({ error: 'Invalid template key: ' + template }) };
   }
 
-  if (!phone || phone.replace(/\D/g, '').length < 7) {
-    return { statusCode: 400, body: JSON.stringify({ error: 'Valid phone number required' }) };
+  if (!phone || phone.replace(/\D/g, '').length < 10) {
+    return { statusCode: 400, body: JSON.stringify({ error: 'Valid 10-digit phone number required' }) };
   }
 
+  const { data: existingSub } = await supabase
+    .from('subscriptions')
+    .select('id')
+    .eq('user_id', user.id)
+    .eq('template_key', template)
+    .gt('current_period_end', new Date().toISOString())
+    .limit(1);
+
+  if (existingSub && existingSub.length > 0) {
+    return { statusCode: 400, body: JSON.stringify({ error: 'You already have active access to this template.' }) };
+  }
+
+  const siteUrl = process.env.URL || 'https://budgettemplates.shop';
   const orderId = 'order_' + template + '_' + crypto.randomBytes(8).toString('hex');
-  const returnUrl = 'https://budgettemplates.shop/account.html?payment=success&order_id={order_id}';
+  const returnUrl = siteUrl + '/account.html?payment=success&order_id={order_id}';
 
   try {
     const res = await fetch(CASHFREE_BASE + '/orders', {
@@ -68,7 +80,7 @@ exports.handler = async (event) => {
       body: JSON.stringify({
         order_id: orderId,
         order_amount: plan.amount,
-        order_currency: 'USD',
+        order_currency: 'INR',
         customer_details: {
           customer_id: user.id.replace(/-/g, ''),
           customer_email: user.email,
@@ -77,13 +89,13 @@ exports.handler = async (event) => {
         },
         order_meta: {
           return_url: returnUrl,
-          notify_url: 'https://budgettemplates.shop/webhooks/cashfree',
+          notify_url: siteUrl + '/webhooks/cashfree',
         },
         order_tags: {
           user_id: user.id,
           template_key: template,
         },
-        order_note: plan.name + ' - 30 day access',
+        order_note: plan.name + ' - one-time purchase',
       }),
     });
 
@@ -105,7 +117,7 @@ exports.handler = async (event) => {
         sessionId: data.payment_session_id,
         orderId: data.order_id,
         cfOrderId: data.cf_order_id,
-        cashfreeEnv: process.env.CASHFREE_ENV === 'production' ? 'production' : 'sandbox',
+        cashfreeEnv: process.env.CASHFREE_ENV === 'sandbox' ? 'sandbox' : 'production',
       }),
     };
 

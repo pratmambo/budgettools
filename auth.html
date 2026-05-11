@@ -1,6 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=AW-18154608762"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'AW-18154608762');
+  </script>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Sign In or Create Account | BudgetTools</title>
@@ -553,13 +561,15 @@
 
   // ── GOOGLE OAUTH ────────────────────────────────────────────
   async function handleGoogle() {
-    if (!sb) { showAlert('login', 'Auth system failed to initialize. Please refresh the page.'); return; }
+    const currentMode = new URLSearchParams(window.location.search).get('mode') || 'login';
+    const alertTarget = (currentMode === 'signup') ? 'signup' : 'login';
+    if (!sb) { showAlert(alertTarget, 'Auth system failed to initialize. Please refresh the page.'); return; }
     try {
       const redirectTo = window.location.origin + '/auth.html?mode=callback&next=' + encodeURIComponent(next);
       const { error } = await sb.auth.signInWithOAuth({ provider: 'google', options: { redirectTo } });
-      if (error) showAlert('login', 'Google sign-in is not configured yet. Please use email sign-in for now.');
+      if (error) showAlert(alertTarget, 'Google sign-in is not configured yet. Please use email sign-in for now.');
     } catch (e) {
-      showAlert('login', 'Google sign-in failed. Please use email sign-in instead.');
+      showAlert(alertTarget, 'Google sign-in failed. Please use email sign-in instead.');
     }
   }
 

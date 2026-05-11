@@ -70,9 +70,8 @@ CREATE TRIGGER on_auth_user_created
 -- ============================================================
 
 CREATE TABLE IF NOT EXISTS public.subscriptions (
-  id                    TEXT PRIMARY KEY,     -- Cashfree subscription ID (sub_xxx)
+  id                    TEXT PRIMARY KEY,     -- Cashfree order ID (order_xxx)
   user_id               UUID NOT NULL REFERENCES public.profiles(id) ON DELETE CASCADE,
-  plan_id               TEXT,                 -- Cashfree plan ID (plan_xxx)
   template_key          TEXT NOT NULL,        -- which template this subscription covers
   status                TEXT NOT NULL,        -- active | trialing | past_due | canceled | paused
   current_period_start  TIMESTAMPTZ,

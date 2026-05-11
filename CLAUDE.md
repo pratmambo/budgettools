@@ -26,13 +26,13 @@ BudgetTools is a **static HTML SaaS** with serverless backend functions. There i
 | Service | Role |
 |---|---|
 | **Supabase** | Auth (email/password + Google OAuth) and database (Postgres with RLS) |
-| **Cashfree** | Subscription payments — JS SDK checkout, webhook-driven activation |
+| **Cashfree** | One-time payments in INR — JS SDK checkout, webhook-driven activation |
 | **Netlify** | Hosting (static files) + serverless functions (`netlify/functions/`) |
 
 ### Two categories of HTML pages
 
 - **Free calculators** (`calc-*.html`) — standalone tools, no auth or payment integration. Each is fully self-contained.
-- **Premium templates** (`wedding-planner.html`, `event-budget.html`, `travel-budget.html`, `cafe-costing.html`, `inventory.html`) — use the full auth → storage → payment → trial stack. Gated by a 5-minute demo timer + paywall. One-time payment grants 30 days of access.
+- **Premium templates** (`wedding-planner.html`, `event-budget.html`, `travel-budget.html`, `cafe-costing.html`, `inventory.html`) — use the full auth → storage → payment → trial stack. Gated by a 5-minute demo timer + paywall. ₹899 one-time payment per template.
 - **Auth/account pages** (`auth.html`, `account.html`) and landing page (`index.html`).
 
 ### Client-side JS modules (`/js/`)
@@ -43,8 +43,9 @@ All four are loaded via `<script>` tags in templates — there is no bundler.
 - **`storage-cloud.js`** — Overrides `window.Storage` with a cloud-backed API (`Storage.get()`, `Storage.set()`, `Storage.clear()`). Writes localStorage immediately (zero latency) and debounces cloud saves by 800 ms. Falls back to localStorage when logged out. Exposes `window.BT_STORAGE.checkProAccess()` and `window.BT_STORAGE.startCheckout()`.
 - **`subscription.js`** — Exposes `window.BT_SUB` with the upgrade banner/modal and Cashfree checkout flow (`startCheckout(templateId, phone)`). Loads the Cashfree JS SDK on demand. Called by `BT_STORAGE.startCheckout()`.
 - **`trial.js`** — 5-minute demo timer for premium templates. Uses `localStorage` (persists across sessions). After expiry, dims the page and shows the upgrade modal via `BT_SUB.showUpgradeModal()`. Exposes `window.BT_TRIAL.start(templateId)` and `window.BT_TRIAL.unlock()`.
+- **`tour.js`** — Product tour slideshow for premium templates. Shows a card-based walkthrough of features on first visit. Stores completion in `localStorage` (`bt_tour_seen_<templateId>`). Auto-starts on page load. Exposes `window.BT_TOUR.start()` and `window.BT_TOUR.restart()`.
 
-**Script load order in premium templates:** Supabase CDN → `auth.js` → set `window.TEMPLATE_KEY` → `storage-cloud.js` → `subscription.js` → `trial.js`.
+**Script load order in premium templates:** Supabase CDN → `auth.js` → set `window.TEMPLATE_KEY` → `storage-cloud.js` → `subscription.js` → `trial.js` → `tour.js`.
 
 ### Admin bypass
 
@@ -57,24 +58,24 @@ All functions use the Supabase **service role key** (bypasses RLS). Client JS on
 | Function | Route | Purpose |
 |---|---|---|
 | `user-data.js` | `GET/POST /api/user-data` | Read/write template state (JSONB) in `template_data` table |
-| `subscription-status.js` | `GET /api/subscription-status` | Check if user has active (non-expired) access for a template or `all` |
+| `subscription-status.js` | `GET /api/subscription-status` | Check if user has active access for a template |
 | `create-checkout-session.js` | `POST /api/create-checkout-session` | Create Cashfree one-time order, return `sessionId` for JS SDK |
 | `customer-portal.js` | `POST /api/customer-portal` | Returns user's active purchases and expiry dates |
-| `payment-webhook.js` | `POST /webhooks/cashfree` | Receive Cashfree payment events → upsert `subscriptions` table with 30-day expiry |
+| `payment-webhook.js` | `POST /webhooks/cashfree` | Receive Cashfree payment events → upsert `subscriptions` table + send confirmation email via Resend |
 
 ### Database schema (`supabase-schema.sql`)
 
 Three tables with RLS enabled:
 
 - **`profiles`** — one row per user, auto-created by `on_auth_user_created` trigger on `auth.users` insert.
-- **`subscriptions`** — one row per purchase. Written **only** by the webhook function (service role). Each row has `current_period_end` (30 days from payment). Access is granted while `current_period_end > now()`. `template_key` is one of: `wedding | event | travel | cafe | inventory | all`.
+- **`subscriptions`** — one row per purchase. Written **only** by the webhook function (service role). Each row has `current_period_end` (set to 2099 for permanent access). Access is granted while `current_period_end > now()`. `template_key` is one of: `wedding | event | travel | cafe | inventory`.
 - **`template_data`** — one row per `(user_id, template_key)`. Stores the template's entire state as JSONB.
 
 ### Template keys
 
 Each paid template maps to a key used consistently across `PLAN_PRICES` (create-checkout-session.js), `KEY_TO_TEMPLATE` (storage-cloud.js), `TEMPLATES` (subscription.js), and the database:
 
-`wedding`, `event`, `travel`, `cafe`, `inventory`, `all`
+`wedding`, `event`, `travel`, `cafe`, `inventory`
 
 The localStorage keys use a versioned format: `bt_wedding_v2`, `bt_event_v2`, `bt_travel_v1`, `bt_cafe_v1`, `bt_inventory_v1`. These are set via `window.TEMPLATE_KEY` in each HTML template before `storage-cloud.js` loads.
 
@@ -88,8 +89,8 @@ The localStorage keys use a versioned format: `bt_wedding_v2`, `bt_event_v2`, `b
 
 All secrets live in Netlify environment variables (never in client JS):
 
-`SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, `CASHFREE_APP_ID`, `CASHFREE_SECRET_KEY`, `CASHFREE_WEBHOOK_SECRET`, `CASHFREE_ENV` (sandbox or production), `URL`
+`SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, `CASHFREE_APP_ID`, `CASHFREE_SECRET_KEY`, `CASHFREE_WEBHOOK_SECRET`, `CASHFREE_ENV` (defaults to production; set to `sandbox` for testing), `URL`, `RESEND_API_KEY` (for purchase confirmation emails; optional — emails are skipped if not set), `RESEND_FROM_EMAIL` (optional, defaults to `BudgetTools <noreply@budgettemplates.shop>`)
 
-Cashfree prices (USD) are hardcoded in `create-checkout-session.js` PLAN_PRICES. One-time payments — each purchase grants 30 days of access.
+Cashfree prices (INR, ₹899 per template) are hardcoded in `create-checkout-session.js` PLAN_PRICES. One-time payments — no "all templates" bundle.
 
 The client-side `SUPABASE_URL` and `SUPABASE_ANON_KEY` are hard-coded in `js/auth.js` — the anon key is safe to expose because RLS enforces data isolation.

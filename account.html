@@ -1,6 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=AW-18154608762"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'AW-18154608762');
+  </script>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>My Account | BudgetTools</title>
@@ -98,6 +106,38 @@
   </div>
 </div>
 
+<!-- ── EDIT PROFILE DIALOG ───────────────────────────────── -->
+<div id="edit-profile-dialog" class="hidden fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50 px-4">
+  <div class="bg-white rounded-xl shadow-2xl max-w-md w-full p-7">
+    <div class="flex items-center gap-3 mb-5">
+      <div class="w-10 h-10 bg-primary-fixed rounded-full flex items-center justify-center flex-shrink-0">
+        <span class="material-symbols-outlined text-primary filled">person</span>
+      </div>
+      <h3 class="text-lg font-semibold text-on-surface">Edit Profile</h3>
+    </div>
+    <div class="space-y-4 mb-6">
+      <div>
+        <label class="block text-sm font-medium text-on-surface-variant mb-1.5">Display Name</label>
+        <input id="edit-name" type="text" placeholder="Your name" class="w-full px-3 py-2.5 border border-outline-variant rounded-lg text-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-colors" />
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-on-surface-variant mb-1.5">Email</label>
+        <input id="edit-email" type="email" disabled class="w-full px-3 py-2.5 border border-outline-variant rounded-lg text-sm bg-surface-container-low text-outline cursor-not-allowed" />
+        <p class="text-xs text-outline mt-1">Email cannot be changed</p>
+      </div>
+    </div>
+    <p id="edit-profile-error" class="hidden text-sm text-red-600 mb-3"></p>
+    <div class="flex gap-3">
+      <button onclick="document.getElementById('edit-profile-dialog').classList.add('hidden')" class="flex-1 bg-surface-container-high text-on-surface py-2.5 px-4 rounded-lg text-sm font-semibold hover:bg-surface-container-highest transition-colors">
+        Cancel
+      </button>
+      <button onclick="saveProfile()" id="save-profile-btn" class="flex-1 grad-primary text-white py-2.5 px-4 rounded-lg text-sm font-semibold hover:opacity-90 transition-opacity">
+        Save Changes
+      </button>
+    </div>
+  </div>
+</div>
+
 <!-- ── NAVIGATION ────────────────────────────────────────── -->
 <nav class="bg-white/80 backdrop-blur-xl sticky top-0 z-40 border-b border-outline-variant/20">
   <div class="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
@@ -130,7 +170,7 @@
       <h1 id="user-email" class="text-xl font-semibold text-on-surface truncate"></h1>
       <p id="joined-date" class="text-sm text-on-surface-variant mt-0.5"></p>
     </div>
-    <button onclick="alert('Profile editing coming soon.')" class="flex items-center gap-1.5 text-sm font-medium text-on-surface-variant hover:text-primary border border-outline-variant px-4 py-2 rounded-lg hover:border-primary/40 transition-colors">
+    <button onclick="showEditProfileModal()" class="flex items-center gap-1.5 text-sm font-medium text-on-surface-variant hover:text-primary border border-outline-variant px-4 py-2 rounded-lg hover:border-primary/40 transition-colors">
       <span class="material-symbols-outlined text-base">edit</span>
       Edit Profile
     </button>
@@ -153,10 +193,10 @@
         </p>
       </div>
       <div class="flex flex-col gap-2 sm:items-end flex-shrink-0">
-        <button onclick="alert('Checkout coming soon')" class="grad-primary text-white px-5 py-2.5 rounded-lg font-semibold text-sm hover:opacity-90 transition-opacity whitespace-nowrap flex items-center gap-1.5">
+        <a href="/index.html#templates" class="grad-primary text-white px-5 py-2.5 rounded-lg font-semibold text-sm hover:opacity-90 transition-opacity whitespace-nowrap flex items-center gap-1.5 text-decoration-none">
           <span class="material-symbols-outlined text-base filled">workspace_premium</span>
           Upgrade to Pro
-        </button>
+        </a>
         <button id="manage-billing-btn" onclick="handleManageBilling()" class="hidden text-sm text-primary hover:underline font-medium">
           Manage Billing →
         </button>
@@ -267,13 +307,13 @@
         </div>
       </div>
 
-      <!-- Upgrade nudge card -->
+      <!-- Explore more card -->
       <div class="rounded-xl border-2 border-dashed border-primary/20 p-5 flex flex-col items-center justify-center text-center gap-3 bg-surface-container-low/50">
-        <span class="material-symbols-outlined text-primary/40 text-3xl filled">lock_open</span>
-        <p class="text-sm text-on-surface-variant font-medium">Unlock all templates with Pro</p>
-        <button onclick="alert('Checkout coming soon')" class="text-xs font-bold text-primary hover:underline">
-          View plans →
-        </button>
+        <span class="material-symbols-outlined text-primary/40 text-3xl">add_circle</span>
+        <p class="text-sm text-on-surface-variant font-medium">Explore more templates</p>
+        <a href="/index.html#templates" class="text-xs font-bold text-primary hover:underline">
+          Browse templates →
+        </a>
       </div>
 
     </div>
@@ -284,13 +324,10 @@
     <h2 class="text-lg font-semibold text-on-surface mb-1">Data &amp; Privacy</h2>
     <p class="text-sm text-on-surface-variant mb-5">Your data is stored securely in your account. We never share or sell your personal information.</p>
     <div class="flex flex-wrap gap-3">
-      <div class="tooltip-container">
-        <button class="flex items-center gap-2 text-sm font-medium text-on-surface-variant border border-outline-variant px-4 py-2 rounded-lg opacity-60 cursor-not-allowed" disabled>
-          <span class="material-symbols-outlined text-base">download</span>
-          Export all my data
-        </button>
-        <div class="tooltip">Coming soon</div>
-      </div>
+      <button onclick="handleExportData()" id="export-btn" class="flex items-center gap-2 text-sm font-medium text-on-surface-variant border border-outline-variant px-4 py-2 rounded-lg hover:border-primary/40 hover:text-primary transition-colors">
+        <span class="material-symbols-outlined text-base">download</span>
+        Export all my data
+      </button>
       <button onclick="document.getElementById('delete-dialog').classList.remove('hidden')" class="flex items-center gap-2 text-sm font-medium text-red-600 border border-red-200 px-4 py-2 rounded-lg hover:bg-red-50 transition-colors">
         <span class="material-symbols-outlined text-base">delete_forever</span>
         Delete my account
@@ -301,7 +338,7 @@
   <!-- ── SECTION 5: Purchases (shown if has active access) ── -->
   <div id="billing-section" class="hidden card p-6">
     <h2 class="text-lg font-semibold text-on-surface mb-1">Your Purchases</h2>
-    <p class="text-sm text-on-surface-variant mb-5">Your Pro access details. Each purchase gives you 30 days of access.</p>
+    <p class="text-sm text-on-surface-variant mb-5">Your Pro access details. Each purchase is a one-time payment.</p>
     <div id="billing-subscriptions" class="space-y-3"></div>
   </div>
 
@@ -337,11 +374,24 @@
     initPage(session.user);
   });
 
+  // ── PAYMENT SUCCESS BANNER ─────────────────────────────────
+  function showPaymentSuccessBanner() {
+    var params = new URLSearchParams(window.location.search);
+    if (params.get('payment') !== 'success') return;
+    var banner = document.createElement('div');
+    banner.style.cssText = 'background:#f0fdf4;border:1px solid #bbf7d0;border-radius:12px;padding:16px 20px;margin-bottom:20px;display:flex;align-items:center;gap:12px;max-width:800px;margin-left:auto;margin-right:auto;';
+    banner.innerHTML = '<span style="font-size:24px;">&#127881;</span><div><p style="margin:0;font-weight:700;color:#166534;font-size:15px;">Payment successful!</p><p style="margin:0;font-size:13px;color:#15803d;">Your Pro access is now active. A confirmation email has been sent.</p></div>';
+    var main = document.getElementById('main-content');
+    if (main && main.firstChild) main.insertBefore(banner, main.firstChild);
+    window.history.replaceState({}, '', '/account.html');
+  }
+
   // ── INIT ────────────────────────────────────────────────────
   async function initPage(user) {
     // Hide loader, show content
     document.getElementById('page-loader').classList.add('hidden');
     document.getElementById('main-content').classList.remove('hidden');
+    showPaymentSuccessBanner();
 
     // Nav
     document.getElementById('nav-email').textContent = user.email;
@@ -366,15 +416,18 @@
     );
 
     if (activeSubs.length > 0) {
-      const activeSub = activeSubs[0];
-      const isAllAccess = activeSub.template_key === 'all';
+      var activeKeys = activeSubs.map(function(s) { return s.template_key; });
+      var hasAll = activeKeys.indexOf('all') !== -1;
 
-      if (isAllAccess) {
-        setPlan('all-access', activeSub);
-        updateAllTemplateCards('Pro Access');
+      if (hasAll) {
+        setPlan('all-access', activeSubs[0]);
+        updateAllTemplateCards();
+      } else if (activeKeys.length > 1) {
+        setPlan('multi', activeSubs);
+        activeKeys.forEach(function(k) { updateTemplateCard(k); });
       } else {
-        setPlan('single', activeSub);
-        updateTemplateCard(activeSub.template_key);
+        setPlan('single', activeSubs[0]);
+        updateTemplateCard(activeSubs[0].template_key);
       }
 
       document.getElementById('billing-section').classList.remove('hidden');
@@ -398,20 +451,24 @@
       badge.textContent = 'All-Access Pro';
       badge.className   = 'px-3 py-1 rounded-full text-xs font-semibold text-white grad-primary';
       desc.textContent  = 'Full access to all premium templates. Your data is synced across all devices.';
-      if (sub?.current_period_end) {
-        renewal.classList.remove('hidden');
-        renewalText.textContent = 'Active · Expires ' + new Date(sub.current_period_end).toLocaleDateString('en-IN', { month: 'long', day: 'numeric', year: 'numeric' });
-      }
+      renewal.classList.remove('hidden');
+      renewalText.textContent = isLifetime(sub?.current_period_end) ? 'Lifetime access · One-time purchase' : ('Active · Expires ' + new Date(sub.current_period_end).toLocaleDateString('en-IN', { month: 'long', day: 'numeric', year: 'numeric' }));
+    } else if (plan === 'multi') {
+      var NAMES = { wedding:'Wedding Planner', event:'Event Budget', travel:'Travel Budget', cafe:'Cafe Costing', inventory:'Inventory' };
+      var names = sub.map(function(s) { return NAMES[s.template_key] || s.template_key; });
+      badge.textContent = 'Pro — ' + sub.length + ' Templates';
+      badge.className   = 'px-3 py-1 rounded-full text-xs font-semibold text-white grad-primary';
+      desc.textContent  = 'You have Pro access to ' + names.join(', ') + '. Your data is synced and saved.';
+      renewal.classList.remove('hidden');
+      renewalText.textContent = 'Lifetime access · One-time purchases';
     } else if (plan === 'single') {
-      const NAMES = { wedding:'Wedding Planner', event:'Event Budget', travel:'Travel Budget', cafe:'Cafe Costing', inventory:'Inventory' };
-      const name  = NAMES[sub?.template_key] || 'Pro';
+      var NAMES = { wedding:'Wedding Planner', event:'Event Budget', travel:'Travel Budget', cafe:'Cafe Costing', inventory:'Inventory' };
+      var name  = NAMES[sub?.template_key] || 'Pro';
       badge.textContent = 'Pro — ' + name;
       badge.className   = 'px-3 py-1 rounded-full text-xs font-semibold bg-amber-100 text-amber-800';
       desc.textContent  = 'You have Pro access to ' + name + '. Your data is synced and saved.';
-      if (sub?.current_period_end) {
-        renewal.classList.remove('hidden');
-        renewalText.textContent = 'Active · Expires ' + new Date(sub.current_period_end).toLocaleDateString('en-IN', { month: 'long', day: 'numeric', year: 'numeric' });
-      }
+      renewal.classList.remove('hidden');
+      renewalText.textContent = isLifetime(sub?.current_period_end) ? 'Lifetime access · One-time purchase' : ('Active · Expires ' + new Date(sub.current_period_end).toLocaleDateString('en-IN', { month: 'long', day: 'numeric', year: 'numeric' }));
     }
   }
 
@@ -453,26 +510,126 @@
     });
   }
 
+  function isLifetime(dateStr) {
+    if (!dateStr) return false;
+    return new Date(dateStr).getFullYear() >= 2090;
+  }
+
   function renderBillingSubscriptions(subs) {
-    const NAMES = { wedding:'Wedding Planner', event:'Event Budget & P&L', travel:'Travel Budget', cafe:'Cafe Costing', inventory:'Inventory Management', all:'All Templates' };
+    const NAMES = { wedding:'Wedding Planner', event:'Event Budget & P&L', travel:'Travel Budget', cafe:'Cafe Costing', inventory:'Inventory Management' };
     const container = document.getElementById('billing-subscriptions');
     container.innerHTML = subs.map(sub => {
       const name = NAMES[sub.template_key] || sub.template_key;
-      const expiryDate = sub.current_period_end ? new Date(sub.current_period_end).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) : '—';
       const now = new Date();
       const isActive = sub.current_period_end && new Date(sub.current_period_end) > now;
+      const lifetime = isLifetime(sub.current_period_end);
+      const accessText = lifetime ? 'Lifetime access' : ('Access until: ' + new Date(sub.current_period_end).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }));
       const statusColor = isActive ? 'text-green-700 bg-green-100' : 'text-gray-600 bg-gray-100';
-      const statusLabel = isActive ? 'Active' : 'Expired';
+      const statusLabel = isActive ? (lifetime ? 'Lifetime' : 'Active') : 'Expired';
       return `
         <div class="flex items-center justify-between py-3 border-b border-outline-variant/20 last:border-0">
           <div>
             <p class="text-sm font-semibold text-on-surface">${name}</p>
-            <p class="text-xs text-on-surface-variant mt-0.5">Access until: ${expiryDate}</p>
+            <p class="text-xs text-on-surface-variant mt-0.5">${accessText}</p>
           </div>
           <span class="px-2.5 py-1 rounded-full text-xs font-semibold ${statusColor}">${statusLabel}</span>
         </div>
       `;
     }).join('');
+  }
+
+  // ── EDIT PROFILE ─────────────────────────────────────────────
+  function showEditProfileModal() {
+    const dialog = document.getElementById('edit-profile-dialog');
+    const nameInput = document.getElementById('edit-name');
+    const emailInput = document.getElementById('edit-email');
+    const errorEl = document.getElementById('edit-profile-error');
+    errorEl.classList.add('hidden');
+
+    sb.auth.getUser().then(({ data: { user } }) => {
+      nameInput.value = user?.user_metadata?.full_name || '';
+      emailInput.value = user?.email || '';
+    });
+
+    dialog.classList.remove('hidden');
+  }
+
+  async function saveProfile() {
+    const btn = document.getElementById('save-profile-btn');
+    const errorEl = document.getElementById('edit-profile-error');
+    const name = document.getElementById('edit-name').value.trim();
+
+    if (!name) {
+      errorEl.textContent = 'Please enter a display name.';
+      errorEl.classList.remove('hidden');
+      return;
+    }
+
+    btn.textContent = 'Saving…';
+    btn.disabled = true;
+    errorEl.classList.add('hidden');
+
+    try {
+      const { error } = await sb.auth.updateUser({ data: { full_name: name } });
+      if (error) throw error;
+
+      const { data: { user } } = await sb.auth.getUser();
+      if (user) {
+        await sb.from('profiles').update({ full_name: name, updated_at: new Date().toISOString() }).eq('id', user.id);
+      }
+
+      document.getElementById('edit-profile-dialog').classList.add('hidden');
+      const initials = name.charAt(0).toUpperCase();
+      document.getElementById('avatar-initials').textContent = initials;
+    } catch (err) {
+      errorEl.textContent = 'Failed to save: ' + (err.message || 'Unknown error');
+      errorEl.classList.remove('hidden');
+    } finally {
+      btn.textContent = 'Save Changes';
+      btn.disabled = false;
+    }
+  }
+
+  // ── EXPORT DATA ─────────────────────────────────────────────
+  async function handleExportData() {
+    const btn = document.getElementById('export-btn');
+    btn.querySelector('.material-symbols-outlined').textContent = 'hourglass_empty';
+    btn.disabled = true;
+
+    try {
+      const { data: { session } } = await sb.auth.getSession();
+      if (!session) throw new Error('Not logged in');
+
+      const TEMPLATES = ['bt_wedding_v2', 'bt_event_v2', 'bt_travel_v1', 'bt_cafe_v1', 'bt_inventory_v1'];
+      const exportData = { exported_at: new Date().toISOString(), email: session.user.email, templates: {} };
+
+      for (const tpl of TEMPLATES) {
+        try {
+          const res = await fetch('/api/user-data?template=' + encodeURIComponent(tpl), {
+            headers: { 'Authorization': 'Bearer ' + session.access_token }
+          });
+          if (res.ok) {
+            const json = await res.json();
+            if (json.data) exportData.templates[tpl] = json.data;
+          }
+        } catch (_) {}
+      }
+
+      const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'budgettools-data-' + new Date().toISOString().slice(0, 10) + '.json';
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    } catch (err) {
+      alert('Export failed: ' + (err.message || 'Unknown error'));
+    } finally {
+      btn.querySelector('.material-symbols-outlined').textContent = 'download';
+      btn.disabled = false;
+    }
   }
 
   // ── MANAGE BILLING ──────────────────────────────────────────
